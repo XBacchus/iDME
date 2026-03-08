@@ -17,5 +17,5 @@ xdm:
   password: admin123
   verify-code: "0000"
   timezone: UTC+08:00
-  tenant-id: ""
-  application-id: ""
+  tenant-id: "821c75a0d0f7447b93fdf9ae932814b7"
+  application-id: "497bc30622bb434c9096c34d1ba38f02"
