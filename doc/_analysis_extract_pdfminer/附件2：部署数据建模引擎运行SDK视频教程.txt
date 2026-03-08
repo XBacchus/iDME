@@ -1,0 +1,19 @@
+部署数据建模引擎运行 SDK 视频教程
+
+1、【视频】Linux 服务器部署数据建模引擎运行 SDK
+
+https://connect.huaweicloud.com/courses/learn/C101753408611812355/about
+
+2、【视频】Windows 本地服务器部署数据建模引擎运行 SDK
+
+https://connect.huaweicloud.com/courses/learn/C101751438739507543/about
+
+3、【视频】在容器中部署数据建模引擎运行 SDK
+
+https://connect.huaweicloud.com/courses/learn/C101754549182623045/about
+
+4、【视频】在 Java 工程中集成数据建模引擎运行 SDK
+
+https://connect.huaweicloud.com/courses/learn/C101753409054818373/about
+
+

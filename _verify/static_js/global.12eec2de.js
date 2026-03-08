@@ -1,0 +1,2 @@
+import{R as o,U as e}from"./@antv.3cbf0fc3.js";import{r as n}from"./console-browserify.07dad4c4.js";var d="undefined"!=typeof window?window:void 0!==e?e:"undefined"!=typeof self?self:{};const s=o(d);var f,i=void 0!==e?e:"undefined"!=typeof window?window:{},a=n;"undefined"!=typeof document?f=document:(f=i["__GLOBAL_DOCUMENT_CACHE@4"])||(f=i["__GLOBAL_DOCUMENT_CACHE@4"]=a);var t=f;const r=o(t);export{s as a,t as b,r as d,d as w};
+

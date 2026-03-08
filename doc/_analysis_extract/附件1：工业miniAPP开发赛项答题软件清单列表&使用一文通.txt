@@ -1,0 +1,28 @@
+
+工业miniAPP开发赛项
+答题软件清单列表
+序号
+软件名称
+软件下载链接
+1
+工业数字模型驱动引擎iDME
+HYPERLINK &quot;https://console.huaweicloud.com/dme/?locale=zh-cn&amp;agencyId=f845d52d2e674eb99d2f34b197553b9a&amp;region=cn-north-4&quot; \l &quot;/dme/runenv&quot; \o &quot;https://console.huaweicloud.com/dme/?locale=zh-cn&amp;agencyId=f845d52d2e674eb99d2f34b197553b9a&amp;region=cn-north-4#/dme/runenv&quot; https://console.huaweicloud.com/dme/?locale=zh-cn&amp;agencyId=f845d52d2e674eb99d2f34b197553b9a&amp;region=cn-north-4#/dme/runenv
+*  参赛团队可根据实际情况，在列表中选择一款或多款软件进行答题；
+*  使用不符合国产工业软件的工具答题，原则上属于无效作品；
+*  部分软件涉及激活码，激活码在确认报名成功后，将统一下发;
+*  各软件工具的详细下载、安装、注册、使用等操作手册将在大赛官网“培训资料”板块发布。
+使用一文通
+使用说明： HYPERLINK &quot;https://www.kdocs.cn/l/cfkF2BZAMlIv&quot; 部署数据建模引擎运行SDK视频教程.pdf（点击查看）、 HYPERLINK &quot;https://www.kdocs.cn/l/cqXjo8DWStby&quot; 工业数字模型驱动引擎 SDK参考.pdf（点击查看）
+License使用：
+选手通过链接（ HYPERLINK &quot;https://id1.cloud.huawei.com/UnifiedIDMPortal/portal/userRegister/regbyphone.html?themeName=red&amp;access_type=offline&amp;clientID=103493351&amp;loginChannel=88000000&amp;loginUrl=https://auth.huaweicloud.com/authui/login.html?service=https%3A%2F%2Fconsole.huaweicloud.com%2Fdme%2F%3Flocale%3Dzh-cn%26region%3Dcn-north-4%26cloud_route_state%3D%2Fdme%2Frunenv%23&amp;casLoginUrl=https://auth.huaweicloud.com/authui/casLogin&amp;service=https://auth.huaweicloud.com/authui/casLogin?service=https%3A%2F%2Fconsole.huaweicloud.com%2Fdme%2F%3Flocale%3Dzh-cn%26region%3Dcn-north-4%26cloud_route_state%3D%2Fdme%2Frunenv&amp;countryCode=cn&amp;scope=https://www.huawei.com/auth/account/unified.profile+https://www.huawei.com/auth/account/risk.idstate&amp;reqClientType=88&amp;state=b85ff48f1c91496f8b942307ad97dfcb&amp;lang=zh-cn&quot; 注册_华为账号）注册华为云账号,搜索工业数字模型驱动引擎iDME，使用数据建模引擎中的iDME设计服务，进行数据库表设计。
+提供华为云账号ID、用于本地部署的iDME设计服务中的应用ID\物理指纹信息（windows系统MAC地址/Linux系统UUID）发送至klbsupport@shensizaowu.com，由组委会申请license并发放（一支团队一个license（一个华为云账号ID+应用ID））
+示例：
+华为云账号ID
+团队名称
+iDME设计服务中的应用ID
+申请人
+物理指纹信息（windows）
+可添加多个
+联系方式
+高校名称
+邮箱

@@ -1,0 +1,21 @@
+﻿server:
+  port: 8080
+
+spring:
+  application:
+    name: miniapp-backend
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+xdm:
+  base-url: http://127.0.0.1:8003/rdm_497bc30622bb434c9096c34d1ba38f02_app/services
+  username: admin
+  password: admin123
+  verify-code: "0000"
+  timezone: UTC+08:00
+  tenant-id: ""
+  application-id: ""

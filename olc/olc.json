@@ -1,0 +1,443 @@
+{
+  "domain": "olc",
+  "rules": [
+    {
+      "group": {
+        "name": "GeneralFlowControl_Runtime",
+        "tags": [
+          {
+            "tag": "ServiceName",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "HEALCAL_6500Times10Seconds",
+        "enabled": true,
+        "policyType": "NODE",
+        "rateLimit": 6500,
+        "timeUnit": "second",
+        "timeInterval": 10,
+        "flowControlMode": "QUOTA",
+        "calculateAlg": {
+          "algName": "HEALCAL",
+          "algParam": {
+            "responseTime": "parentgroup.passAvgRt",
+            "average": "parentgroup.totalPassAvgRt",
+            "minResource": 0.45,
+            "maxResource": 0.55,
+            "minWal": 0.5,
+            "maxWal": 1.0,
+            "timeout": "300",
+            "delta": 2
+          }
+        }
+      }
+    },
+    {
+      "group": {
+        "name": "DownloadQuotaFlow_Control",
+        "tags": [
+          {
+            "tag": "InterfaceName",
+            "match": "include",
+            "values": [
+              "/rdm/basic/api/v2/file/temp-link"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "Flow_50Times1Seconds",
+        "enabled": true,
+        "policyType": "NODE",
+        "rateLimit": 50,
+        "timeUnit": "second",
+        "timeInterval": 1,
+        "flowControlMode": "QUOTA",
+        "blockMsg": "{\n    \"result\": \"FAIL\",\n    \"error_msg\": \"当前已触发上传下载限流保护，请稍后重试。\"\n}"
+      }
+    },
+    {
+      "group": {
+        "name": "GeneralStaticControl_Runtime",
+        "tags": [
+          {
+            "tag": "ServiceName",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "HEALCAL_50Times1Seconds",
+        "enabled": true,
+        "policyType": "NODE",
+        "rateLimit": 50,
+        "timeUnit": "second",
+        "timeInterval": 1,
+        "flowControlMode": "QUOTA"
+      }
+    },
+    {
+      "group": {
+        "name": "GeneralResourceControl_Runtime",
+        "tags": [
+          {
+            "tag": "Resource",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "PID_CPU_RESOURCE_CONTROL",
+        "enabled": false,
+        "policyType": "NODE",
+        "rateLimit": 1500,
+        "timeUnit": "second",
+        "timeInterval": 10,
+        "flowControlMode": "QUOTA",
+        "calculateAlg": {
+          "algName": "PID",
+          "algParam": {
+            "currentUsage": "localresource.cpu",
+            "Kp":0.5,
+            "Ki":0.0,
+            "Kd":0.5,
+            "delta":1,
+            "maxWal": 3,
+            "minWal": 0.01,
+            "maxResource": 0.85,
+            "minResource": 0.75
+          }
+        }
+      }
+    },
+    {
+      "group": {
+        "name": "GeneralResourceControl_Runtime2",
+        "tags": [
+          {
+            "tag": "Resource",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "PID_MEMORY_RESOURCE_CONTROL",
+        "enabled": false,
+        "policyType": "NODE",
+        "rateLimit": 1500,
+        "timeUnit": "second",
+        "timeInterval": 10,
+        "flowControlMode": "QUOTA",
+        "calculateAlg": {
+          "algName": "PID",
+          "algParam": {
+            "currentUsage": "localresource.memory",
+            "Kp":0.5,
+            "Ki":0.0,
+            "Kd":0.5,
+            "delta":1,
+            "maxWal": 3,
+            "minWal": 0.01,
+            "maxResource": 0.85,
+            "minResource": 0.75
+          }
+        }
+      }
+    },
+    {
+      "group": {
+        "name": "degradeGroup",
+        "tags": [
+          {
+            "tag": "InterfaceName",
+            "match": "equal",
+            "values": [
+              "/KafkaException",
+              "/MongoDbException",
+              "/ObsException",
+              "/EsException",
+              "/SyncException"
+            ]
+          }
+        ]
+      },
+      "degrade": {
+        "name": "degrade",
+        "enabled": true,
+        "grade": 4,
+        "threshold": 5,
+        "timeWindow": 600,
+        "maxTimeWindow": 610
+      }
+    },
+    {
+      "group": {
+        "name": "tenantGroup",
+        "enable": true,
+        "tags": [
+          {
+            "tag": "UID",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "flow",
+        "enable": true,
+        "rateLimit": 650,
+        "timeUnit": "second",
+        "timeInterval": 1,
+        "flowControlMode": "QPS"
+      }
+    },
+    {
+      "group": {
+        "name": "buzGroup",
+        "tags": [
+          {
+            "tag": "BuzPriority",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "buzFlow",
+        "policyType": "NODE",
+        "rateLimit": 6000,
+        "timeUnit": "second",
+        "timeInterval": 1,
+        "flowControlMode": "QUOTA",
+        "calculateAlg": {
+          "algName": "LoadWalWithPriority",
+          "algParam": {
+            "currentUsage": "localresource.loadaverage",
+            "priority": "localgroup.buzPriority",
+            "maxWal": 2.5,
+            "minWal": 0.1,
+            "maxResource": 3,
+            "minResource": 1
+          }
+        }
+      }
+    },
+    {
+      "group": {
+        "name": "downloadGroup",
+        "tags": [
+          {
+            "tag": "InterfaceName",
+            "match": "include",
+            "values": [
+              "/rdm/basic/api/ResourceManagement/downloadFile",
+              "/rdm/basic/api/instanceUpload/uploadInstance",
+              "/rdm/basic/api/file/exportInstanceDataByIds",
+              "/rdm/basic/api/swagger/downloadFile",
+              "/rdm/basic/api/unitTypeUpload/uploadUnitType",
+              "/rdm/basic/api/UnitMeasuringExport/exportUnitData",
+              "/sync/offlineSynController/exportOfflineData",
+              "/offline/sync/import",
+              "/rdm/basic/api/file-extension/export",
+              "/rdm/basic/api/file-extension/import",
+              "/rdm/basic/api/UnitMeasuringExport/downloadTemplateXml",
+              "/sync/syncTenantController/downloadFile",
+              "/rdm/basic/api/upload/uploadFile",
+              "/rdm/basic/api/v1/view-model/upload",
+              "/rule-engine/api/rule-definitions/upload",
+              "/rule-engine/api/rule-definitions/download"
+            ]
+          },
+          {
+            "tag": "Tenant",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          },
+          {
+            "tag": "ENV",
+            "match": "equal",
+            "values": [
+              "trial"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "downloadFlow",
+        "enabled": false,
+        "policyType": "NODE",
+        "rateLimit": 1,
+        "timeUnit": "second",
+        "timeInterval": 1,
+        "flowControlMode": "QPS",
+        "blockMsg": "{\n    \"result\": \"FAIL\",\n    \"error_msg\": \"当前已触发上传下载限流保护，请稍后重试。\"\n}"
+      }
+    },
+    {
+      "group": {
+        "name": "sliceUploadGroup",
+        "tags": [
+          {
+            "tag": "InterfaceName",
+            "match": "include",
+            "values": [
+              "/rdm/basic/api/upload/uploadLargeFile",
+              "/rdm/basic/api/upload/updateLargeFile",
+              "/rdm/basic/api/file/startBatchUpload",
+              "/rdm/basic/api/v2/file/temp-link"
+            ]
+          },
+          {
+            "tag": "Tenant",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          },
+          {
+            "tag": "ENV",
+            "match": "equal",
+            "values": [
+              "trial"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "sliceUploadFlow",
+        "enabled": false,
+        "policyType": "NODE",
+        "rateLimit": 50,
+        "timeUnit": "second",
+        "timeInterval": 1,
+        "flowControlMode": "QPS",
+        "blockMsg": "{\n    \"result\": \"FAIL\",\n    \"error_msg\": \"当前已触发上传下载限流保护，请稍后重试。\"\n}"
+      }
+    },
+    {
+      "group": {
+        "enabled": true,
+        "name": "limitQueryGroup",
+        "tags": [
+          {
+            "tag": "URI",
+            "match": "default",
+            "values": [
+              "*"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "limitFlow",
+        "enabled": true,
+        "policyType": "CLUSTER",
+        "rateLimit": 100,
+        "timeUnit": "minute",
+        "timeInterval": 1,
+        "flowControlMode": "QUOTA",
+        "blockMsg": "{\n    \"result\": \"FAIL\",\n    \"error_msg\": \"当前已触发分页查询限流保护，请稍后重试。\"\n}"
+      }
+    },
+    {
+      "group": {
+        "name": "basicInterfaceGroup",
+        "tags": [
+          {
+            "tag": "InterfaceName",
+            "match": "include",
+            "share": false,
+            "values": [
+              "/staticsPage",
+              "/rdm/basic/api/linkxsync"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "basicInterfaceFlow",
+        "enabled": false,
+        "policyType": "NODE",
+        "rateLimit": 1500,
+        "timeUnit": "second",
+        "timeInterval": 10,
+        "flowControlMode": "QUOTA",
+        "blockMsg": "{\n    \"result\": \"FAIL\",\n    \"error_msg\": \"当前已触发接口限流保护，请稍后重试。\"\n}"
+      }
+    },
+    {
+      "group": {
+        "name": "viewModelGroup",
+        "tags": [
+          {
+            "tag": "InterfaceName",
+            "match": "include",
+            "values": [
+              "/rdm/basic/api/v1/view-model/page",
+              "/rdm/basic/api/v1/view-model/export",
+              "/rdm/basic/api/v1/view-model/upload",
+              "/rdm/basic/api/v1/view-model/execute"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "Flow_100Times1Seconds",
+        "enabled": true,
+        "policyType": "NODE",
+        "rateLimit": 20,
+        "timeUnit": "second",
+        "timeInterval": 1,
+        "flowControlMode": "QUOTA",
+        "blockMsg": "{\n    \"result\": \"FAIL\",\n    \"error_msg\": \"当前已触发限流保护，请稍后重试。\"\n}"
+      }
+    },
+    {
+      "group": {
+        "name": "ruleEngineDesignGroup",
+        "tags": [
+          {
+            "tag": "InterfaceName",
+            "match": "include",
+            "values": [
+              "POST::/rule-engine/api/rule-definitions",
+              "PUT::/rule-engine/api/rule-definitions",
+              "POST::/rule-engine/api/rule-definitions/check-out",
+              "POST::/rule-engine/api/rule-definitions/check-in"
+            ]
+          }
+        ]
+      },
+      "flow": {
+        "name": "ruleDesignFlow",
+        "enabled": true,
+        "policyType": "NODE",
+        "rateLimit": 20,
+        "timeUnit": "second",
+        "timeInterval": 1,
+        "flowControlMode": "QPS",
+        "blockMsg": "{\n    \"result\": \"FAIL\",\n    \"error_msg\": \"当前已触发规则设计限流保护，请稍后重试。\"\n}"
+      }
+    }
+  ]
+}

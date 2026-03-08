@@ -1,0 +1,21 @@
+[INFO] one-click startup begin...
+[INFO] force mode enabled: stop then start.
+[INFO] sdk-runtime is not running on port 8003, skip stop.
+[INFO] sdk-runtime port 8003 is closed.
+[INFO] stopping tx-distributor (PID 10356) on port 6001...
+[INFO] stop signal sent to tx-distributor.
+[INFO] tx-distributor port 6001 is closed.
+[INFO] stopping PG13 by stoppg13.bat...
+[INFO] PG13 stop command completed.
+[INFO] PG13 port 5433 is closed.
+[INFO] starting PG13...
+waiting for server to start.... done
+server started
+[INFO] PG13 started on port 5433.
+[INFO] PG13 is ready on port 5433.
+[INFO] starting tx-distributor...
+[INFO] tx-distributor is ready on port 6001.
+[INFO] starting sdk runtime...
+[INFO] sdk-runtime is ready on port 8003.
+[INFO] startup completed.
+[INFO] ports: PG13=5433, tx-distributor=6001, sdk-runtime=8003

@@ -1,0 +1,103 @@
+<!doctype html><html><head><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><meta http-equiv=Pragma content=no-cache><meta http-equiv=Cache-Control content=no-cache><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui"><meta name=format-detection content="telephone=no"><meta name=format-detection content="email=no"><meta name=apple-mobile-web-app-capable content=yes><meta name=full-screen content=yes><meta name=browsermode content=application><meta name=x5-fullscreen content=true><meta name=x5-page-mode content=app><meta charset=utf-8><link rel=icon type=image/x-icon href=./DefaultAcetate.svg><title>工业数字模型驱动引擎iDME</title><style type=text/css>body {
+        margin: 0;
+        padding: 0;
+      }
+      .loading {
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        position: absolute;
+      }
+      .loading .loadingco {
+        width: 200px;
+        height: 80px;
+        text-align: center;
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+      }
+      .loading h2 {
+        color: #666;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 20px;
+        font-weight: 400;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .loading span {
+        display: inline-block;
+        vertical-align: middle;
+        width: 0.6em;
+        height: 0.6em;
+        margin: 0.19em;
+        background: #007db6;
+        border-radius: 0.6em;
+        -webkit-animation: loading 1s infinite alternate;
+        animation: loading 1s infinite alternate;
+      }
+      .loading span:nth-of-type(2) {
+        background: #008fb2;
+        -webkit-animation-delay: 0.2s;
+        animation-delay: 0.2s;
+      }
+      .loading span:nth-of-type(3) {
+        background: #009b9e;
+        -webkit-animation-delay: 0.4s;
+        animation-delay: 0.4s;
+      }
+      .loading span:nth-of-type(4) {
+        background: #00a77d;
+        -webkit-animation-delay: 0.6s;
+        animation-delay: 0.6s;
+      }
+      .loading span:nth-of-type(5) {
+        background: #00b247;
+        -webkit-animation-delay: 0.8s;
+        animation-delay: 0.8s;
+      }
+      .loading span:nth-of-type(6) {
+        background: #5ab027;
+        -webkit-animation-delay: 1s;
+        animation-delay: 1s;
+      }
+      .loading span:nth-of-type(7) {
+        background: #a0b61e;
+        -webkit-animation-delay: 1.2s;
+        animation-delay: 1.2s;
+      }
+      @-webkit-keyframes loading {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes loading {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      .placeholder {
+        color: #999;
+      }
+      html,
+      body {
+        height: 100%;
+        font-size: 14px;
+      }
+      #usp_yan {
+        z-index: 21474836488 !important;
+      }</style><script>this.globalThis || (this.globalThis = this);
+      if (location.href.includes('\\')) {
+        location.href = location.pathname;
+      }
+      window.appStaticResUrl = './';</script><script type=module crossorigin src=./static/js/index.c3dbf984.js integrity="sha256-ePDMSNT+e2HIZ9afFvD5UmzNKQmrBE8a1duAPKMtU1E="></script><link rel=modulepreload crossorigin href=./static/js/tslib.332144f6.js><link rel=modulepreload crossorigin href=./static/js/gl-matrix.e38527c6.js><link rel=modulepreload crossorigin href=./static/js/detect-browser.b74405bd.js><link rel=modulepreload crossorigin href=./static/js/d3-ease.59ebbadf.js><link rel=modulepreload crossorigin href=./static/js/d3-color.7417a9d3.js><link rel=modulepreload crossorigin href=./static/js/d3-interpolate.428e59d4.js><link rel=modulepreload crossorigin href=./static/js/d3-timer.513ec6c2.js><link rel=modulepreload crossorigin href=./static/js/@babel.fe752766.js><link rel=modulepreload crossorigin href=./static/js/regl.18b19af2.js><link rel=modulepreload crossorigin href=./static/js/lodash.d22c82af.js><link rel=modulepreload crossorigin href=./static/js/d3-quadtree.4590a45a.js><link rel=modulepreload crossorigin href=./static/js/d3-force.2689c699.js><link rel=modulepreload crossorigin href=./static/js/dagre-compound.5bb5e695.js><link rel=modulepreload crossorigin href=./static/js/is-any-array.32cc0dab.js><link rel=modulepreload crossorigin href=./static/js/ml-array-max.6415f4b4.js><link rel=modulepreload crossorigin href=./static/js/ml-array-min.4febe338.js><link rel=modulepreload crossorigin href=./static/js/ml-array-rescale.50a6d14e.js><link rel=modulepreload crossorigin href=./static/js/fecha.b97c33cb.js><link rel=modulepreload crossorigin href=./static/js/@antv.3cbf0fc3.js><link rel=modulepreload crossorigin href=./static/js/@vue.3273d7ec.js><link rel=modulepreload crossorigin href=./static/js/vue.1387d10e.js><link rel=modulepreload crossorigin href=./static/js/cssfilter.0dee9a4a.js><link rel=modulepreload crossorigin href=./static/js/xss.83039029.js><link rel=modulepreload crossorigin href=./static/js/@aurora.66342944.js><link rel=modulepreload crossorigin href=./static/js/sortablejs.f1428cea.js><link rel=modulepreload crossorigin href=./static/js/async-validator.b18813ff.js><link rel=modulepreload crossorigin href=./static/js/cropperjs.c5674f27.js><link rel=modulepreload crossorigin href=./static/js/@juggle.325b798e.js><link rel=modulepreload crossorigin href=./static/js/@plmcsdk.81afa5cd.js><link rel=modulepreload crossorigin href=./static/js/pinia.fd33e534.js><link rel=modulepreload crossorigin href=./static/js/date-now.7a4b9cb9.js><link rel=modulepreload crossorigin href=./static/js/console-browserify.07dad4c4.js><link rel=modulepreload crossorigin href=./static/js/crypto-js.316fcc36.js><link rel=modulepreload crossorigin href=./static/js/dayjs.eceaec7a.js><link rel=modulepreload crossorigin href=./static/js/@intlify.854fb32c.js><link rel=modulepreload crossorigin href=./static/js/vue-i18n.0a8a5272.js><link rel=modulepreload crossorigin href=./static/js/monaco-editor.8d0d2348.js><link rel=modulepreload crossorigin href=./static/js/codemirror.3f2612d3.js><link rel=modulepreload crossorigin href=./static/js/global.12eec2de.js><link rel=modulepreload crossorigin href=./static/js/keycode.f9d85149.js><link rel=modulepreload crossorigin href=./static/js/safe-json-parse.aab176df.js><link rel=modulepreload crossorigin href=./static/js/is-function.ec80c90e.js><link rel=modulepreload crossorigin href=./static/js/@videojs.720b41d4.js><link rel=modulepreload crossorigin href=./static/js/videojs-vtt.js.4fefb02c.js><link rel=modulepreload crossorigin href=./static/js/m3u8-parser.f92634d8.js><link rel=modulepreload crossorigin href=./static/js/@xmldom.ffa076a7.js><link rel=modulepreload crossorigin href=./static/js/mpd-parser.cea99f94.js><link rel=modulepreload crossorigin href=./static/js/mux.js.d6ea7746.js><link rel=modulepreload crossorigin href=./static/js/video.js.af1b8a5e.js><link rel=modulepreload crossorigin href=./static/js/vue-router.72af0a82.js><link rel=modulepreload crossorigin href=./static/js/mitt.4f2cfe6e.js><link rel=stylesheet href=./static/css/cropperjs.09dad5da.css><link rel=stylesheet href=./static/css/@plmcsdk.0622d410.css><link rel=stylesheet href=./static/css/monaco-editor.b83ad14c.css><link rel=stylesheet href=./static/css/codemirror.fc025ba9.css><link rel=stylesheet href=./static/css/video.bfcd54f0.css><link rel=stylesheet href=./static/css/index.f3a4d0da.css></head><body id=linkxApp><div id=app></div></body></html>

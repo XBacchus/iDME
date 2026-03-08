@@ -1,0 +1,111 @@
+﻿:root {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #0f172a;
+  background: #f4f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #dbeafe, #e0f2fe);
+  border: 1px solid #bfdbfe;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.hero p {
+  margin: 10px 0 0;
+  color: #334155;
+}
+
+.actions,
+.proxy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+label {
+  font-weight: 600;
+}
+
+input {
+  flex: 1;
+  min-width: 320px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #0ea5e9;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.panel {
+  margin-top: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  padding: 14px;
+}
+
+.panel.error {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #0b1120;
+  color: #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 24px;
+  }
+
+  input {
+    min-width: 100%;
+  }
+}
