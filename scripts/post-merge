@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+cd "$ROOT_DIR"
+
+changed_files="$(git diff --name-only ORIG_HEAD HEAD || true)"
+
+has_changed() {
+  local pattern="$1"
+  echo "$changed_files" | grep -Eq "$pattern"
+}
+
+if has_changed '^miniapp/frontend/package(-lock)?\\.json$'; then
+  echo "INFO: frontend dependencies changed, running npm install..."
+  (
+    cd miniapp/frontend
+    npm install
+  ) || echo "WARN: npm install failed in miniapp/frontend"
+fi
+
+if has_changed '^miniapp/backend/pom\\.xml$'; then
+  echo "INFO: backend dependencies changed, running maven validate..."
+  (
+    cd miniapp/backend
+    mvn -q -DskipTests validate
+  ) || echo "WARN: maven validate failed in miniapp/backend"
+fi
+
+echo "OK: post-merge automation done."

@@ -1,4 +1,4 @@
-﻿package com.idme.miniapp.config;
+package com.idme.miniapp.config;
 
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;

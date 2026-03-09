@@ -1,0 +1,11 @@
+---
+description: API 文档规则
+globs: 
+alwaysApply: true
+---
+API 文档规则：
+1. 新 API 需求写入 `API_DOCS/demanding_api.json`。
+2. 实现后从需求池移除，并写入 app 级 API 文档 JSON。
+3. 汇总到 `API_DOCS/api_doc.json`。
+4. JSON 文档中禁止注释。
+5. 联调或发布前，将运行态 OpenAPI 快照同步到 `_verify/api-docs.json`（建议来源：`/v3/api-docs`）。

@@ -1,0 +1,11 @@
+# MOST IMPORTANT RULES
+
+1. 先读 `.memories/general/*`、`.memories/modules/*`，重点 `SYSTEM-PRICE.md`（系统口径基线，历史命名保留）。
+2. 技术栈固定：前端 `Vue + Node.js`，后端 `JDK17 + Maven + Spring Boot 3.0`，数据层 `xDM-F`。
+3. 命令需兼容 PowerShell，避免 `&&`。
+4. 任务优先并行拆解；强依赖链串行。
+5. API 流程：`demanding_api.json -> app JSON -> api_doc.json`。
+6. 文件结构变更后更新 `.cursor/project_structure.md`。
+7. 数据结构变更后更新 `.cursor/database_datainfo.md`。
+8. 接口契约、网关代理、流程规则改动后更新 `miniapp/backend/tests/TEST_ACCEPTANCE_CHECKLIST.md`。
+9. 联调或发布前同步运行态 OpenAPI 快照到 `_verify/api-docs.json`。

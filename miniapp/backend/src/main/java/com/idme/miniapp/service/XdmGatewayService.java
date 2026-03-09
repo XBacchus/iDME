@@ -1,4 +1,4 @@
-﻿package com.idme.miniapp.service;
+package com.idme.miniapp.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -125,10 +126,12 @@ public class XdmGatewayService {
         headers.set("x-dme-timezone", props.getTimezone());
         headers.set("x-xsrf-token", xsrfToken);
         headers.set("x-csrf-token", csrfToken);
-        headers.set("tenantid", props.getTenantId());
-        headers.set("applicationid", props.getApplicationId());
+        putIfNotBlank(headers, "tenantid", props.getTenantId());
+        putIfNotBlank(headers, "applicationid", props.getApplicationId());
         headers.set("x-user-id", "");
         headers.set("modifier", "");
+        putIfNotBlank(headers, "origin", runtimeOrigin());
+        putIfNotBlank(headers, "referer", runtimeReferer());
 
         Map<String, String> loginBody = new HashMap<>();
         loginBody.put("username", props.getUsername());
@@ -159,10 +162,12 @@ public class XdmGatewayService {
         headers.set("x-dme-timezone", props.getTimezone());
         headers.set("x-xsrf-token", holder.xsrfToken);
         headers.set("x-csrf-token", holder.csrfToken);
-        headers.set("tenantid", props.getTenantId());
-        headers.set("applicationid", props.getApplicationId());
+        putIfNotBlank(headers, "tenantid", props.getTenantId());
+        putIfNotBlank(headers, "applicationid", props.getApplicationId());
         headers.set("x-user-id", "");
         headers.set("modifier", "");
+        putIfNotBlank(headers, "origin", runtimeOrigin());
+        putIfNotBlank(headers, "referer", runtimeReferer());
         return headers;
     }
 
@@ -177,6 +182,28 @@ public class XdmGatewayService {
         merged.putAll(base);
         merged.setContentType(MediaType.APPLICATION_JSON);
         return merged;
+    }
+
+    private void putIfNotBlank(HttpHeaders headers, String key, String value) {
+        if (StringUtils.hasText(value)) {
+            headers.set(key, value);
+        }
+    }
+
+    private String runtimeOrigin() {
+        URI uri = URI.create(props.getBaseUrl());
+        if (!StringUtils.hasText(uri.getScheme()) || !StringUtils.hasText(uri.getHost())) {
+            return null;
+        }
+        if (uri.getPort() > 0) {
+            return uri.getScheme() + "://" + uri.getHost() + ":" + uri.getPort();
+        }
+        return uri.getScheme() + "://" + uri.getHost();
+    }
+
+    private String runtimeReferer() {
+        String base = props.getBaseUrl();
+        return (base.endsWith("/") ? base.substring(0, base.length() - 1) : base) + "/index.html";
     }
 
     private URI buildUri(String path) {
@@ -230,15 +257,12 @@ public class XdmGatewayService {
             URI baseUri = URI.create(baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl);
             java.net.CookieManager cookieManager = new java.net.CookieManager();
             cookieManager.setCookiePolicy(java.net.CookiePolicy.ACCEPT_ALL);
+            java.net.CookieHandler.setDefault(cookieManager);
 
-            java.net.http.HttpClient client = java.net.http.HttpClient.newBuilder()
-                .cookieHandler(cookieManager)
-                .connectTimeout(Duration.ofSeconds(15))
-                .build();
-
-            org.springframework.http.client.JdkClientHttpRequestFactory factory =
-                new org.springframework.http.client.JdkClientHttpRequestFactory(client);
-            factory.setReadTimeout(Duration.ofSeconds(30));
+            org.springframework.http.client.SimpleClientHttpRequestFactory factory =
+                new org.springframework.http.client.SimpleClientHttpRequestFactory();
+            factory.setConnectTimeout((int) Duration.ofSeconds(15).toMillis());
+            factory.setReadTimeout((int) Duration.ofSeconds(30).toMillis());
 
             RestTemplate restTemplate = new RestTemplate(factory);
             return new SessionHolder(restTemplate, baseUri, cookieManager);

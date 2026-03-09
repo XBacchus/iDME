@@ -1,4 +1,4 @@
-﻿package com.idme.miniapp;
+package com.idme.miniapp;
 
 import com.idme.miniapp.config.XdmProperties;
 import org.springframework.boot.SpringApplication;

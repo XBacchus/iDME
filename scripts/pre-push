@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+branch="$(git symbolic-ref --quiet --short HEAD || true)"
+
+if [ -z "$branch" ]; then
+  echo "INFO: detached HEAD, skip branch check."
+  exit 0
+fi
+
+if echo "$branch" | grep -Eq '^(main|master|develop|production)$'; then
+  echo "OK: protected branch $branch"
+  exit 0
+fi
+
+if echo "$branch" | grep -Eq '^(feature|fix|refactor|test|docs|hotfix|release)/[a-z0-9._-]+$'; then
+  echo "OK: branch name valid: $branch"
+  exit 0
+fi
+
+echo "ERROR: invalid branch name: $branch"
+echo "Allowed: feature|fix|refactor|test|docs|hotfix|release/<name> or protected branches"
+exit 1

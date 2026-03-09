@@ -1,4 +1,4 @@
-﻿package com.idme.miniapp.controller;
+package com.idme.miniapp.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.idme.miniapp.service.XdmGatewayService;

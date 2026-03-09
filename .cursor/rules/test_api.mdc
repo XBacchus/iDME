@@ -1,0 +1,9 @@
+---
+description: API 测试规则
+globs: 
+alwaysApply: true
+---
+1. API 测试前确认后端端口（当前默认 8080）。
+2. 默认前后端可能已运行，不要求重复启动。
+3. 命令必须兼容 PowerShell。
+4. 接口契约、网关代理、流程规则改动需同步验收清单：`miniapp/backend/tests/TEST_ACCEPTANCE_CHECKLIST.md`。

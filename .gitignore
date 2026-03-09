@@ -1,2 +1,37 @@
-﻿497bc30622bb434c9096c34d1ba38f02-sdk-xdm.tar
+497bc30622bb434c9096c34d1ba38f02-sdk-xdm.tar
 xdm-tx-distributor/xdm-tx-distributor.jar
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/
+
+# Java / Maven
+**/target/
+*.class
+
+# Node / Frontend
+**/node_modules/
+**/dist/
+**/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime logs / temp
+*.log
+*.log.*
+xdm.log
+xdm.log.bak
+start_run.log
+start_run2.log
+pg13/*.log
+xdm-tx-distributor/tx.log
+olc/*.tmp
+
+# Local caches / test artifacts
+_verify/cookie*.txt
+_verify/start_now.log
