@@ -8,6 +8,7 @@
 - `.cursor/rules`: Cursor 规则集
 - `.memories`: 记忆库（业务和模块知识）
 - `scripts`: Git Hooks 与自动化脚本
+- `doc/4天需求拆分`: 4天需求拆分与任务分发文档
 
 ## 规则文件
 - `AGENTS.md`
@@ -22,3 +23,5 @@
 
 ## 变更记录
 - 2026-03-09：初始化协作规则体系（AGENTS、CLAUDE、.cursor/rules、.memories、API_DOCS、git hooks、验收清单）。
+- 2026-03-09：新增 `doc/4天需求拆分` 目录，包含 Day1~Day4 需求文档、分发总览和成员分工模板。
+- 2026-03-09：补充 Day1~Day4 每日验收清单文档，支持按天勾检、状态标记和测试文件映射。
