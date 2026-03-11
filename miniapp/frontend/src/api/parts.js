@@ -25,3 +25,9 @@ export const deleteCategory = (id) => request.delete(`/api/parts/categories/${id
 export const getVersionHistory = (id) => request.get(`/api/parts/${id}/versions`)
 
 export const createVersion = (id, data) => request.post(`/api/parts/${id}/versions`, data)
+
+export const compareVersions = (id, v1, v2) => request.get(`/api/parts/${id}/versions/compare`, { params: { v1, v2 } })
+
+export const rollbackVersion = (id, version) => request.post(`/api/parts/${id}/versions/${version}/rollback`)
+
+export const updateVersionStatus = (id, version, status) => request.put(`/api/parts/${id}/versions/${version}/status`, { status })

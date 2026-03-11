@@ -1,9 +1,12 @@
 <template>
   <div class="p-8">
-    <div class="floating-island mb-6">
+    <div class="floating-island">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-lg font-semibold text-white">物料管理</h2>
-        <el-button type="primary" size="small" @click="handleAdd">新增物料</el-button>
+        <h2 class="text-2xl font-bold text-white">物料管理</h2>
+        <div class="flex gap-2">
+          <el-button size="default" @click="router.push('/parts/categories')">分类管理</el-button>
+          <el-button type="primary" size="default" @click="handleAdd">新增物料</el-button>
+        </div>
       </div>
 
       <div class="flex gap-4 mb-6">
@@ -21,25 +24,35 @@
         <el-table-column prop="supplier" label="供应商" width="150" />
         <el-table-column prop="categoryName" label="分类" width="120" />
         <el-table-column prop="version" label="版本" width="100" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="320" fixed="right">
           <template #default="{ row }">
-            <el-button link type="primary" size="small" @click.stop="handleEdit(row)">编辑</el-button>
-            <el-button link type="primary" size="small" @click.stop="handleBOM(row)">BOM</el-button>
-            <el-button link type="danger" size="small" @click.stop="handleDelete(row)">删除</el-button>
+            <div class="flex gap-2 overflow-x-auto">
+              <el-button link size="small" @click.stop="handleEdit(row)">编辑</el-button>
+              <el-button link size="small" @click.stop="handleBOM(row)">BOM</el-button>
+              <el-button link size="small" @click.stop="handleVersions(row)">版本</el-button>
+              <el-button link type="danger" size="small" @click.stop="handleDelete(row)">删除</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
 
-      <el-pagination
-        v-model:current-page="pagination.page"
-        v-model:page-size="pagination.size"
-        :total="pagination.total"
-        :page-sizes="[10, 20, 50]"
-        layout="total, sizes, prev, pager, next"
-        class="mt-6"
-        @current-change="loadData"
-        @size-change="loadData"
-      />
+      <div class="flex justify-between items-center mt-6">
+        <span class="text-sm text-gray-400">共 {{ pagination.total }} 条</span>
+        <el-pagination
+          v-model:current-page="pagination.page"
+          v-model:page-size="pagination.size"
+          :total="pagination.total"
+          :page-sizes="[10, 20, 50]"
+          layout="prev, pager, next"
+          @current-change="loadData"
+          @size-change="loadData"
+        />
+        <el-select v-model="pagination.size" size="small" style="width: 100px" @change="loadData">
+          <el-option :value="10" label="10 / page" />
+          <el-option :value="20" label="20 / page" />
+          <el-option :value="50" label="50 / page" />
+        </el-select>
+      </div>
     </div>
   </div>
 </template>
@@ -97,6 +110,7 @@ const handleSearch = () => {
 const handleAdd = () => router.push('/parts/add')
 const handleEdit = (row) => router.push(`/parts/edit/${row.id}`)
 const handleBOM = (row) => router.push(`/parts/bom/${row.id}`)
+const handleVersions = (row) => router.push(`/parts/versions/${row.id}`)
 const handleRowClick = (row) => router.push(`/parts/edit/${row.id}`)
 
 const handleDelete = async (row) => {

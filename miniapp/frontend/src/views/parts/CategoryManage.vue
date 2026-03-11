@@ -2,11 +2,14 @@
   <div class="p-8">
     <div class="floating-island">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-lg font-semibold text-white">分类管理</h2>
-        <el-button type="primary" size="small" @click="handleAdd(null)">新增根分类</el-button>
+        <h2 class="text-2xl font-bold text-white">分类管理</h2>
+        <div class="flex gap-2">
+          <el-input v-model="searchKeyword" placeholder="搜索分类..." clearable class="w-64" size="small" />
+          <el-button type="primary" size="default" @click="handleAdd(null)">新增根分类</el-button>
+        </div>
       </div>
 
-      <CategoryTree :data="treeData" @add="handleAdd" @edit="handleEdit" @delete="handleDelete" />
+      <CategoryTree :data="treeData" :search-keyword="searchKeyword" @add="handleAdd" @edit="handleEdit" @delete="handleDelete" />
     </div>
 
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="400px">
@@ -34,6 +37,7 @@ const dialogVisible = ref(false)
 const isEdit = ref(false)
 const currentNode = ref(null)
 const form = reactive({ name: '', parentId: null })
+const searchKeyword = ref('')
 
 const dialogTitle = computed(() => isEdit.value ? '编辑分类' : '新增分类')
 

@@ -20,6 +20,19 @@ const route = useRoute()
 const title = computed(() => {
   const titles = {
     'Home': '首页控制台',
+    'Parts': '物料管理',
+    'PartAdd': '新增物料',
+    'PartEdit': '编辑物料',
+    'PartBOM': 'BOM管理',
+    'PartVersions': '版本管理',
+    'PartCategories': '分类管理',
+    'Equipments': '设备管理',
+    'EquipmentAdd': '新增设备',
+    'EquipmentEdit': '编辑设备',
+    'WorkingPlans': '工艺路线管理',
+    'WorkingPlanAdd': '新增工艺路线',
+    'WorkingPlanEdit': '编辑工艺路线',
+    'WorkingPlanDetail': '工艺路线详情',
     'Procedures': '工序配置'
   }
   return titles[route.name] || '首页'

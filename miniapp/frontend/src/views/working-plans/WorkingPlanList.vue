@@ -1,43 +1,31 @@
 <template>
-  <div class="p-8 space-y-6">
-    <div class="flex justify-between items-center">
-      <h1 class="text-lg font-bold text-white">工艺路线管理</h1>
-      <button @click="$router.push('/working-plans/new')" class="bg-blue-600 hover:bg-blue-500 px-4 py-1.5 text-xs text-white rounded-sm transition-colors">
-        + 新增工艺路线
-      </button>
-    </div>
-
-    <div class="floating-island overflow-hidden">
-      <div class="p-4 border-b border-white/5 bg-white/5">
-        <input v-model="search" placeholder="搜索工艺编号/名称..." class="w-64 px-3 py-1.5 text-xs bg-black/20 border border-white/10 text-white rounded outline-none focus:ring-1 focus:ring-blue-500">
+  <div class="p-8">
+    <div class="floating-island">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-white">工艺路线管理</h2>
+        <el-button type="primary" size="default" @click="$router.push('/working-plans/new')">新增工艺路线</el-button>
       </div>
 
-      <table class="w-full text-sm text-white">
-        <thead>
-          <tr class="text-gray-500 border-b border-white/5">
-            <th class="px-6 py-4 font-medium text-left">工艺编号</th>
-            <th class="px-6 py-4 font-medium text-left">工艺名称</th>
-            <th class="px-6 py-4 font-medium text-left">版本号</th>
-            <th class="px-6 py-4 font-medium text-left">所属产品</th>
-            <th class="px-6 py-4 font-medium text-left">操作人员</th>
-            <th class="px-6 py-4 font-medium text-right">操作</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-white/5">
-          <tr v-for="item in filteredList" :key="item.id" class="hover:bg-white/5 transition-colors">
-            <td class="px-6 py-4 font-mono text-xs text-blue-400">{{ item.code }}</td>
-            <td class="px-6 py-4">{{ item.name }}</td>
-            <td class="px-6 py-4 text-gray-400">{{ item.version }}</td>
-            <td class="px-6 py-4 text-gray-400">{{ item.product }}</td>
-            <td class="px-6 py-4 text-gray-400">{{ item.operator }}</td>
-            <td class="px-6 py-4 text-right space-x-3">
-              <button @click="$router.push(`/working-plans/${item.id}`)" class="text-gray-500 hover:text-white transition-colors">详情</button>
-              <button @click="$router.push(`/working-plans/${item.id}/edit`)" class="text-gray-500 hover:text-white transition-colors">编辑</button>
-              <button @click="handleDelete(item.id)" class="text-red-400/70 hover:text-red-400 transition-colors">删除</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="mb-6">
+        <el-input v-model="search" placeholder="搜索工艺编号/名称" clearable class="w-64" size="small" />
+      </div>
+
+      <el-table :data="filteredList" style="width: 100%">
+        <el-table-column prop="code" label="工艺编号" width="150" />
+        <el-table-column prop="name" label="工艺名称" width="200" />
+        <el-table-column prop="version" label="版本号" width="120" />
+        <el-table-column prop="product" label="所属产品" width="150" />
+        <el-table-column prop="operator" label="操作人员" width="120" />
+        <el-table-column label="操作" width="280" fixed="right">
+          <template #default="{ row }">
+            <div class="flex gap-2 overflow-x-auto">
+              <el-button link size="small" @click="$router.push(`/working-plans/${row.id}`)">详情</el-button>
+              <el-button link size="small" @click="$router.push(`/working-plans/${row.id}/edit`)">编辑</el-button>
+              <el-button link type="danger" size="small" @click="handleDelete(row.id)">删除</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -62,7 +50,6 @@ const loadData = async () => {
     const { data } = await api.getList()
     list.value = data
   } catch (error) {
-    // 使用Mock数据
     list.value = [
       { id: 1, code: 'WP-2023-001', name: '中心轮零件加工', version: 'V1.0', product: '中心轮组件', operator: '张工' }
     ]
@@ -82,12 +69,3 @@ const handleDelete = async (id) => {
 
 onMounted(loadData)
 </script>
-
-<style scoped>
-.floating-island {
-  background: #2C2C2E;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-}
-</style>
