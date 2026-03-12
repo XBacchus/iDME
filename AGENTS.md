@@ -49,7 +49,13 @@
 2. `pre-push`：分支名必须匹配 `feature|fix|refactor|test|docs|hotfix|release/xxx` 或受保护分支。
 3. `post-merge`：拉代码后自动处理依赖与后端构建校验。
 
-## 8. 风险操作确认机制
+## 9. 前端开发规范
+
+1. 前端开发时必须先阅读设计规范：`miniapp/frontend/设计规范.md`。
+2. 设计模板参考：`miniapp/frontend/设计模板.html`。
+3. 开发计划参考：`miniapp/frontend/前端开发计划.md`。
+4. 风格要求：暗色主题（Earth Edition）、Tailwind CSS、Arc 浏览器风格。
+5. 所有前端页面必须遵循设计规范中的配色、布局、组件样式。
 
 以下高风险操作前必须明确确认：
 - 删除文件/目录、批量修改
