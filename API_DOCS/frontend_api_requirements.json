@@ -1,0 +1,306 @@
+{
+  "title": "前端API需求文档",
+  "version": "1.0",
+  "baseURL": "http://localhost:8080/api",
+  "modules": [
+    {
+      "module": "物料管理",
+      "apis": [
+        {
+          "name": "获取物料列表",
+          "method": "GET",
+          "path": "/api/parts",
+          "params": {
+            "keyword": "搜索关键词（物料编号/名称）",
+            "categoryId": "分类ID",
+            "page": "页码",
+            "size": "每页数量"
+          },
+          "response": {
+            "records": [
+              {
+                "id": "物料ID",
+                "partNo": "物料编号",
+                "partName": "物料名称",
+                "specification": "规格型号",
+                "stockQty": "库存数量",
+                "supplier": "供应商",
+                "categoryName": "分类名称",
+                "version": "当前版本"
+              }
+            ],
+            "total": "总数"
+          }
+        },
+        {
+          "name": "获取物料详情",
+          "method": "GET",
+          "path": "/api/parts/{id}"
+        },
+        {
+          "name": "创建物料",
+          "method": "POST",
+          "path": "/api/parts",
+          "body": {
+            "partNo": "物料编号",
+            "partName": "物料名称",
+            "specification": "规格型号",
+            "categoryId": "分类ID",
+            "supplier": "供应商"
+          }
+        },
+        {
+          "name": "更新物料",
+          "method": "PUT",
+          "path": "/api/parts/{id}"
+        },
+        {
+          "name": "删除物料",
+          "method": "DELETE",
+          "path": "/api/parts/{id}"
+        },
+        {
+          "name": "获取物料BOM",
+          "method": "GET",
+          "path": "/api/parts/{id}/bom",
+          "response": {
+            "id": "物料ID",
+            "partName": "物料名称",
+            "children": [
+              {
+                "id": "子物料ID",
+                "partName": "子物料名称",
+                "quantity": "数量",
+                "children": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "更新物料BOM",
+          "method": "PUT",
+          "path": "/api/parts/{id}/bom"
+        }
+      ]
+    },
+    {
+      "module": "物料版本管理",
+      "apis": [
+        {
+          "name": "获取版本历史",
+          "method": "GET",
+          "path": "/api/parts/{id}/versions",
+          "response": [
+            {
+              "version": "版本号",
+              "description": "版本说明",
+              "status": "状态(draft/published)",
+              "createdBy": "创建人",
+              "createdAt": "创建时间"
+            }
+          ]
+        },
+        {
+          "name": "创建新版本",
+          "method": "POST",
+          "path": "/api/parts/{id}/versions",
+          "body": {
+            "description": "版本说明"
+          }
+        },
+        {
+          "name": "版本对比",
+          "method": "GET",
+          "path": "/api/parts/{id}/versions/compare",
+          "params": {
+            "v1": "版本1",
+            "v2": "版本2"
+          },
+          "response": {
+            "v1": {
+              "version": "版本号",
+              "description": "版本说明"
+            },
+            "v2": {
+              "version": "版本号",
+              "description": "版本说明"
+            }
+          }
+        },
+        {
+          "name": "版本回滚",
+          "method": "POST",
+          "path": "/api/parts/{id}/versions/{version}/rollback"
+        },
+        {
+          "name": "更新版本状态",
+          "method": "PUT",
+          "path": "/api/parts/{id}/versions/{version}/status",
+          "body": {
+            "status": "published"
+          }
+        }
+      ]
+    },
+    {
+      "module": "物料分类管理",
+      "apis": [
+        {
+          "name": "获取分类树",
+          "method": "GET",
+          "path": "/api/parts/categories",
+          "response": [
+            {
+              "id": "分类ID",
+              "name": "分类名称",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "创建分类",
+          "method": "POST",
+          "path": "/api/parts/categories",
+          "body": {
+            "name": "分类名称",
+            "parentId": "父分类ID（可选）"
+          }
+        },
+        {
+          "name": "更新分类",
+          "method": "PUT",
+          "path": "/api/parts/categories/{id}"
+        },
+        {
+          "name": "删除分类",
+          "method": "DELETE",
+          "path": "/api/parts/categories/{id}"
+        }
+      ]
+    },
+    {
+      "module": "设备管理",
+      "apis": [
+        {
+          "name": "获取设备列表",
+          "method": "GET",
+          "path": "/api/equipments",
+          "params": {
+            "keyword": "搜索关键词",
+            "page": "页码",
+            "size": "每页数量"
+          },
+          "response": {
+            "records": [
+              {
+                "id": "设备ID",
+                "equipmentNo": "设备编号",
+                "equipmentName": "设备名称",
+                "model": "型号",
+                "manufacturer": "制造商",
+                "status": "状态(running/idle/maintenance/fault)",
+                "location": "位置"
+              }
+            ],
+            "total": "总数"
+          }
+        },
+        {
+          "name": "获取设备详情",
+          "method": "GET",
+          "path": "/api/equipments/{id}"
+        },
+        {
+          "name": "创建设备",
+          "method": "POST",
+          "path": "/api/equipments"
+        },
+        {
+          "name": "更新设备",
+          "method": "PUT",
+          "path": "/api/equipments/{id}"
+        },
+        {
+          "name": "删除设备",
+          "method": "DELETE",
+          "path": "/api/equipments/{id}"
+        }
+      ]
+    },
+    {
+      "module": "工序配置",
+      "apis": [
+        {
+          "name": "获取工序列表",
+          "method": "GET",
+          "path": "/api/procedures",
+          "response": [
+            {
+              "id": "工序ID",
+              "procedureName": "工序名称",
+              "procedureCode": "工序代码",
+              "description": "工序描述",
+              "standardTime": "标准工时(分钟)"
+            }
+          ],
+          "note": "固定5道工序：毛坯制造、粗加工、精加工、检测、入库"
+        }
+      ]
+    },
+    {
+      "module": "工艺路线管理",
+      "apis": [
+        {
+          "name": "获取工艺路线列表",
+          "method": "GET",
+          "path": "/api/working-plans",
+          "response": [
+            {
+              "id": "工艺路线ID",
+              "planName": "工艺路线名称",
+              "partName": "关联物料",
+              "version": "版本",
+              "status": "状态",
+              "createdAt": "创建时间"
+            }
+          ]
+        },
+        {
+          "name": "获取工艺路线详情",
+          "method": "GET",
+          "path": "/api/working-plans/{id}",
+          "response": {
+            "id": "工艺路线ID",
+            "planName": "工艺路线名称",
+            "partId": "关联物料ID",
+            "version": "版本",
+            "procedures": [
+              {
+                "id": "工序ID",
+                "procedureName": "工序名称",
+                "equipmentId": "设备ID",
+                "equipmentName": "设备名称",
+                "standardTime": "标准工时"
+              }
+            ]
+          }
+        },
+        {
+          "name": "创建工艺路线",
+          "method": "POST",
+          "path": "/api/working-plans"
+        },
+        {
+          "name": "更新工艺路线",
+          "method": "PUT",
+          "path": "/api/working-plans/{id}"
+        },
+        {
+          "name": "删除工艺路线",
+          "method": "DELETE",
+          "path": "/api/working-plans/{id}"
+        }
+      ]
+    }
+  ]
+}

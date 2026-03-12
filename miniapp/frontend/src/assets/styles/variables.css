@@ -1,0 +1,10 @@
+:root {
+  --earth-bg: #1C1C1E;
+  --island-bg: #2C2C2E;
+  --accent-blue: #5E81AC;
+  --accent-sage: #8FBCBB;
+  --accent-clay: #A3BE8C;
+  --text-primary: #ECEFF4;
+  --text-secondary: #D8DEE9;
+  --border-color: rgba(255, 255, 255, 0.08);
+}
