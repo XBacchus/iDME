@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "miniapp-backend API",
-    "version": "0.1.1"
+    "version": "0.1.2"
   },
   "paths": {
     "/api/equipments": {
@@ -109,6 +109,169 @@
           }
         }
       }
+    },
+    "/api/working-plans": {
+      "get": {
+        "summary": "获取工艺路线列表",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "按工艺编号/工艺名称检索"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "创建工艺路线",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkingPlanWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/working-plans/{id}": {
+      "get": {
+        "summary": "获取工艺路线详情",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "更新工艺路线",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkingPlanWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "删除工艺路线",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/working-plans/{id}/processes": {
+      "get": {
+        "summary": "获取工艺流程",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "更新工艺流程",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/working-plans/{id}/procedures": {
+      "post": {
+        "summary": "追加工序到工艺路线",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -157,6 +320,43 @@
           },
           "sparePartsInfo": {
             "type": "string"
+          }
+        }
+      },
+      "WorkingPlanWriteRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "工艺编号"
+          },
+          "name": {
+            "type": "string",
+            "description": "工艺名称"
+          },
+          "operator": {
+            "type": "string",
+            "description": "操作人员"
+          },
+          "operationTime": {
+            "type": "string",
+            "description": "操作时间"
+          },
+          "equipment": {
+            "type": "string",
+            "description": "设备使用情况"
+          },
+          "product": {
+            "type": "string",
+            "description": "所属产品"
+          },
+          "version": {
+            "type": "string",
+            "description": "版本"
+          },
+          "description": {
+            "type": "string",
+            "description": "工艺描述"
           }
         }
       }

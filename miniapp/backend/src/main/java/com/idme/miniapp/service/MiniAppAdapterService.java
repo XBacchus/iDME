@@ -36,6 +36,7 @@ public class MiniAppAdapterService {
     private final XdmRuntimeService xdmRuntimeService;
     private final ObjectMapper objectMapper;
     private final EquipmentProductionDateStore equipmentProductionDateStore;
+    private final WorkingPlanOperationTimeStore workingPlanOperationTimeStore;
 
     private final AtomicLong categoryIdSeed = new AtomicLong(1000);
     private final ConcurrentHashMap<String, CategoryNode> categories = new ConcurrentHashMap<>();
@@ -44,11 +45,13 @@ public class MiniAppAdapterService {
     public MiniAppAdapterService(
         XdmRuntimeService xdmRuntimeService,
         ObjectMapper objectMapper,
-        EquipmentProductionDateStore equipmentProductionDateStore
+        EquipmentProductionDateStore equipmentProductionDateStore,
+        WorkingPlanOperationTimeStore workingPlanOperationTimeStore
     ) {
         this.xdmRuntimeService = xdmRuntimeService;
         this.objectMapper = objectMapper;
         this.equipmentProductionDateStore = equipmentProductionDateStore;
+        this.workingPlanOperationTimeStore = workingPlanOperationTimeStore;
     }
 
     public Map<String, Object> listParts(String keyword, String categoryId, int page, int size) {
@@ -77,11 +80,14 @@ public class MiniAppAdapterService {
     }
 
     public Map<String, Object> createPart(Map<String, Object> payload) {
+        validatePartRequiredFields(payload);
         return mapPart(xdmRuntimeService.create(ENTITY_PART, buildPartPayload(payload, null)));
     }
 
     public Map<String, Object> updatePart(String id, Map<String, Object> payload) {
-        return mapPart(xdmRuntimeService.update(ENTITY_PART, buildPartPayload(payload, id)));
+        Map<String, Object> mergedPayload = mergePartPayloadWithExisting(id, payload);
+        validatePartRequiredFields(mergedPayload);
+        return mapPart(xdmRuntimeService.update(ENTITY_PART, buildPartPayload(mergedPayload, id)));
     }
 
     public void deletePart(String id) {
@@ -355,15 +361,44 @@ public class MiniAppAdapterService {
     }
 
     public Map<String, Object> createWorkingPlan(Map<String, Object> body) {
-        return mapWorkingPlan(xdmRuntimeService.create(ENTITY_WORKING_PLAN, buildWorkingPlanPayload(body, null)));
+        Map<String, Object> payload = buildWorkingPlanPayload(body, null);
+        try {
+            Map<String, Object> item = mapWorkingPlan(xdmRuntimeService.create(ENTITY_WORKING_PLAN, payload));
+            overrideOperationTimeFromRequest(item, body);
+            return item;
+        } catch (IllegalStateException ex) {
+            if (shouldRetryWithoutOperationTime(payload, ex)) {
+                Map<String, Object> fallbackPayload = new LinkedHashMap<>(payload);
+                fallbackPayload.remove("operationTime");
+                Map<String, Object> item = mapWorkingPlan(xdmRuntimeService.create(ENTITY_WORKING_PLAN, fallbackPayload));
+                overrideOperationTimeFromRequest(item, body);
+                return item;
+            }
+            throw ex;
+        }
     }
 
     public Map<String, Object> updateWorkingPlan(String id, Map<String, Object> body) {
-        return mapWorkingPlan(xdmRuntimeService.update(ENTITY_WORKING_PLAN, buildWorkingPlanPayload(body, id)));
+        Map<String, Object> payload = buildWorkingPlanPayload(body, id);
+        try {
+            Map<String, Object> item = mapWorkingPlan(xdmRuntimeService.update(ENTITY_WORKING_PLAN, payload));
+            overrideOperationTimeFromRequest(item, body);
+            return item;
+        } catch (IllegalStateException ex) {
+            if (shouldRetryWithoutOperationTime(payload, ex)) {
+                Map<String, Object> fallbackPayload = new LinkedHashMap<>(payload);
+                fallbackPayload.remove("operationTime");
+                Map<String, Object> item = mapWorkingPlan(xdmRuntimeService.update(ENTITY_WORKING_PLAN, fallbackPayload));
+                overrideOperationTimeFromRequest(item, body);
+                return item;
+            }
+            throw ex;
+        }
     }
 
     public void deleteWorkingPlan(String id) {
         xdmRuntimeService.delete(ENTITY_WORKING_PLAN, id);
+        workingPlanOperationTimeStore.remove(id);
     }
 
     public List<Map<String, Object>> getWorkingPlanProcesses(String workingPlanId) {
@@ -431,6 +466,49 @@ public class MiniAppAdapterService {
             .collect(Collectors.toList());
         seedCategories(all);
         return all;
+    }
+
+    private Map<String, Object> mergePartPayloadWithExisting(String id, Map<String, Object> body) {
+        JsonNode existing = xdmRuntimeService.get(ENTITY_PART, id);
+        Map<String, Object> merged = new LinkedHashMap<>();
+        merged.put("partNo", firstText(existing, "partCode", "partNo"));
+        merged.put("partName", firstText(existing, "partName"));
+        merged.put("specification", firstText(existing, "specModel", "specification"));
+        merged.put("stockQty", asLong(existing.path("stockQty")));
+        merged.put("supplier", firstText(existing, "supplier"));
+
+        String categoryPath = nullIfBlank(existing.path("categoryPath").asText(null));
+        if (StringUtils.hasText(categoryPath)) {
+            merged.put("categoryPath", categoryPath);
+        }
+        String versionNo = nullIfBlank(existing.path("versionNo").asText(null));
+        if (StringUtils.hasText(versionNo)) {
+            merged.put("versionNo", versionNo);
+        }
+        merged.putAll(body);
+        return merged;
+    }
+
+    private void validatePartRequiredFields(Map<String, Object> body) {
+        if (!StringUtils.hasText(firstText(body, "partCode", "partNo"))) {
+            throw new IllegalArgumentException("物料编号不能为空");
+        }
+        if (!StringUtils.hasText(firstText(body, "partName"))) {
+            throw new IllegalArgumentException("物料名称不能为空");
+        }
+        if (!StringUtils.hasText(firstText(body, "specModel", "specification"))) {
+            throw new IllegalArgumentException("规格型号不能为空");
+        }
+        if (!StringUtils.hasText(firstText(body, "supplier"))) {
+            throw new IllegalArgumentException("供应商不能为空");
+        }
+        Object stockQtyRaw = firstValue(body, "stockQty");
+        if (stockQtyRaw == null) {
+            throw new IllegalArgumentException("库存数量不能为空");
+        }
+        if (asLong(stockQtyRaw) < 0) {
+            throw new IllegalArgumentException("库存数量不能小于0");
+        }
     }
 
     private Map<String, Object> buildPartPayload(Map<String, Object> body, String id) {
@@ -594,9 +672,49 @@ public class MiniAppAdapterService {
         }
     }
 
+    private boolean shouldRetryWithoutOperationTime(Map<String, Object> payload, IllegalStateException ex) {
+        if (!payload.containsKey("operationTime")) {
+            return false;
+        }
+        String message = ex.getMessage();
+        if (!StringUtils.hasText(message)) {
+            return false;
+        }
+        String lower = message.toLowerCase(Locale.ROOT);
+        return lower.contains("operationtime") || lower.contains("params.operationtime");
+    }
+
+    private void overrideOperationTimeFromRequest(Map<String, Object> item, Map<String, Object> body) {
+        if (!hasAnyField(body, "operationTime")) {
+            return;
+        }
+        String id = asString(item.get("id"));
+        if (!StringUtils.hasText(id)) {
+            return;
+        }
+        String operationTime = firstText(body, "operationTime");
+        if (StringUtils.hasText(operationTime)) {
+            workingPlanOperationTimeStore.put(id, operationTime);
+            item.put("operationTime", operationTime);
+        } else {
+            workingPlanOperationTimeStore.remove(id);
+            item.put("operationTime", "");
+        }
+    }
+
     private Map<String, Object> mapWorkingPlan(JsonNode node) {
+        String id = node.path("id").asText("");
+        String operationTime = firstText(node, "operationTime");
+        if (StringUtils.hasText(id)) {
+            if (StringUtils.hasText(operationTime)) {
+                workingPlanOperationTimeStore.mergeFromXdm(id, operationTime);
+            } else {
+                operationTime = workingPlanOperationTimeStore.get(id);
+            }
+        }
+
         Map<String, Object> item = new LinkedHashMap<>();
-        item.put("id", node.path("id").asText(""));
+        item.put("id", id);
         item.put("code", firstText(node, "planCode", "code"));
         item.put("name", firstText(node, "planName", "name"));
         item.put("version", normalizeVersion(node.path("versionNo").asText()));
@@ -604,7 +722,7 @@ public class MiniAppAdapterService {
         item.put("description", firstText(node, "planDescription", "description"));
         item.put("operator", firstText(node, "operatorName", "operator"));
         item.put("equipment", firstText(node, "equipmentUsage", "equipment"));
-        item.put("operationTime", firstText(node, "operationTime"));
+        item.put("operationTime", operationTime);
         return item;
     }
 
@@ -1022,10 +1140,15 @@ public class MiniAppAdapterService {
         if (value instanceof Number number) {
             return number.longValue();
         }
+        String text = String.valueOf(value).trim();
         try {
-            return Long.parseLong(String.valueOf(value).trim());
+            return Long.parseLong(text);
         } catch (Exception ex) {
-            return 0L;
+            try {
+                return (long) Double.parseDouble(text);
+            } catch (Exception ignored) {
+                return 0L;
+            }
         }
     }
 
@@ -1036,10 +1159,15 @@ public class MiniAppAdapterService {
         if (value.isNumber()) {
             return value.asLong();
         }
+        String text = value.asText("0").trim();
         try {
-            return Long.parseLong(value.asText("0").trim());
+            return Long.parseLong(text);
         } catch (Exception ex) {
-            return 0L;
+            try {
+                return (long) Double.parseDouble(text);
+            } catch (Exception ignored) {
+                return 0L;
+            }
         }
     }
 

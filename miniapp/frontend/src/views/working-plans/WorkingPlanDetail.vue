@@ -29,6 +29,10 @@
             <label class="text-[10px] text-gray-500 block mb-1">操作人员</label>
             <p class="text-gray-400 text-sm">{{ detail.operator }}</p>
           </div>
+          <div>
+            <label class="text-[10px] text-gray-500 block mb-1">操作时间</label>
+            <p class="text-gray-400 text-sm">{{ detail.operationTime || '-' }}</p>
+          </div>
         </div>
       </div>
 
@@ -70,24 +74,10 @@ const loadData = async () => {
     detail.value = data
     const { data: procs } = await api.getProcesses(route.params.id)
     processes.value = procs
-  } catch (error) {
-    // 使用Mock数据
-    detail.value = {
-      code: 'WP-2023-001',
-      name: '中心轮零件加工',
-      version: 'V1.0',
-      product: '中心轮组件',
-      operator: '张工',
-      description: '中心轮零件的完整加工工艺流程，包含毛坯制造、粗加工、精加工、检测和入库五个关键工序。',
-      equipment: 'CNC加工中心、三坐标测量仪、磨床'
-    }
-    processes.value = [
-      { id: 1, num: '01', name: '毛坯制造', location: '铸造车间', status: 'active' },
-      { id: 2, num: '02', name: '粗加工', location: 'CNC-01 工位', status: 'pending' },
-      { id: 3, num: '03', name: '精加工', location: 'CNC-05 工位', status: 'pending' },
-      { id: 4, num: '04', name: '检测', location: 'CMM 三坐标', status: 'pending' },
-      { id: 5, num: '05', name: '入库', location: '成品仓', status: 'pending' }
-    ]
+  } catch {
+    detail.value = {}
+    processes.value = []
+    ElMessage.error('加载工艺路线详情失败')
   }
 }
 

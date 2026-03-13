@@ -16,6 +16,7 @@
         <el-table-column prop="version" label="版本号" width="120" />
         <el-table-column prop="product" label="所属产品" width="150" />
         <el-table-column prop="operator" label="操作人员" width="120" />
+        <el-table-column prop="operationTime" label="操作时间" width="180" />
         <el-table-column label="操作" width="280" fixed="right">
           <template #default="{ row }">
             <div class="flex gap-2 overflow-x-auto">
@@ -41,7 +42,7 @@ const list = ref([])
 const filteredList = computed(() => {
   if (!search.value) return list.value
   return list.value.filter(item =>
-    item.code.includes(search.value) || item.name.includes(search.value)
+    (item.code || '').includes(search.value) || (item.name || '').includes(search.value)
   )
 })
 
@@ -49,10 +50,9 @@ const loadData = async () => {
   try {
     const { data } = await api.getList()
     list.value = data
-  } catch (error) {
-    list.value = [
-      { id: 1, code: 'WP-2023-001', name: '中心轮零件加工', version: 'V1.0', product: '中心轮组件', operator: '张工' }
-    ]
+  } catch {
+    list.value = []
+    ElMessage.error('加载工艺路线列表失败')
   }
 }
 

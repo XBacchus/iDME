@@ -290,14 +290,20 @@
           "name": "获取工艺路线列表",
           "method": "GET",
           "path": "/api/working-plans",
+          "params": {
+            "keyword": "搜索关键词（工艺编号/工艺名称）"
+          },
           "response": [
             {
               "id": "工艺路线ID",
-              "planName": "工艺路线名称",
-              "partName": "关联物料",
+              "code": "工艺编号",
+              "name": "工艺名称",
               "version": "版本",
-              "status": "状态",
-              "createdAt": "创建时间"
+              "product": "所属产品",
+              "description": "工艺描述",
+              "operator": "操作人员",
+              "equipment": "设备使用情况",
+              "operationTime": "操作时间"
             }
           ]
         },
@@ -307,34 +313,66 @@
           "path": "/api/working-plans/{id}",
           "response": {
             "id": "工艺路线ID",
-            "planName": "工艺路线名称",
-            "partId": "关联物料ID",
+            "code": "工艺编号",
+            "name": "工艺名称",
             "version": "版本",
-            "procedures": [
-              {
-                "id": "工序ID",
-                "procedureName": "工序名称",
-                "equipmentId": "设备ID",
-                "equipmentName": "设备名称",
-                "standardTime": "标准工时"
-              }
-            ]
+            "product": "所属产品",
+            "description": "工艺描述",
+            "operator": "操作人员",
+            "equipment": "设备使用情况",
+            "operationTime": "操作时间"
           }
         },
         {
           "name": "创建工艺路线",
           "method": "POST",
-          "path": "/api/working-plans"
+          "path": "/api/working-plans",
+          "body": {
+            "code": "工艺编号（必填）",
+            "name": "工艺名称（必填）",
+            "operator": "操作人员（必填）",
+            "operationTime": "操作时间（必填，字符串）",
+            "equipment": "设备使用情况（必填）",
+            "product": "所属产品",
+            "version": "版本",
+            "description": "工艺描述"
+          },
+          "note": "后端会兼容 xDM-F 对 operationTime 的格式限制，并保证回显"
         },
         {
           "name": "更新工艺路线",
           "method": "PUT",
-          "path": "/api/working-plans/{id}"
+          "path": "/api/working-plans/{id}",
+          "body": {
+            "code": "工艺编号",
+            "name": "工艺名称",
+            "operator": "操作人员",
+            "operationTime": "操作时间（字符串）",
+            "equipment": "设备使用情况",
+            "product": "所属产品",
+            "version": "版本",
+            "description": "工艺描述"
+          }
         },
         {
           "name": "删除工艺路线",
           "method": "DELETE",
           "path": "/api/working-plans/{id}"
+        },
+        {
+          "name": "获取工艺流程",
+          "method": "GET",
+          "path": "/api/working-plans/{id}/processes"
+        },
+        {
+          "name": "更新工艺流程",
+          "method": "PUT",
+          "path": "/api/working-plans/{id}/processes"
+        },
+        {
+          "name": "追加工序到工艺路线",
+          "method": "POST",
+          "path": "/api/working-plans/{id}/procedures"
         }
       ]
     }

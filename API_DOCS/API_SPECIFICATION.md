@@ -599,59 +599,47 @@
 ### 6.1 获取工艺路线列表
 **接口**: `GET /api/working-plans`
 
-**请求参数**: keyword, page, size
+**请求参数**: `keyword`（可选，按工艺编号/工艺名称过滤）
 
 **响应示例**:
 ```json
 {
   "code": 200,
   "message": "success",
-  "data": {
-    "records": [
-      {
-        "id": 1,
-        "planName": "中心轮零件加工 V1.0",
-        "partId": 1,
-        "partName": "中心轮组件",
-        "status": "active",
-        "createdAt": "2024-01-01T10:00:00"
-      }
-    ],
-    "total": 10,
-    "size": 10,
-    "current": 1,
-    "pages": 1
-  }
+  "data": [
+    {
+      "id": "873975767468347392",
+      "code": "WP-2026-001",
+      "name": "中心轮零件加工",
+      "version": "1.0",
+      "product": "中心轮组件",
+      "description": "中心轮零件加工标准工艺",
+      "operator": "张工",
+      "equipment": "CNC-01, CMM-02",
+      "operationTime": "2026-03-13 10:00:00"
+    }
+  ]
 }
 ```
 
 ### 6.2 获取工艺路线详情
 **接口**: `GET /api/working-plans/{id}`
 
-**响应包含**: procedures 数组（关联的工序列表）
-
 **响应示例**:
 ```json
 {
   "code": 200,
   "message": "success",
   "data": {
-    "id": 1,
-    "planName": "中心轮零件加工 V1.0",
-    "partId": 1,
-    "partName": "中心轮组件",
-    "status": "active",
-    "procedures": [
-      {
-        "id": 1,
-        "name": "毛坯制造",
-        "order": 1,
-        "equipmentId": 1,
-        "equipmentName": "数控车床",
-        "duration": 120
-      }
-    ],
-    "createdAt": "2024-01-01T10:00:00"
+    "id": "873975767468347392",
+    "code": "WP-2026-001",
+    "name": "中心轮零件加工",
+    "version": "1.0",
+    "product": "中心轮组件",
+    "description": "中心轮零件加工标准工艺",
+    "operator": "张工",
+    "equipment": "CNC-01, CMM-02",
+    "operationTime": "2026-03-13 10:00:00"
   }
 }
 ```
@@ -659,19 +647,17 @@
 ### 6.3 创建工艺路线
 **接口**: `POST /api/working-plans`
 
-**请求体**:
+**请求体示例**:
 ```json
 {
-  "planName": "中心轮零件加工 V1.0",
-  "partId": 1,
-  "status": "active",
-  "procedures": [
-    {
-      "procedureId": 1,
-      "equipmentId": 1,
-      "duration": 120
-    }
-  ]
+  "code": "WP-2026-001",
+  "name": "中心轮零件加工",
+  "version": "1.0",
+  "product": "中心轮组件",
+  "description": "中心轮零件加工标准工艺",
+  "operator": "张工",
+  "equipment": "CNC-01, CMM-02",
+  "operationTime": "2026-03-13 10:00:00"
 }
 ```
 
@@ -681,10 +667,15 @@
   "code": 200,
   "message": "success",
   "data": {
-    "id": 1,
-    "planName": "中心轮零件加工 V1.0",
-    "partId": 1,
-    "status": "active"
+    "id": "873975767468347392",
+    "code": "WP-2026-001",
+    "name": "中心轮零件加工",
+    "version": "1.0",
+    "product": "中心轮组件",
+    "description": "中心轮零件加工标准工艺",
+    "operator": "张工",
+    "equipment": "CNC-01, CMM-02",
+    "operationTime": "2026-03-13 10:00:00"
   }
 }
 ```
@@ -692,7 +683,7 @@
 ### 6.4 更新工艺路线
 **接口**: `PUT /api/working-plans/{id}`
 
-**请求体**: 同创建工艺路线
+**请求体**: 同创建接口，可按需传入部分字段。
 
 **响应示例**:
 ```json
@@ -700,10 +691,15 @@
   "code": 200,
   "message": "success",
   "data": {
-    "id": 1,
-    "planName": "中心轮零件加工 V1.0",
-    "partId": 1,
-    "status": "active"
+    "id": "873975767468347392",
+    "code": "WP-2026-001",
+    "name": "中心轮零件加工-已更新",
+    "version": "1.1",
+    "product": "中心轮组件",
+    "description": "中心轮零件加工标准工艺-更新",
+    "operator": "李工",
+    "equipment": "CNC-03, CMM-02",
+    "operationTime": "2026-03-14 09:30:00"
   }
 }
 ```
@@ -719,6 +715,15 @@
   "data": null
 }
 ```
+
+### 6.6 获取工艺流程
+**接口**: `GET /api/working-plans/{id}/processes`
+
+### 6.7 更新工艺流程
+**接口**: `PUT /api/working-plans/{id}/processes`
+
+### 6.8 追加工序到工艺路线
+**接口**: `POST /api/working-plans/{id}/procedures`
 
 ---
 

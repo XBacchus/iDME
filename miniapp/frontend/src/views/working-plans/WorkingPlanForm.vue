@@ -7,13 +7,13 @@
     <div class="floating-island p-6 max-w-3xl">
       <el-form :model="form" label-width="100px" label-position="left">
         <el-form-item label="工艺编号">
-          <el-input v-model="form.code" placeholder="如: WP-2024-001" />
+          <el-input v-model="form.code" placeholder="例如 WP-2024-001" />
         </el-form-item>
         <el-form-item label="工艺名称">
-          <el-input v-model="form.name" placeholder="如: 中心轮零件加工" />
+          <el-input v-model="form.name" placeholder="例如 中心轴零件加工" />
         </el-form-item>
         <el-form-item label="版本号">
-          <el-input v-model="form.version" placeholder="如: 1.0" />
+          <el-input v-model="form.version" placeholder="例如 1.0" />
         </el-form-item>
         <el-form-item label="所属产品">
           <el-input v-model="form.product" placeholder="产品名称" />
@@ -26,6 +26,9 @@
         </el-form-item>
         <el-form-item label="设备使用">
           <el-input v-model="form.equipment" placeholder="设备列表" />
+        </el-form-item>
+        <el-form-item label="操作时间">
+          <el-input v-model="form.operationTime" placeholder="例如 2026-03-13 10:00:00" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSubmit">保存</el-button>
@@ -52,7 +55,8 @@ const form = ref({
   product: '',
   description: '',
   operator: '',
-  equipment: ''
+  equipment: '',
+  operationTime: ''
 })
 
 const handleSubmit = async () => {
@@ -74,7 +78,11 @@ onMounted(async () => {
   if (route.params.id && route.path.includes('edit')) {
     isEdit.value = true
     const { data } = await api.getById(route.params.id)
-    form.value = data
+    form.value = {
+      ...form.value,
+      ...data,
+      operationTime: data.operationTime || ''
+    }
   }
 })
 </script>

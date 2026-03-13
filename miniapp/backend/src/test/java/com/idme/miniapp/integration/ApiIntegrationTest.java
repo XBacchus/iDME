@@ -3,6 +3,7 @@ package com.idme.miniapp.integration;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idme.miniapp.service.EquipmentProductionDateStore;
+import com.idme.miniapp.service.WorkingPlanOperationTimeStore;
 import com.idme.miniapp.service.XdmGatewayService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,10 +38,14 @@ class ApiIntegrationTest {
     @MockBean
     private EquipmentProductionDateStore equipmentProductionDateStore;
 
+    @MockBean
+    private WorkingPlanOperationTimeStore workingPlanOperationTimeStore;
+
     @BeforeEach
     void setUp() {
-        Mockito.reset(xdmGatewayService, equipmentProductionDateStore);
+        Mockito.reset(xdmGatewayService, equipmentProductionDateStore, workingPlanOperationTimeStore);
         Mockito.when(equipmentProductionDateStore.get(Mockito.anyString())).thenReturn("");
+        Mockito.when(workingPlanOperationTimeStore.get(Mockito.anyString())).thenReturn("");
     }
 
     @Test

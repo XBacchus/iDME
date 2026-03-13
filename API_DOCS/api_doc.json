@@ -1,8 +1,8 @@
-﻿{
+{
   "openapi": "3.0.3",
   "info": {
     "title": "iDME MiniApp API",
-    "version": "0.2.1"
+    "version": "0.2.2"
   },
   "paths": {
     "/api/parts": {

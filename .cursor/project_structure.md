@@ -26,3 +26,6 @@
 - 2026-03-12：新增后端适配层与 REST 控制器（`dto/ApiResponse`、`service/XdmRuntimeService`、`service/MiniAppAdapterService`、`controller/PartController`、`controller/EquipmentController`、`controller/WorkingPlanController`、`controller/ProcedureController`、`controller/GlobalExceptionHandler`），并新增后端单元/集成测试与 API 文档快照同步。
 - 2026-03-13：设备模块字段口径修复（前端 `EquipmentList.vue`、`EquipmentForm.vue`），新增后端持久化组件 `service/EquipmentProductionDateStore`，运行时新增 `miniapp/backend/data/equipment-production-dates.json` 作为 `productionDate` 回显缓存文件。
 - 2026-03-13：新增赛题建模清单文档 `doc/四个核心模型字段清单.md`，用于固定 Equipment/Part/WorkingProcedure/WorkingPlan 字段口径。
+- 2026-03-13：物料模块补齐必需字段校验（前端 `PartForm.vue`、后端 `MiniAppAdapterService.java`），并修复 Part 更新时字段合并逻辑，避免部分更新导致必填字段被误清空。
+- 2026-03-13：更新根目录 `start.bat`，新增 miniapp 后端(8080)与前端(5173)一键启动及 `-force` 停止流程。
+- 2026-03-13：工艺路线模块补齐 operationTime 前后端口径：前端 WorkingPlanForm.vue、WorkingPlanList.vue、WorkingPlanDetail.vue 新增字段展示；后端新增 service/WorkingPlanOperationTimeStore.java，并在 MiniAppAdapterService.java 增加 operationTime 兼容重试与缓存回写逻辑。
