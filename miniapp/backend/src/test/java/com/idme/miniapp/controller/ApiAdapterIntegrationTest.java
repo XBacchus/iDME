@@ -181,6 +181,69 @@ class ApiAdapterIntegrationTest {
         Assertions.assertTrue(values.contains("sparePartsInfo"));
     }
 
+    @Test
+    void shouldRejectCreatePartWhenRequiredFieldsMissing() throws Exception {
+        String body = """
+            {
+              "partNo": "P-REQ-001",
+              "partName": "测试物料",
+              "stockQty": 5
+            }
+            """;
+
+        mockMvc.perform(post("/api/parts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value(400))
+            .andExpect(jsonPath("$.message").value("规格型号不能为空"));
+    }
+
+    @Test
+    void shouldPreserveStockQtyWhenPartUpdatePayloadIsPartial() throws Exception {
+        JsonNode getResponse = success(List.of(Map.of(
+            "id", "P1001",
+            "partCode", "P-1001",
+            "partName", "中心轮组件",
+            "specModel", "CL-100",
+            "stockQty", 10,
+            "supplier", "供应商A",
+            "versionNo", "V1.0"
+        )));
+        JsonNode updateResponse = success(List.of(Map.of(
+            "id", "P1001",
+            "partCode", "P-1001",
+            "partName", "中心轮组件",
+            "specModel", "CL-100",
+            "stockQty", 10,
+            "supplier", "供应商B",
+            "versionNo", "V1.0"
+        )));
+        Mockito.when(xdmGatewayService.proxy(Mockito.eq("/dynamic/api/Part/get"), Mockito.eq(HttpMethod.POST), Mockito.any()))
+            .thenReturn(getResponse);
+        Mockito.when(xdmGatewayService.proxy(Mockito.eq("/dynamic/api/Part/update"), Mockito.eq(HttpMethod.POST), Mockito.any()))
+            .thenReturn(updateResponse);
+
+        String body = """
+            {
+              "supplier": "供应商B"
+            }
+            """;
+
+        mockMvc.perform(put("/api/parts/P1001")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value(200))
+            .andExpect(jsonPath("$.data.stockQty").value(10))
+            .andExpect(jsonPath("$.data.supplier").value("供应商B"));
+
+        ArgumentCaptor<JsonNode> captor = ArgumentCaptor.forClass(JsonNode.class);
+        Mockito.verify(xdmGatewayService, Mockito.times(1))
+            .proxy(Mockito.eq("/dynamic/api/Part/update"), Mockito.eq(HttpMethod.POST), captor.capture());
+        Assertions.assertEquals(10L, captor.getValue().path("params").path("stockQty").asLong());
+    }
+
     private JsonNode success(Object data) {
         return objectMapper.valueToTree(Map.of(
             "result", "SUCCESS",

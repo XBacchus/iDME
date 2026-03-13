@@ -41,10 +41,18 @@
           "name": "创建物料",
           "method": "POST",
           "path": "/api/parts",
+          "requiredFields": [
+            "partNo",
+            "partName",
+            "specification",
+            "stockQty",
+            "supplier"
+          ],
           "body": {
             "partNo": "物料编号",
             "partName": "物料名称",
             "specification": "规格型号",
+            "stockQty": "库存数量（>=0）",
             "categoryId": "分类ID",
             "supplier": "供应商"
           }
@@ -52,7 +60,16 @@
         {
           "name": "更新物料",
           "method": "PUT",
-          "path": "/api/parts/{id}"
+          "path": "/api/parts/{id}",
+          "body": {
+            "partNo": "物料编号（可选，部分更新）",
+            "partName": "物料名称（可选，部分更新）",
+            "specification": "规格型号（可选，部分更新）",
+            "stockQty": "库存数量（可选，部分更新）",
+            "categoryId": "分类ID（可选，部分更新）",
+            "supplier": "供应商（可选，部分更新）"
+          },
+          "note": "后端会合并已有数据并执行必填校验，最终实体需满足必填字段约束"
         },
         {
           "name": "删除物料",

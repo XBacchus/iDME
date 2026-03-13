@@ -29,3 +29,4 @@
 - 2026-03-13：物料模块补齐必需字段校验（前端 `PartForm.vue`、后端 `MiniAppAdapterService.java`），并修复 Part 更新时字段合并逻辑，避免部分更新导致必填字段被误清空。
 - 2026-03-13：更新根目录 `start.bat`，新增 miniapp 后端(8080)与前端(5173)一键启动及 `-force` 停止流程。
 - 2026-03-13：工艺路线模块补齐 operationTime 前后端口径：前端 WorkingPlanForm.vue、WorkingPlanList.vue、WorkingPlanDetail.vue 新增字段展示；后端新增 service/WorkingPlanOperationTimeStore.java，并在 MiniAppAdapterService.java 增加 operationTime 兼容重试与缓存回写逻辑。
+- 2026-03-13：同步 Part 契约文档到 `API_DOCS`（必填字段与更新语义）并更新验收清单 `miniapp/backend/tests/TEST_ACCEPTANCE_CHECKLIST.md`。

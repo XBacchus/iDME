@@ -146,6 +146,15 @@
 
 **接口**: `POST /api/parts`
 
+**必填字段**:
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| partNo | string | 物料编号 |
+| partName | string | 物料名称 |
+| specification | string | 规格型号 |
+| stockQty | number | 库存数量（>=0） |
+| supplier | string | 供应商 |
+
 **请求体**:
 ```json
 {
@@ -176,11 +185,29 @@
 }
 ```
 
+**校验失败示例**:
+```json
+{
+  "code": 400,
+  "message": "规格型号不能为空",
+  "data": null
+}
+```
+
 ---
 
 ### 1.4 更新物料
 
 **接口**: `PUT /api/parts/{id}`
+
+**请求体（支持部分更新）**:
+```json
+{
+  "supplier": "供应商B"
+}
+```
+
+> 说明：后端会先合并已有物料数据后再校验，最终仍需满足物料必填字段约束。
 
 **响应示例**:
 ```json

@@ -61,6 +61,9 @@ const form = reactive({
 const rules = {
   partNo: [{ required: true, message: '请输入物料编号', trigger: 'blur' }],
   partName: [{ required: true, message: '请输入物料名称', trigger: 'blur' }],
+  specification: [{ required: true, message: '请输入规格型号', trigger: 'blur' }],
+  stockQty: [{ required: true, message: '请输入库存数量', trigger: 'change' }],
+  supplier: [{ required: true, message: '请输入供应商', trigger: 'blur' }],
   categoryId: [{ required: true, message: '请选择分类', trigger: 'change' }]
 }
 
