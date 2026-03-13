@@ -1,21 +1,36 @@
 <template>
   <div class="p-8">
     <div class="floating-island">
-      <div class="flex justify-between items-center mb-6">
+      <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-white">设备管理</h2>
         <el-button type="primary" size="default" @click="handleAdd">新增设备</el-button>
       </div>
 
+      <div class="mb-6 flex items-center gap-3">
+        <el-input
+          v-model="query.keyword"
+          placeholder="按设备编码/设备名称/厂商搜索"
+          clearable
+          style="max-width: 360px"
+          @keyup.enter="handleSearch"
+        />
+        <el-button type="primary" @click="handleSearch">查询</el-button>
+        <el-button @click="handleReset">重置</el-button>
+      </div>
+
       <el-table :data="tableData" style="width: 100%" class="dark-table" @row-click="handleEdit">
-        <el-table-column prop="code" label="设备编码" width="120" />
-        <el-table-column prop="name" label="设备名称" width="150" />
+        <el-table-column prop="equipmentCode" label="设备编码" width="140" />
+        <el-table-column prop="equipmentName" label="设备名称" width="160" />
         <el-table-column prop="manufacturer" label="生产厂家" width="120" />
         <el-table-column prop="brand" label="品牌" width="100" />
-        <el-table-column prop="model" label="规格型号" width="120" />
+        <el-table-column prop="specModel" label="规格型号" width="130" />
         <el-table-column prop="supplier" label="供应商" width="120" />
-        <el-table-column prop="productionDate" label="生产日期" width="110" />
-        <el-table-column prop="serviceLife" label="使用年限" width="90" />
+        <el-table-column prop="productionDate" label="生产日期" width="130" />
+        <el-table-column prop="serviceLifeYears" label="使用年限" width="100" />
+        <el-table-column prop="depreciationMethod" label="折旧方式" width="140" show-overflow-tooltip />
         <el-table-column prop="location" label="位置" width="120" />
+        <el-table-column prop="technicalParams" label="技术参数信息" min-width="180" show-overflow-tooltip />
+        <el-table-column prop="sparePartsInfo" label="备品备件信息" min-width="180" show-overflow-tooltip />
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
             <div class="flex gap-2 overflow-x-auto">
@@ -57,22 +72,41 @@ import { getEquipments, deleteEquipment } from '@/api/equipments'
 import EquipmentForm from './EquipmentForm.vue'
 
 const tableData = ref([])
+const query = ref({
+  keyword: ''
+})
 const dialogVisible = ref(false)
 const currentRow = ref(null)
 const dialogTitle = ref('')
 const pagination = ref({ page: 1, size: 20, total: 0 })
 
+const normalizeEquipment = (item = {}) => ({
+  id: item.id || '',
+  equipmentCode: item.equipmentCode || item.code || '',
+  equipmentName: item.equipmentName || item.name || '',
+  manufacturer: item.manufacturer || '',
+  brand: item.brand || '',
+  specModel: item.specModel || item.model || '',
+  supplier: item.supplier || '',
+  productionDate: item.productionDate || '',
+  serviceLifeYears: Number(item.serviceLifeYears ?? item.serviceLife ?? 0),
+  depreciationMethod: item.depreciationMethod || item.depreciation || '',
+  location: item.location || '',
+  technicalParams: item.technicalParams || '',
+  sparePartsInfo: item.sparePartsInfo || item.spareParts || '',
+  status: item.status || 'idle'
+})
+
 const loadData = async () => {
   try {
-    const res = await getEquipments()
-    tableData.value = res.data || res
+    const keyword = query.value.keyword?.trim()
+    const res = await getEquipments(keyword ? { keyword } : undefined)
+    tableData.value = (res.data || res || []).map(normalizeEquipment)
     pagination.value.total = tableData.value.length
-  } catch (error) {
-    tableData.value = [
-      { id: 1, code: 'EQ-001', name: 'CNC加工中心', manufacturer: '德马吉', brand: 'DMG', model: 'DMU-50', supplier: '德国机床', productionDate: '2022-05-10', serviceLife: 10, location: '车间A-01' },
-      { id: 2, code: 'EQ-002', name: '三坐标测量仪', manufacturer: '海克斯康', brand: 'Hexagon', model: 'Global-S', supplier: '精密仪器', productionDate: '2021-08-15', serviceLife: 8, location: '检测室' }
-    ]
-    pagination.value.total = tableData.value.length
+  } catch {
+    tableData.value = []
+    pagination.value.total = 0
+    ElMessage.error('加载设备列表失败')
   }
 }
 
@@ -82,8 +116,17 @@ const handleAdd = () => {
   dialogVisible.value = true
 }
 
+const handleSearch = () => {
+  loadData()
+}
+
+const handleReset = () => {
+  query.value.keyword = ''
+  loadData()
+}
+
 const handleEdit = (row) => {
-  currentRow.value = { ...row }
+  currentRow.value = normalizeEquipment(row)
   dialogTitle.value = '编辑设备'
   dialogVisible.value = true
 }

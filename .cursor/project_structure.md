@@ -3,6 +3,7 @@
 ## 顶层目录
 - `miniapp/backend`: Spring Boot 后端（JDK17/Maven）
 - `miniapp/frontend`: Vue 前端（Node.js/Vite）
+- `doc`: 赛题资料、说明文档与分析沉淀
 - `API_DOCS`: API 需求与文档闭环
 - `_verify`: 运行态校验与 OpenAPI 快照产物
 - `.cursor/rules`: Cursor 规则集
@@ -22,3 +23,6 @@
 
 ## 变更记录
 - 2026-03-09：初始化协作规则体系（AGENTS、CLAUDE、.cursor/rules、.memories、API_DOCS、git hooks、验收清单）。
+- 2026-03-12：新增后端适配层与 REST 控制器（`dto/ApiResponse`、`service/XdmRuntimeService`、`service/MiniAppAdapterService`、`controller/PartController`、`controller/EquipmentController`、`controller/WorkingPlanController`、`controller/ProcedureController`、`controller/GlobalExceptionHandler`），并新增后端单元/集成测试与 API 文档快照同步。
+- 2026-03-13：设备模块字段口径修复（前端 `EquipmentList.vue`、`EquipmentForm.vue`），新增后端持久化组件 `service/EquipmentProductionDateStore`，运行时新增 `miniapp/backend/data/equipment-production-dates.json` 作为 `productionDate` 回显缓存文件。
+- 2026-03-13：新增赛题建模清单文档 `doc/四个核心模型字段清单.md`，用于固定 Equipment/Part/WorkingProcedure/WorkingPlan 字段口径。

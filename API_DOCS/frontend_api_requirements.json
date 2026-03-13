@@ -186,24 +186,32 @@
           "method": "GET",
           "path": "/api/equipments",
           "params": {
-            "keyword": "搜索关键词",
-            "page": "页码",
-            "size": "每页数量"
+            "keyword": "搜索关键词（设备编码/名称/厂商/品牌/型号/供应商/位置）"
           },
-          "response": {
-            "records": [
-              {
-                "id": "设备ID",
-                "equipmentNo": "设备编号",
-                "equipmentName": "设备名称",
-                "model": "型号",
-                "manufacturer": "制造商",
-                "status": "状态(running/idle/maintenance/fault)",
-                "location": "位置"
-              }
-            ],
-            "total": "总数"
-          }
+          "response": [
+            {
+              "id": "设备ID",
+              "equipmentCode": "设备编码",
+              "equipmentName": "设备名称",
+              "manufacturer": "生产厂家",
+              "brand": "品牌",
+              "specModel": "规格型号",
+              "supplier": "供应商",
+              "productionDate": "生产日期（字符串）",
+              "serviceLifeYears": "使用年限（整数）",
+              "depreciationMethod": "折旧方式",
+              "location": "位置",
+              "technicalParams": "技术参数信息",
+              "sparePartsInfo": "备品备件信息",
+              "status": "状态",
+              "code": "兼容字段=equipmentCode",
+              "name": "兼容字段=equipmentName",
+              "model": "兼容字段=specModel",
+              "serviceLife": "兼容字段=serviceLifeYears",
+              "depreciation": "兼容字段=depreciationMethod",
+              "spareParts": "兼容字段=sparePartsInfo"
+            }
+          ]
         },
         {
           "name": "获取设备详情",
@@ -213,12 +221,40 @@
         {
           "name": "创建设备",
           "method": "POST",
-          "path": "/api/equipments"
+          "path": "/api/equipments",
+          "body": {
+            "equipmentCode": "设备编码（必填）",
+            "equipmentName": "设备名称（必填）",
+            "manufacturer": "生产厂家（必填）",
+            "brand": "品牌",
+            "specModel": "规格型号",
+            "supplier": "供应商",
+            "productionDate": "生产日期（可选；xDM拒绝时后端会降级并持久化回显）",
+            "serviceLifeYears": "使用年限",
+            "depreciationMethod": "折旧方式",
+            "location": "位置",
+            "technicalParams": "技术参数信息",
+            "sparePartsInfo": "备品备件信息"
+          }
         },
         {
           "name": "更新设备",
           "method": "PUT",
-          "path": "/api/equipments/{id}"
+          "path": "/api/equipments/{id}",
+          "body": {
+            "equipmentCode": "设备编码（必填）",
+            "equipmentName": "设备名称（必填）",
+            "manufacturer": "生产厂家（必填）",
+            "brand": "品牌",
+            "specModel": "规格型号",
+            "supplier": "供应商",
+            "productionDate": "生产日期（可选；xDM拒绝时后端会降级并持久化回显）",
+            "serviceLifeYears": "使用年限",
+            "depreciationMethod": "折旧方式",
+            "location": "位置",
+            "technicalParams": "技术参数信息（支持清空）",
+            "sparePartsInfo": "备品备件信息（支持清空）"
+          }
         },
         {
           "name": "删除设备",

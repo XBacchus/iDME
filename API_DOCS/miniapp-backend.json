@@ -2,7 +2,164 @@
   "openapi": "3.0.3",
   "info": {
     "title": "miniapp-backend API",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
-  "paths": {}
+  "paths": {
+    "/api/equipments": {
+      "get": {
+        "summary": "获取设备列表",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "按设备编码/名称/厂商/品牌/规格/供应商/位置搜索"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "创建设备",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EquipmentWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/equipments/{id}": {
+      "get": {
+        "summary": "获取设备详情",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "更新设备",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EquipmentWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "删除设备",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EquipmentWriteRequest": {
+        "type": "object",
+        "required": [
+          "equipmentCode",
+          "equipmentName",
+          "manufacturer"
+        ],
+        "properties": {
+          "equipmentCode": {
+            "type": "string"
+          },
+          "equipmentName": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "specModel": {
+            "type": "string"
+          },
+          "supplier": {
+            "type": "string"
+          },
+          "productionDate": {
+            "type": "string",
+            "description": "可选；后端在xDM拒绝该值时会自动降级并持久化回显"
+          },
+          "serviceLifeYears": {
+            "type": "integer"
+          },
+          "depreciationMethod": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "technicalParams": {
+            "type": "string"
+          },
+          "sparePartsInfo": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
 }

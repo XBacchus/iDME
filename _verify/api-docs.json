@@ -1,0 +1,75 @@
+﻿{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "iDME MiniApp API",
+    "version": "0.2.1"
+  },
+  "paths": {
+    "/api/parts": {
+      "get": {},
+      "post": {}
+    },
+    "/api/parts/{id}": {
+      "get": {},
+      "put": {},
+      "delete": {}
+    },
+    "/api/parts/{id}/bom": {
+      "get": {},
+      "put": {},
+      "post": {}
+    },
+    "/api/parts/categories": {
+      "get": {},
+      "post": {}
+    },
+    "/api/parts/categories/{id}": {
+      "put": {},
+      "delete": {}
+    },
+    "/api/parts/{id}/versions": {
+      "get": {},
+      "post": {}
+    },
+    "/api/parts/{id}/versions/compare": {
+      "get": {}
+    },
+    "/api/parts/{id}/versions/{version}/rollback": {
+      "post": {}
+    },
+    "/api/parts/{id}/versions/{version}/status": {
+      "put": {}
+    },
+    "/api/equipments": {
+      "get": {},
+      "post": {}
+    },
+    "/api/equipments/{id}": {
+      "get": {},
+      "put": {},
+      "delete": {}
+    },
+    "/api/working-plans": {
+      "get": {},
+      "post": {}
+    },
+    "/api/working-plans/{id}": {
+      "get": {},
+      "put": {},
+      "delete": {}
+    },
+    "/api/working-plans/{id}/processes": {
+      "get": {},
+      "put": {}
+    },
+    "/api/working-plans/{id}/procedures": {
+      "post": {}
+    },
+    "/api/procedures": {
+      "get": {}
+    },
+    "/api/procedures/{id}": {
+      "put": {}
+    }
+  }
+}
