@@ -308,8 +308,27 @@ input, select, textarea {
   border-color: rgba(255, 255, 255, 0.05) !important;
 }
 
+/* 修复固定列拖动时穿模：提升层级并提供不透明底色 */
+.el-table th.el-table-fixed-column--left,
+.el-table th.el-table-fixed-column--right,
+.el-table td.el-table-fixed-column--left,
+.el-table td.el-table-fixed-column--right {
+  z-index: 25 !important;
+  background-color: #2C2C2E !important;
+}
+
+.el-table .el-table__fixed-right-patch {
+  z-index: 24 !important;
+  background-color: #2C2C2E !important;
+}
+
 .el-table__body tr:hover > td {
   background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.el-table__body tr:hover > td.el-table-fixed-column--left,
+.el-table__body tr:hover > td.el-table-fixed-column--right {
+  background-color: #36363a !important;
 }
 
 .el-pagination {
