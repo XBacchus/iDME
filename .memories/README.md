@@ -62,3 +62,4 @@
 ## 最近更新
 
 - 2026-03-09：初始化 iDME 记忆文档根说明。
+- 2026-03-13：制造域后端按 PRD 全量重构（Part/Equipment/Procedure/WorkingPlan 分层、统一响应 `{code,message,data}`），并完成 API 文档与验收清单闭环同步。

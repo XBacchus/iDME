@@ -28,3 +28,20 @@
 - 测试文件：`src/test/java/com/idme/miniapp/controller/ManufacturingApiControllerTest.java`
 - 测试命令：`mvn -Dtest=ManufacturingApiControllerTest test`
 - 结果：10/10 通过
+
+## 2026-03-13 制造域 PRD 全量接口验收
+1. 设计输入
+- 调用 `parts` 全量接口：`POST/GET/GET{id}/PUT{id}/DELETE{id}`、`categories`、`bom`、`versions`、`versions/compare`
+- 调用 `equipments` CRUD 全量接口
+- 调用 `procedures` 查询接口
+- 调用 `working-plans` CRUD 全量接口
+2. 设计预期
+- Controller 按领域拆分：`Part/Equipment/Procedure/WorkingPlan`
+- 统一响应格式：`{ code, message, data }`
+- 所有制造域数据操作通过 `XdmGatewayService.proxy()` 访问 xDM-F 动态 API
+- API 文档与 `_verify/api-docs.json` 快照保持一致
+3. 输出对比
+- 状态：✅
+- 测试文件：`src/test/java/com/idme/miniapp/controller/ManufacturingControllersTest.java`
+- 测试命令：`mvn test`
+- 结果：15/15 通过

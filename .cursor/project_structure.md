@@ -26,3 +26,4 @@
 - 2026-03-09：新增 `doc/4天需求拆分` 目录，包含 Day1~Day4 需求文档、分发总览和成员分工模板。
 - 2026-03-09：补充 Day1~Day4 每日验收清单文档，支持按天勾检、状态标记和测试文件映射。
 - 2026-03-11：新增 `ManufacturingApiController.java` 与 `ManufacturingApiControllerTest.java`，封装制造域 API（parts/equipments/working-plans）并通过网关代理。
+- 2026-03-13：制造域后端按 PRD 重构为分层结构，新增 `Part/Equipment/Procedure/WorkingPlan` 四组 Controller+Service、统一响应与全局异常处理；删除旧聚合控制器与旧测试并替换为全量接口测试。
