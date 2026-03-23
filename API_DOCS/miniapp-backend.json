@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "miniapp-backend API",
-    "version": "0.1.2"
+    "version": "0.2.4"
   },
   "paths": {
     "/api/equipments": {
@@ -272,6 +272,46 @@
           }
         }
       }
+    },
+    "/api/procedures": {
+      "get": {
+        "summary": "获取工序列表",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/procedures/{id}": {
+      "put": {
+        "summary": "更新工序",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcedureWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -357,6 +397,43 @@
           "description": {
             "type": "string",
             "description": "工艺描述"
+          }
+        }
+      },
+      "ProcedureWriteRequest": {
+        "type": "object",
+        "required": [
+          "procedureCode",
+          "procedureName",
+          "productionStep",
+          "operatorName",
+          "startTime",
+          "endTime"
+        ],
+        "properties": {
+          "procedureCode": {
+            "type": "string",
+            "description": "工序编号"
+          },
+          "procedureName": {
+            "type": "string",
+            "description": "工序名称"
+          },
+          "productionStep": {
+            "type": "string",
+            "description": "生产步骤"
+          },
+          "operatorName": {
+            "type": "string",
+            "description": "操作人员"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "开始时间，支持 yyyy-MM-dd HH:mm:ss；后端会自动归一化为 xDM 可接受格式"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "结束时间，支持 yyyy-MM-dd HH:mm:ss；后端会自动归一化为 xDM 可接受格式"
           }
         }
       }

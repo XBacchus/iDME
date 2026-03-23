@@ -10,10 +10,32 @@
       </div>
 
       <div class="flex gap-4 mb-6">
-        <el-input v-model="searchForm.keyword" placeholder="搜索物料编号/名称" clearable class="w-64" size="small" @input="handleSearch" />
-        <el-select v-model="searchForm.categoryId" placeholder="选择分类" clearable class="w-48" size="small" @change="loadData">
-          <el-option v-for="cat in categories" :key="cat.id" :label="cat.name" :value="cat.id" />
-        </el-select>
+        <el-input
+          v-model="searchForm.keyword"
+          placeholder="搜索物料编号/名称"
+          clearable
+          class="w-64"
+          size="small"
+          @input="handleSearch"
+        />
+        <el-tree-select
+          v-model="searchForm.categoryId"
+          :data="categories"
+          :props="categoryNodeProps"
+          node-key="id"
+          check-strictly
+          clearable
+          filterable
+          :default-expanded-keys="expandedKeys"
+          :loading="categoryLoading"
+          placeholder="选择分类"
+          class="w-56"
+          size="small"
+          @change="handleCategoryChange"
+          @node-expand="handleCategoryExpand"
+          @node-collapse="handleCategoryCollapse"
+        />
+        <el-button v-if="categoryLoadFailed" link size="small" @click="loadCategories">重试分类加载</el-button>
       </div>
 
       <el-table :data="tableData" style="width: 100%" @row-click="handleRowClick">
@@ -58,44 +80,145 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getPartList, deletePart, getCategoryTree } from '@/api/parts'
 
+const CATEGORY_FILTER_CACHE_KEY = 'parts:list:category-filter:v1'
+
 const router = useRouter()
 const tableData = ref([])
 const categories = ref([])
+const expandedKeys = ref([])
+const categoryDescendantMap = ref(new Map())
+const categoryLoading = ref(false)
+const categoryLoadFailed = ref(false)
 const searchForm = reactive({ keyword: '', categoryId: null })
 const pagination = reactive({ page: 1, size: 20, total: 0 })
+const categoryNodeProps = { label: 'name', value: 'id', children: 'children' }
 let searchTimer = null
+
+const normalizeCategoryTree = (nodes) => {
+  if (!Array.isArray(nodes)) {
+    return []
+  }
+  return nodes.map(node => ({
+    ...node,
+    id: String(node.id),
+    children: normalizeCategoryTree(node.children || [])
+  }))
+}
+
+const collectDescendantIds = (node) => {
+  const ids = [String(node.id)]
+  for (const child of node.children || []) {
+    ids.push(...collectDescendantIds(child))
+  }
+  return ids
+}
+
+const buildCategoryDescendantMap = (treeNodes) => {
+  const map = new Map()
+  const walk = (nodes) => {
+    for (const node of nodes) {
+      map.set(String(node.id), collectDescendantIds(node))
+      walk(node.children || [])
+    }
+  }
+  walk(treeNodes)
+  return map
+}
+
+const persistCategoryFilterState = () => {
+  const payload = {
+    categoryId: searchForm.categoryId ? String(searchForm.categoryId) : null,
+    expandedKeys: expandedKeys.value
+  }
+  sessionStorage.setItem(CATEGORY_FILTER_CACHE_KEY, JSON.stringify(payload))
+}
+
+const restoreCategoryFilterState = () => {
+  const raw = sessionStorage.getItem(CATEGORY_FILTER_CACHE_KEY)
+  if (!raw) {
+    return
+  }
+  try {
+    const parsed = JSON.parse(raw)
+    searchForm.categoryId = parsed.categoryId ? String(parsed.categoryId) : null
+    expandedKeys.value = Array.isArray(parsed.expandedKeys) ? parsed.expandedKeys.map(id => String(id)) : []
+  } catch {
+    searchForm.categoryId = null
+    expandedKeys.value = []
+  }
+}
 
 const loadData = async () => {
   try {
-    const { data } = await getPartList({ ...searchForm, page: pagination.page, size: pagination.size })
+    const selectedCategoryId = searchForm.categoryId ? String(searchForm.categoryId) : ''
+    const selectedCategoryIds = selectedCategoryId
+      ? (categoryDescendantMap.value.get(selectedCategoryId) || [selectedCategoryId])
+      : []
+
+    const { data } = await getPartList({
+      keyword: searchForm.keyword,
+      categoryId: selectedCategoryId || undefined,
+      categoryIds: selectedCategoryIds.length ? selectedCategoryIds.join(',') : undefined,
+      page: pagination.page,
+      size: pagination.size
+    })
     tableData.value = data.records
     pagination.total = data.total
-  } catch (error) {
-    // 使用Mock数据
-    tableData.value = [
-      { id: 1, partNo: 'MTR-2023-001', partName: '中心轮轴承单元', specification: 'SKF-6205-2RS', stockQty: 1240, supplier: 'SKF Group', categoryName: '轴承', version: 'V1.0' },
-      { id: 2, partNo: 'MTR-2023-042', partName: '精密硬化齿轮', specification: 'MOD-2.5-42T', stockQty: 15, supplier: '德国精工部件', categoryName: '齿轮', version: 'V1.0' }
-    ]
-    pagination.total = 2
+  } catch {
+    tableData.value = []
+    pagination.total = 0
+    ElMessage.error('加载物料列表失败')
   }
 }
 
 const loadCategories = async () => {
   try {
+    categoryLoading.value = true
+    categoryLoadFailed.value = false
     const { data } = await getCategoryTree()
-    categories.value = data
-  } catch (error) {
-    // 使用Mock数据
-    categories.value = [
-      { id: 1, name: '轴承' },
-      { id: 2, name: '齿轮' },
-      { id: 3, name: '外壳' }
-    ]
+    const normalized = normalizeCategoryTree(data)
+    categories.value = normalized
+    categoryDescendantMap.value = buildCategoryDescendantMap(normalized)
+
+    if (searchForm.categoryId && !categoryDescendantMap.value.has(String(searchForm.categoryId))) {
+      searchForm.categoryId = null
+      persistCategoryFilterState()
+    }
+    await nextTick()
+  } catch {
+    categories.value = []
+    categoryDescendantMap.value = new Map()
+    categoryLoadFailed.value = true
+    ElMessage.error('加载分类失败')
+  } finally {
+    categoryLoading.value = false
+  }
+}
+
+const handleCategoryChange = () => {
+  pagination.page = 1
+  persistCategoryFilterState()
+  loadData()
+}
+
+const handleCategoryExpand = (nodeData) => {
+  const nodeId = String(nodeData.id)
+  if (!expandedKeys.value.includes(nodeId)) {
+    expandedKeys.value = [...expandedKeys.value, nodeId]
+    persistCategoryFilterState()
+  }
+}
+
+const handleCategoryCollapse = (nodeData) => {
+  const nodeId = String(nodeData.id)
+  if (expandedKeys.value.includes(nodeId)) {
+    expandedKeys.value = expandedKeys.value.filter(id => id !== nodeId)
+    persistCategoryFilterState()
   }
 }
 
@@ -120,8 +243,13 @@ const handleDelete = async (row) => {
   loadData()
 }
 
+const initPage = async () => {
+  restoreCategoryFilterState()
+  await loadCategories()
+  await loadData()
+}
+
 onMounted(() => {
-  loadData()
-  loadCategories()
+  initPage()
 })
 </script>

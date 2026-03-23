@@ -48,11 +48,39 @@ if not errorlevel 1 (
   if errorlevel 1 exit /b 1
 )
 
+call :is_port_listening 8080
+if not errorlevel 1 (
+  echo [INFO] miniapp-backend already listening on 8080, skip start.
+) else (
+  echo [INFO] starting miniapp-backend...
+  start "miniapp-backend" cmd /c "cd /d ""%~dp0miniapp\backend"" && call mvn spring-boot:run"
+  call :wait_port 8080 180 miniapp-backend
+  if errorlevel 1 exit /b 1
+)
+
+call :is_port_listening 5173
+if not errorlevel 1 (
+  echo [INFO] miniapp-frontend already listening on 5173, skip start.
+) else (
+  echo [INFO] starting miniapp-frontend...
+  start "miniapp-frontend" cmd /c "cd /d ""%~dp0miniapp\frontend"" && if not exist node_modules (echo [INFO] installing frontend dependencies... && call npm install) && call npm run dev"
+  call :wait_port 5173 180 miniapp-frontend
+  if errorlevel 1 exit /b 1
+)
+
 echo [INFO] startup completed.
-echo [INFO] ports: PG13=5433, tx-distributor=6001, sdk-runtime=8003
+echo [INFO] ports: PG13=5433, tx-distributor=6001, sdk-runtime=8003, miniapp-backend=8080, miniapp-frontend=5173
 exit /b 0
 
 :force_restart
+call :stop_by_port 5173 miniapp-frontend
+call :wait_port_down 5173 30 miniapp-frontend
+if errorlevel 1 exit /b 1
+
+call :stop_by_port 8080 miniapp-backend
+call :wait_port_down 8080 30 miniapp-backend
+if errorlevel 1 exit /b 1
+
 call :stop_by_port 8003 sdk-runtime
 call :wait_port_down 8003 30 sdk-runtime
 if errorlevel 1 exit /b 1

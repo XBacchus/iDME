@@ -32,6 +32,7 @@ public class MiniAppAdapterService {
     private static final String ENTITY_WORKING_PROCEDURE = "WorkingProcedure";
     private static final String REL_PART_BOM = "Part_Part";
     private static final String REL_PLAN_PROCEDURE = "WorkingPlan_WorkingProcedure";
+    private static final String REL_PROCEDURE_EQUIPMENT = "WorkingProcedure_Equipment";
 
     private final XdmRuntimeService xdmRuntimeService;
     private final ObjectMapper objectMapper;
@@ -54,11 +55,12 @@ public class MiniAppAdapterService {
         this.workingPlanOperationTimeStore = workingPlanOperationTimeStore;
     }
 
-    public Map<String, Object> listParts(String keyword, String categoryId, int page, int size) {
+    public Map<String, Object> listParts(String keyword, String categoryId, String categoryIds, int page, int size) {
         List<Map<String, Object>> all = loadAllPartsMapped();
+        Set<String> categoryIdSet = parseCategoryIds(categoryIds);
         List<Map<String, Object>> filtered = all.stream()
             .filter(item -> matchesKeyword(item, keyword, "partNo", "partName"))
-            .filter(item -> !StringUtils.hasText(categoryId) || categoryId.equals(asString(item.get("categoryId"))))
+            .filter(item -> matchesCategory(item, categoryId, categoryIdSet))
             .collect(Collectors.toList());
 
         int safePage = Math.max(page, 1);
@@ -73,6 +75,24 @@ public class MiniAppAdapterService {
         data.put("current", safePage);
         data.put("pages", filtered.isEmpty() ? 0 : (int) Math.ceil(filtered.size() / (double) safeSize));
         return data;
+    }
+
+    private boolean matchesCategory(Map<String, Object> item, String categoryId, Set<String> categoryIdSet) {
+        String itemCategoryId = asString(item.get("categoryId"));
+        if (!categoryIdSet.isEmpty()) {
+            return categoryIdSet.contains(itemCategoryId);
+        }
+        return !StringUtils.hasText(categoryId) || categoryId.equals(itemCategoryId);
+    }
+
+    private Set<String> parseCategoryIds(String categoryIds) {
+        if (!StringUtils.hasText(categoryIds)) {
+            return Set.of();
+        }
+        return java.util.Arrays.stream(categoryIds.split(","))
+            .map(String::trim)
+            .filter(StringUtils::hasText)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Map<String, Object> getPart(String id) {
@@ -447,7 +467,22 @@ public class MiniAppAdapterService {
         List<Map<String, Object>> data = xdmRuntimeService.list(ENTITY_WORKING_PROCEDURE).stream()
             .map(this::mapProcedure)
             .collect(Collectors.toList());
-        return data.isEmpty() ? defaultProcedureList() : data;
+        if (data.isEmpty()) {
+            data = defaultProcedureList();
+        }
+        Map<String, String> equipmentByProcedure = loadProcedureEquipmentMap();
+        for (Map<String, Object> item : data) {
+            String procedureId = asString(item.get("id"));
+            String equipment = firstNonBlank(
+                equipmentByProcedure.get(procedureId),
+                asString(item.get("productionAndTestingEquipment")),
+                asString(item.get("equipment")),
+                ""
+            );
+            item.put("productionAndTestingEquipment", equipment);
+            item.put("equipment", equipment);
+        }
+        return data;
     }
 
     public Map<String, Object> updateProcedure(String id, Map<String, Object> body) {
@@ -457,6 +492,8 @@ public class MiniAppAdapterService {
         putIfText(payload, "procedureCode", firstText(body, "procedureCode", "code"));
         putIfText(payload, "productionStep", firstText(body, "productionStep", "description"));
         putIfText(payload, "operatorName", firstText(body, "operatorName", "operator"));
+        putIfText(payload, "startTime", normalizeProcedureTimeInput(firstText(body, "startTime")));
+        putIfText(payload, "endTime", normalizeProcedureTimeInput(firstText(body, "endTime")));
         return mapProcedure(xdmRuntimeService.update(ENTITY_WORKING_PROCEDURE, payload));
     }
 
@@ -464,7 +501,6 @@ public class MiniAppAdapterService {
         List<Map<String, Object>> all = xdmRuntimeService.list(ENTITY_PART).stream()
             .map(this::mapPart)
             .collect(Collectors.toList());
-        seedCategories(all);
         return all;
     }
 
@@ -578,7 +614,8 @@ public class MiniAppAdapterService {
     private Map<String, Object> mapPart(JsonNode node) {
         String categoryPath = nullIfBlank(node.path("categoryPath").asText(null));
         String categoryName = extractCategoryName(categoryPath);
-        String categoryId = findCategoryIdByName(categoryName);
+        seedCategoryPath(categoryPath);
+        String categoryId = findCategoryIdByPath(categoryPath);
 
         Map<String, Object> item = new LinkedHashMap<>();
         item.put("id", node.path("id").asText(""));
@@ -727,12 +764,25 @@ public class MiniAppAdapterService {
     }
 
     private Map<String, Object> mapProcedure(JsonNode node) {
+        String procedureName = firstText(node, "procedureName", "name");
+        String productionStep = firstText(node, "productionStep", "description");
+        String operatorName = firstText(node, "operatorName", "operator");
+        String startTime = firstTemporalText(node, "startTime");
+        String endTime = firstTemporalText(node, "endTime");
+
         Map<String, Object> item = new LinkedHashMap<>();
         item.put("id", node.path("id").asText(""));
-        item.put("name", firstText(node, "procedureName", "name"));
-        item.put("procedureName", firstText(node, "procedureName", "name"));
+        item.put("name", procedureName);
+        item.put("procedureName", procedureName);
         item.put("procedureCode", firstText(node, "procedureCode", "code"));
-        item.put("description", firstText(node, "productionStep", "description"));
+        item.put("productionStep", productionStep);
+        item.put("description", productionStep);
+        item.put("operatorName", operatorName);
+        item.put("operator", operatorName);
+        item.put("startTime", startTime);
+        item.put("endTime", endTime);
+        item.put("productionAndTestingEquipment", "");
+        item.put("equipment", "");
         item.put("standardTime", null);
         item.put("order", 0);
         return item;
@@ -846,27 +896,57 @@ public class MiniAppAdapterService {
     }
 
     private void seedCategoriesFromParts() {
-        List<Map<String, Object>> parts = xdmRuntimeService.list(ENTITY_PART).stream()
-            .map(this::mapPart)
-            .collect(Collectors.toList());
-        seedCategories(parts);
+        List<JsonNode> parts = xdmRuntimeService.list(ENTITY_PART);
+        for (JsonNode part : parts) {
+            seedCategoryPath(part.path("categoryPath").asText(null));
+        }
     }
 
-    private synchronized void seedCategories(List<Map<String, Object>> parts) {
-        for (Map<String, Object> part : parts) {
-            String categoryName = asString(part.get("categoryName"));
-            if (!StringUtils.hasText(categoryName)) {
+    private synchronized void seedCategoryPath(String categoryPath) {
+        if (!StringUtils.hasText(categoryPath)) {
+            return;
+        }
+        String parentId = null;
+        for (String segment : categoryPath.split("/")) {
+            String name = segment == null ? "" : segment.trim();
+            if (!StringUtils.hasText(name)) {
                 continue;
             }
-            if (!hasCategoryName(categoryName.trim())) {
-                CategoryNode node = new CategoryNode(String.valueOf(categoryIdSeed.incrementAndGet()), categoryName.trim(), null);
-                categories.put(node.id, node);
+            CategoryNode existing = findCategoryNodeByParentAndName(parentId, name);
+            if (existing == null) {
+                CategoryNode created = new CategoryNode(String.valueOf(categoryIdSeed.incrementAndGet()), name, parentId);
+                categories.put(created.id, created);
+                parentId = created.id;
+            } else {
+                parentId = existing.id;
             }
         }
     }
 
-    private boolean hasCategoryName(String categoryName) {
-        return categories.values().stream().anyMatch(node -> categoryName.equals(node.name));
+    private String findCategoryIdByPath(String categoryPath) {
+        if (!StringUtils.hasText(categoryPath)) {
+            return null;
+        }
+        String parentId = null;
+        for (String segment : categoryPath.split("/")) {
+            String name = segment == null ? "" : segment.trim();
+            if (!StringUtils.hasText(name)) {
+                continue;
+            }
+            CategoryNode node = findCategoryNodeByParentAndName(parentId, name);
+            if (node == null) {
+                return null;
+            }
+            parentId = node.id;
+        }
+        return parentId;
+    }
+
+    private CategoryNode findCategoryNodeByParentAndName(String parentId, String name) {
+        return categories.values().stream()
+            .filter(node -> Objects.equals(parentId, node.parentId) && name.equals(node.name))
+            .findFirst()
+            .orElse(null);
     }
 
     private String resolveCategoryPath(Map<String, Object> body) {
@@ -917,17 +997,6 @@ public class MiniAppAdapterService {
         item.put("name", node.name);
         item.put("parentId", node.parentId);
         return item;
-    }
-
-    private String findCategoryIdByName(String categoryName) {
-        if (!StringUtils.hasText(categoryName)) {
-            return null;
-        }
-        return categories.values().stream()
-            .filter(node -> categoryName.equals(node.name))
-            .map(node -> node.id)
-            .findFirst()
-            .orElse(null);
     }
 
     private String extractCategoryName(String categoryPath) {
@@ -991,6 +1060,8 @@ public class MiniAppAdapterService {
         payload.put("procedureCode", code);
         payload.put("productionStep", firstText(process, "location", "productionStep"));
         payload.put("operatorName", firstText(process, "operator", "operatorName"));
+        putIfText(payload, "startTime", normalizeProcedureTimeInput(firstText(process, "startTime")));
+        putIfText(payload, "endTime", normalizeProcedureTimeInput(firstText(process, "endTime")));
         return xdmRuntimeService.create(ENTITY_WORKING_PROCEDURE, payload);
     }
 
@@ -1003,7 +1074,13 @@ public class MiniAppAdapterService {
             row.put("name", names[i]);
             row.put("procedureName", names[i]);
             row.put("procedureCode", "PROC-" + String.format(Locale.ROOT, "%02d", i + 1));
+            row.put("productionStep", "");
             row.put("description", "");
+            row.put("operatorName", "");
+            row.put("startTime", "");
+            row.put("endTime", "");
+            row.put("productionAndTestingEquipment", "");
+            row.put("equipment", "");
             row.put("standardTime", null);
             row.put("order", i + 1);
             defaults.add(row);
@@ -1011,9 +1088,66 @@ public class MiniAppAdapterService {
         return defaults;
     }
 
+    private Map<String, String> loadProcedureEquipmentMap() {
+        List<JsonNode> relations;
+        try {
+            relations = xdmRuntimeService.listRelation(REL_PROCEDURE_EQUIPMENT);
+        } catch (Exception ignored) {
+            return Map.of();
+        }
+        if (relations.isEmpty()) {
+            return Map.of();
+        }
+
+        Map<String, String> equipmentNameById = new HashMap<>();
+        try {
+            equipmentNameById = xdmRuntimeService.list(ENTITY_EQUIPMENT).stream()
+                .collect(Collectors.toMap(
+                    node -> node.path("id").asText(),
+                    node -> firstText(node, "equipmentName", "name"),
+                    (left, right) -> left
+                ));
+        } catch (Exception ignored) {
+        }
+
+        Map<String, LinkedHashSet<String>> namesByProcedure = new LinkedHashMap<>();
+        for (JsonNode relation : relations) {
+            String procedureId = relation.path("source").path("id").asText("");
+            if (!StringUtils.hasText(procedureId)) {
+                continue;
+            }
+
+            JsonNode target = relation.path("target");
+            String equipmentId = target.path("id").asText("");
+            String equipmentName = firstText(target, "equipmentName", "name");
+            if (!StringUtils.hasText(equipmentName) && StringUtils.hasText(equipmentId)) {
+                equipmentName = equipmentNameById.getOrDefault(equipmentId, "");
+            }
+            if (!StringUtils.hasText(equipmentName)) {
+                continue;
+            }
+
+            namesByProcedure.computeIfAbsent(procedureId, key -> new LinkedHashSet<>()).add(equipmentName);
+        }
+
+        Map<String, String> result = new LinkedHashMap<>();
+        namesByProcedure.forEach((procedureId, names) -> result.put(procedureId, String.join("、", names)));
+        return result;
+    }
+
     private String firstText(JsonNode node, String... fields) {
         for (String field : fields) {
             String val = nullIfBlank(node.path(field).asText(null));
+            if (StringUtils.hasText(val)) {
+                return val;
+            }
+        }
+        return "";
+    }
+
+    private String firstTemporalText(JsonNode node, String... fields) {
+        for (String field : fields) {
+            String val = normalizeTemporalValue(node.path(field));
             if (StringUtils.hasText(val)) {
                 return val;
             }
@@ -1058,6 +1192,57 @@ public class MiniAppAdapterService {
         if (StringUtils.hasText(value)) {
             map.put(key, value);
         }
+    }
+
+    private String normalizeTemporalValue(JsonNode node) {
+        if (node == null || node.isMissingNode() || node.isNull()) {
+            return "";
+        }
+        if (node.isTextual()) {
+            return nullIfBlank(node.asText(""));
+        }
+        if (node.isNumber()) {
+            return String.valueOf(node.asLong());
+        }
+        if (node.isObject()) {
+            String fromTime = nullIfBlank(node.path("time").asText(null));
+            if (StringUtils.hasText(fromTime)) {
+                return fromTime;
+            }
+            String fromValue = nullIfBlank(node.path("value").asText(null));
+            if (StringUtils.hasText(fromValue)) {
+                return fromValue;
+            }
+            String fromEpochSecond = nullIfBlank(node.path("epochSecond").asText(null));
+            if (StringUtils.hasText(fromEpochSecond)) {
+                return fromEpochSecond;
+            }
+            String fromSeconds = nullIfBlank(node.path("seconds").asText(null));
+            if (StringUtils.hasText(fromSeconds)) {
+                return fromSeconds;
+            }
+        }
+        return "";
+    }
+
+    private String normalizeProcedureTimeInput(String value) {
+        if (!StringUtils.hasText(value)) {
+            return null;
+        }
+        String trimmed = value.trim();
+        if (trimmed.matches("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")) {
+            return trimmed.replace(" ", "T") + ".000+0800";
+        }
+        if (trimmed.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$")) {
+            return trimmed + ".000+0800";
+        }
+        if (trimmed.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$")) {
+            return trimmed.replaceFirst("([+-]\\d{2}):(\\d{2})$", "$1$2");
+        }
+        if (trimmed.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}[+-]\\d{2}:\\d{2}$")) {
+            return trimmed.replaceFirst("([+-]\\d{2}):(\\d{2})$", "$1$2");
+        }
+        return trimmed;
     }
 
     private void putTextWithNullSupport(

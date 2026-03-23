@@ -106,20 +106,11 @@ const loadData = async () => {
     partInfo.value = part.data
     bomData.value = bom.data
     partList.value = parts.data.records
-  } catch (error) {
-    partInfo.value = { id, partNo: 'MTR-2023-001', partName: '中心轮组件', version: 'V1.0' }
-    bomData.value = [
-      { id: 2, partNo: 'MTR-2023-042', partName: '轴承单元', quantity: 2, version: 'V1.0', children: [
-        { id: 4, partNo: 'MTR-2023-044', partName: '轴承', quantity: 1, version: 'V1.0' },
-        { id: 5, partNo: 'MTR-2023-045', partName: '密封圈', quantity: 2, version: 'V1.0' }
-      ]},
-      { id: 3, partNo: 'MTR-2023-043', partName: '齿轮', quantity: 1, version: 'V1.0', children: [] }
-    ]
-    partList.value = [
-      { id: 2, partNo: 'MTR-2023-042', partName: '轴承单元', version: 'V1.0' },
-      { id: 3, partNo: 'MTR-2023-043', partName: '齿轮', version: 'V1.0' },
-      { id: 4, partNo: 'MTR-2023-044', partName: '轴承', version: 'V1.0' }
-    ]
+  } catch {
+    partInfo.value = {}
+    bomData.value = []
+    partList.value = []
+    ElMessage.error('加载BOM数据失败')
   }
 }
 
