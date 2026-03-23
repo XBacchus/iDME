@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+  -->
+
+<param_validators>
+    <param_validator url="/v1/login/logout" failpath=""
+                     errorHandler="com.huawei.iit.sdk.common.exception.ValidateErrorHandlerCommon" method="get"
+                     dataPattern="form" allParameterCheck="false">
+        <parameter name="redirectUri" required="false" decode="false" dataPattern="">
+            <validator ref="simple_validator"/>
+        </parameter>
+        <parameter name="state" required="false" decode="false" dataPattern="">
+            <validator ref="simple_validator"/>
+        </parameter>
+    </param_validator>
+</param_validators>

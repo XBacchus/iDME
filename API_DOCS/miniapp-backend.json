@@ -5,9 +5,87 @@
     "version": "0.1.2"
   },
   "paths": {
+    "/api/parts": {
+      "post": {
+        "summary": "Create part",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "List parts",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parts/{id}": {
+      "delete": {
+        "summary": "Delete part",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parts/categories": {
+      "get": {
+        "summary": "Get category tree",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parts/{id}/bom": {
+      "post": {
+        "summary": "Add BOM relation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/equipments": {
       "get": {
-        "summary": "获取设备列表",
+        "summary": "List equipments",
         "parameters": [
           {
             "name": "keyword",
@@ -16,7 +94,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "按设备编码/名称/厂商/品牌/规格/供应商/位置搜索"
+            "description": "Search by code, name, manufacturer, brand, model, supplier, or location"
           }
         ],
         "responses": {
@@ -26,7 +104,7 @@
         }
       },
       "post": {
-        "summary": "创建设备",
+        "summary": "Create equipment",
         "requestBody": {
           "required": true,
           "content": {
@@ -46,7 +124,7 @@
     },
     "/api/equipments/{id}": {
       "get": {
-        "summary": "获取设备详情",
+        "summary": "Get equipment detail",
         "parameters": [
           {
             "name": "id",
@@ -64,7 +142,7 @@
         }
       },
       "put": {
-        "summary": "更新设备",
+        "summary": "Update equipment",
         "parameters": [
           {
             "name": "id",
@@ -92,7 +170,7 @@
         }
       },
       "delete": {
-        "summary": "删除设备",
+        "summary": "Delete equipment",
         "parameters": [
           {
             "name": "id",
@@ -112,7 +190,7 @@
     },
     "/api/working-plans": {
       "get": {
-        "summary": "获取工艺路线列表",
+        "summary": "List working plans",
         "parameters": [
           {
             "name": "keyword",
@@ -121,7 +199,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "按工艺编号/工艺名称检索"
+            "description": "Search by working plan code or name"
           }
         ],
         "responses": {
@@ -131,7 +209,7 @@
         }
       },
       "post": {
-        "summary": "创建工艺路线",
+        "summary": "Create working plan",
         "requestBody": {
           "required": true,
           "content": {
@@ -151,7 +229,7 @@
     },
     "/api/working-plans/{id}": {
       "get": {
-        "summary": "获取工艺路线详情",
+        "summary": "Get working plan detail",
         "parameters": [
           {
             "name": "id",
@@ -169,7 +247,7 @@
         }
       },
       "put": {
-        "summary": "更新工艺路线",
+        "summary": "Update working plan",
         "parameters": [
           {
             "name": "id",
@@ -197,7 +275,7 @@
         }
       },
       "delete": {
-        "summary": "删除工艺路线",
+        "summary": "Delete working plan",
         "parameters": [
           {
             "name": "id",
@@ -217,7 +295,7 @@
     },
     "/api/working-plans/{id}/processes": {
       "get": {
-        "summary": "获取工艺流程",
+        "summary": "Get process flow",
         "parameters": [
           {
             "name": "id",
@@ -235,7 +313,7 @@
         }
       },
       "put": {
-        "summary": "更新工艺流程",
+        "summary": "Update process flow",
         "parameters": [
           {
             "name": "id",
@@ -255,7 +333,7 @@
     },
     "/api/working-plans/{id}/procedures": {
       "post": {
-        "summary": "追加工序到工艺路线",
+        "summary": "Append procedure to working plan",
         "parameters": [
           {
             "name": "id",
@@ -304,7 +382,7 @@
           },
           "productionDate": {
             "type": "string",
-            "description": "可选；后端在xDM拒绝该值时会自动降级并持久化回显"
+            "description": "Optional; backend falls back and persists echo data if xDM rejects this value"
           },
           "serviceLifeYears": {
             "type": "integer"
@@ -328,35 +406,35 @@
         "properties": {
           "code": {
             "type": "string",
-            "description": "工艺编号"
+            "description": "Working plan code"
           },
           "name": {
             "type": "string",
-            "description": "工艺名称"
+            "description": "Working plan name"
           },
           "operator": {
             "type": "string",
-            "description": "操作人员"
+            "description": "Operator"
           },
           "operationTime": {
             "type": "string",
-            "description": "操作时间"
+            "description": "Operation time"
           },
           "equipment": {
             "type": "string",
-            "description": "设备使用情况"
+            "description": "Equipment usage"
           },
           "product": {
             "type": "string",
-            "description": "所属产品"
+            "description": "Related product"
           },
           "version": {
             "type": "string",
-            "description": "版本"
+            "description": "Version"
           },
           "description": {
             "type": "string",
-            "description": "工艺描述"
+            "description": "Working plan description"
           }
         }
       }
