@@ -113,7 +113,7 @@
       </div>
     </section>
 
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="600px">
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="600px" append-to-body>
       <EquipmentForm :data="currentRow" @success="handleSuccess" @cancel="dialogVisible = false" />
     </el-dialog>
   </div>

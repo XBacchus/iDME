@@ -9,7 +9,13 @@
     </section>
 
     <section class="floating-island mx-auto w-full max-w-4xl">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" class="space-y-2">
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        label-width="100px"
+        class="part-form-inline-errors space-y-2"
+      >
         <el-form-item label="物料编号" prop="partNo">
           <el-input v-model="form.partNo" placeholder="请输入物料编号" />
         </el-form-item>
@@ -115,3 +121,46 @@ onMounted(() => {
   loadData()
 })
 </script>
+
+<style scoped>
+.part-form-inline-errors :deep(.el-form-item) {
+  margin-bottom: 1.35rem;
+}
+
+.part-form-inline-errors :deep(.el-form-item__content) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 13rem;
+  align-items: center;
+  column-gap: 0.9rem;
+}
+
+.part-form-inline-errors :deep(.el-form-item__content > :not(.el-form-item__error)) {
+  grid-column: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.part-form-inline-errors :deep(.el-form-item__error) {
+  position: static;
+  grid-column: 2;
+  padding-top: 0;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+.part-form-inline-errors :deep(.el-input-number) {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .part-form-inline-errors :deep(.el-form-item__content) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .part-form-inline-errors :deep(.el-form-item__error) {
+    grid-column: 1;
+    justify-self: start;
+    margin-top: 0.35rem;
+  }
+}
+</style>

@@ -38,3 +38,6 @@ _verify/start_now.log
 
 # Local collaboration notes
 PROJECT_SUMMARY.md
+
+# Local backend overrides
+miniapp/backend/config/application.yml

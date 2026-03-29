@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <el-dialog v-model="dialogVisible" title="创建新版本" width="500px">
+    <el-dialog v-model="dialogVisible" title="创建新版本" width="500px" append-to-body>
       <el-form :model="form" label-width="80px">
         <el-form-item label="版本说明">
           <el-input v-model="form.description" type="textarea" :rows="3" placeholder="请输入版本说明" />
@@ -48,7 +48,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="compareVisible" title="版本对比" width="800px">
+    <el-dialog v-model="compareVisible" title="版本对比" width="800px" append-to-body>
       <div v-if="compareData" class="grid grid-cols-2 gap-4">
         <div>
           <h3 class="text-white mb-2">版本 {{ compareData.v1.version }}</h3>

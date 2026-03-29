@@ -45,7 +45,7 @@
       </div>
     </section>
 
-    <el-dialog v-model="dialogVisible" title="编辑工序" width="720px">
+    <el-dialog v-model="dialogVisible" title="编辑工序" width="720px" append-to-body>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="工序编号" prop="procedureCode">
           <el-input v-model="form.procedureCode" placeholder="请输入工序编号" />

@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <el-dialog v-model="dialogVisible" :title="isEdit ? '编辑子项' : '添加子项'" width="500px">
+    <el-dialog v-model="dialogVisible" :title="isEdit ? '编辑子项' : '添加子项'" width="500px" append-to-body>
       <el-form :model="childForm" label-width="80px">
         <el-form-item label="子物料">
           <el-select v-model="childForm.childPartId" placeholder="选择物料" filterable>
