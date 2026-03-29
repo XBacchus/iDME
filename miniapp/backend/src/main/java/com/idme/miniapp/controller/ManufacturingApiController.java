@@ -18,7 +18,7 @@ import org.springframework.web.util.UriUtils;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/legacy-manufacturing")
 public class ManufacturingApiController {
 
     private static final String PARTS_PATH = "/api/parts";

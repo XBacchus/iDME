@@ -1,4 +1,5 @@
 # TEST_ACCEPTANCE_CHECKLIST
+- 2026-03-29 | Manufacturing legacy proxy 独立收口到 `/api/legacy-manufacturing/*`，避免与正式 REST 路由 `/api/*` 冲突并恢复后端启动 | 状态：✅ | 文件：ManufacturingApiController.java、ManufacturingApiControllerTest.java、TEST_ACCEPTANCE_CHECKLIST.md、.cursor/project_structure.md | 命令：`mvn "-Dtest=ManufacturingApiControllerTest,ApiAdapterIntegrationTest" test`、`mvn spring-boot:run` | 证据：`GET /actuator/health`
 
 ## 使用说明
 1. 接口契约、网关代理、流程规则相关改动必须更新本清单。

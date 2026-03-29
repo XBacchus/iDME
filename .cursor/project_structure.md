@@ -1,4 +1,5 @@
 # iDME 项目结构（规则基线）
+- 2026-03-29：后端遗留直通控制器 `ManufacturingApiController.java` 改为 `'/api/legacy-manufacturing/*'` 命名空间，避免与 `PartController.java`、`EquipmentController.java`、`WorkingPlanController.java` 的 `/api/*` 正式 REST 路由冲突，恢复默认启动能力。
 
 ## 顶层目录
 - `miniapp/backend`: Spring Boot 后端（JDK17/Maven）

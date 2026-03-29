@@ -29,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ManufacturingApiControllerTest {
 
+    private static final String BASE_PATH = "/api/legacy-manufacturing";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -47,7 +49,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void createPartShouldProxy() throws Exception {
-        mockMvc.perform(post("/api/parts")
+        mockMvc.perform(post(BASE_PATH + "/parts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"partNo\":\"P-1001\"}"))
             .andExpect(status().isOk());
@@ -58,7 +60,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void createPartWithTrailingSlashShouldProxy() throws Exception {
-        mockMvc.perform(post("/api/parts/")
+        mockMvc.perform(post(BASE_PATH + "/parts/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"partNo\":\"P-1002\"}"))
             .andExpect(status().isOk());
@@ -69,7 +71,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void listPartsShouldProxyWithSearchQuery() throws Exception {
-        mockMvc.perform(get("/api/parts")
+        mockMvc.perform(get(BASE_PATH + "/parts")
                 .param("keyword", "bolt")
                 .param("page", "1")
                 .param("size", "20"))
@@ -86,7 +88,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void deletePartShouldProxy() throws Exception {
-        mockMvc.perform(delete("/api/parts/P-3001"))
+        mockMvc.perform(delete(BASE_PATH + "/parts/P-3001"))
             .andExpect(status().isOk());
 
         verify(xdmGatewayService).proxy(eq("/api/parts/P-3001"), eq(HttpMethod.DELETE), eq(null));
@@ -94,7 +96,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void getPartCategoriesShouldProxy() throws Exception {
-        mockMvc.perform(get("/api/parts/categories"))
+        mockMvc.perform(get(BASE_PATH + "/parts/categories"))
             .andExpect(status().isOk());
 
         verify(xdmGatewayService).proxy(eq("/api/parts/categories"), eq(HttpMethod.GET), eq(null));
@@ -102,7 +104,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void addPartBomRelationShouldProxy() throws Exception {
-        mockMvc.perform(post("/api/parts/P-1001/bom")
+        mockMvc.perform(post(BASE_PATH + "/parts/P-1001/bom")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"componentId\":\"C-2001\",\"quantity\":2}"))
             .andExpect(status().isOk());
@@ -113,7 +115,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void createEquipmentShouldProxy() throws Exception {
-        mockMvc.perform(post("/api/equipments")
+        mockMvc.perform(post(BASE_PATH + "/equipments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"equipmentNo\":\"EQ-01\"}"))
             .andExpect(status().isOk());
@@ -124,7 +126,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void createWorkingPlanShouldProxy() throws Exception {
-        mockMvc.perform(post("/api/working-plans")
+        mockMvc.perform(post(BASE_PATH + "/working-plans")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"WP-1\"}"))
             .andExpect(status().isOk());
@@ -135,7 +137,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void getWorkingPlanDetailShouldProxy() throws Exception {
-        mockMvc.perform(get("/api/working-plans/WP-1"))
+        mockMvc.perform(get(BASE_PATH + "/working-plans/WP-1"))
             .andExpect(status().isOk());
 
         verify(xdmGatewayService).proxy(eq("/api/working-plans/WP-1"), eq(HttpMethod.GET), eq(null));
@@ -143,7 +145,7 @@ class ManufacturingApiControllerTest {
 
     @Test
     void linkProcedureShouldProxy() throws Exception {
-        mockMvc.perform(post("/api/working-plans/WP-1/procedures")
+        mockMvc.perform(post(BASE_PATH + "/working-plans/WP-1/procedures")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"procedureId\":\"PROC-01\"}"))
             .andExpect(status().isOk());
