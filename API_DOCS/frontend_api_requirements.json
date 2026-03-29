@@ -1,44 +1,45 @@
 {
-  "title": "前端API需求文档",
+  "title": "鍓嶇API闇€姹傛枃妗?,
   "version": "1.0",
   "baseURL": "http://localhost:8080/api",
   "modules": [
     {
-      "module": "物料管理",
+      "module": "鐗╂枡绠＄悊",
       "apis": [
         {
-          "name": "获取物料列表",
+          "name": "鑾峰彇鐗╂枡鍒楄〃",
           "method": "GET",
           "path": "/api/parts",
           "params": {
-            "keyword": "搜索关键词（物料编号/名称）",
-            "categoryId": "分类ID",
-            "page": "页码",
-            "size": "每页数量"
+            "keyword": "鎼滅储鍏抽敭璇嶏紙鐗╂枡缂栧彿/鍚嶇О锛?,
+            "categoryId": "分类ID（精确过滤）",
+            "categoryIds": "分类ID列表（逗号分隔，父分类含子分类场景）",
+            "page": "椤电爜",
+            "size": "姣忛〉鏁伴噺"
           },
           "response": {
             "records": [
               {
-                "id": "物料ID",
-                "partNo": "物料编号",
-                "partName": "物料名称",
-                "specification": "规格型号",
-                "stockQty": "库存数量",
-                "supplier": "供应商",
-                "categoryName": "分类名称",
-                "version": "当前版本"
+                "id": "鐗╂枡ID",
+                "partNo": "鐗╂枡缂栧彿",
+                "partName": "鐗╂枡鍚嶇О",
+                "specification": "瑙勬牸鍨嬪彿",
+                "stockQty": "搴撳瓨鏁伴噺",
+                "supplier": "渚涘簲鍟?,
+                "categoryName": "鍒嗙被鍚嶇О",
+                "version": "褰撳墠鐗堟湰"
               }
             ],
-            "total": "总数"
+            "total": "鎬绘暟"
           }
         },
         {
-          "name": "获取物料详情",
+          "name": "鑾峰彇鐗╂枡璇︽儏",
           "method": "GET",
           "path": "/api/parts/{id}"
         },
         {
-          "name": "创建物料",
+          "name": "鍒涘缓鐗╂枡",
           "method": "POST",
           "path": "/api/parts",
           "requiredFields": [
@@ -49,108 +50,108 @@
             "supplier"
           ],
           "body": {
-            "partNo": "物料编号",
-            "partName": "物料名称",
-            "specification": "规格型号",
-            "stockQty": "库存数量（>=0）",
-            "categoryId": "分类ID",
-            "supplier": "供应商"
+            "partNo": "鐗╂枡缂栧彿",
+            "partName": "鐗╂枡鍚嶇О",
+            "specification": "瑙勬牸鍨嬪彿",
+            "stockQty": "搴撳瓨鏁伴噺锛?=0锛?,
+            "categoryId": "分类ID（精确过滤）",
+            "supplier": "渚涘簲鍟?
           }
         },
         {
-          "name": "更新物料",
+          "name": "鏇存柊鐗╂枡",
           "method": "PUT",
           "path": "/api/parts/{id}",
           "body": {
-            "partNo": "物料编号（可选，部分更新）",
-            "partName": "物料名称（可选，部分更新）",
-            "specification": "规格型号（可选，部分更新）",
-            "stockQty": "库存数量（可选，部分更新）",
-            "categoryId": "分类ID（可选，部分更新）",
-            "supplier": "供应商（可选，部分更新）"
+            "partNo": "鐗╂枡缂栧彿锛堝彲閫夛紝閮ㄥ垎鏇存柊锛?,
+            "partName": "鐗╂枡鍚嶇О锛堝彲閫夛紝閮ㄥ垎鏇存柊锛?,
+            "specification": "瑙勬牸鍨嬪彿锛堝彲閫夛紝閮ㄥ垎鏇存柊锛?,
+            "stockQty": "搴撳瓨鏁伴噺锛堝彲閫夛紝閮ㄥ垎鏇存柊锛?,
+            "categoryId": "鍒嗙被ID锛堝彲閫夛紝閮ㄥ垎鏇存柊锛?,
+            "supplier": "渚涘簲鍟嗭紙鍙€夛紝閮ㄥ垎鏇存柊锛?
           },
-          "note": "后端会合并已有数据并执行必填校验，最终实体需满足必填字段约束"
+          "note": "鍚庣浼氬悎骞跺凡鏈夋暟鎹苟鎵ц蹇呭～鏍￠獙锛屾渶缁堝疄浣撻渶婊¤冻蹇呭～瀛楁绾︽潫"
         },
         {
-          "name": "删除物料",
+          "name": "鍒犻櫎鐗╂枡",
           "method": "DELETE",
           "path": "/api/parts/{id}"
         },
         {
-          "name": "获取物料BOM",
+          "name": "鑾峰彇鐗╂枡BOM",
           "method": "GET",
           "path": "/api/parts/{id}/bom",
           "response": {
-            "id": "物料ID",
-            "partName": "物料名称",
+            "id": "鐗╂枡ID",
+            "partName": "鐗╂枡鍚嶇О",
             "children": [
               {
-                "id": "子物料ID",
-                "partName": "子物料名称",
-                "quantity": "数量",
+                "id": "瀛愮墿鏂橧D",
+                "partName": "瀛愮墿鏂欏悕绉?,
+                "quantity": "鏁伴噺",
                 "children": []
               }
             ]
           }
         },
         {
-          "name": "更新物料BOM",
+          "name": "鏇存柊鐗╂枡BOM",
           "method": "PUT",
           "path": "/api/parts/{id}/bom"
         }
       ]
     },
     {
-      "module": "物料版本管理",
+      "module": "鐗╂枡鐗堟湰绠＄悊",
       "apis": [
         {
-          "name": "获取版本历史",
+          "name": "鑾峰彇鐗堟湰鍘嗗彶",
           "method": "GET",
           "path": "/api/parts/{id}/versions",
           "response": [
             {
-              "version": "版本号",
-              "description": "版本说明",
-              "status": "状态(draft/published)",
-              "createdBy": "创建人",
-              "createdAt": "创建时间"
+              "version": "鐗堟湰鍙?,
+              "description": "鐗堟湰璇存槑",
+              "status": "鐘舵€?draft/published)",
+              "createdBy": "鍒涘缓浜?,
+              "createdAt": "鍒涘缓鏃堕棿"
             }
           ]
         },
         {
-          "name": "创建新版本",
+          "name": "鍒涘缓鏂扮増鏈?,
           "method": "POST",
           "path": "/api/parts/{id}/versions",
           "body": {
-            "description": "版本说明"
+            "description": "鐗堟湰璇存槑"
           }
         },
         {
-          "name": "版本对比",
+          "name": "鐗堟湰瀵规瘮",
           "method": "GET",
           "path": "/api/parts/{id}/versions/compare",
           "params": {
-            "v1": "版本1",
-            "v2": "版本2"
+            "v1": "鐗堟湰1",
+            "v2": "鐗堟湰2"
           },
           "response": {
             "v1": {
-              "version": "版本号",
-              "description": "版本说明"
+              "version": "鐗堟湰鍙?,
+              "description": "鐗堟湰璇存槑"
             },
             "v2": {
-              "version": "版本号",
-              "description": "版本说明"
+              "version": "鐗堟湰鍙?,
+              "description": "鐗堟湰璇存槑"
             }
           }
         },
         {
-          "name": "版本回滚",
+          "name": "鐗堟湰鍥炴粴",
           "method": "POST",
           "path": "/api/parts/{id}/versions/{version}/rollback"
         },
         {
-          "name": "更新版本状态",
+          "name": "鏇存柊鐗堟湰鐘舵€?,
           "method": "PUT",
           "path": "/api/parts/{id}/versions/{version}/status",
           "body": {
@@ -160,234 +161,251 @@
       ]
     },
     {
-      "module": "物料分类管理",
+      "module": "鐗╂枡鍒嗙被绠＄悊",
       "apis": [
         {
-          "name": "获取分类树",
+          "name": "鑾峰彇鍒嗙被鏍?,
           "method": "GET",
           "path": "/api/parts/categories",
           "response": [
             {
-              "id": "分类ID",
-              "name": "分类名称",
+              "id": "鍒嗙被ID",
+              "name": "鍒嗙被鍚嶇О",
               "children": []
             }
           ]
         },
         {
-          "name": "创建分类",
+          "name": "鍒涘缓鍒嗙被",
           "method": "POST",
           "path": "/api/parts/categories",
           "body": {
-            "name": "分类名称",
-            "parentId": "父分类ID（可选）"
+            "name": "鍒嗙被鍚嶇О",
+            "parentId": "鐖跺垎绫籌D锛堝彲閫夛級"
           }
         },
         {
-          "name": "更新分类",
+          "name": "鏇存柊鍒嗙被",
           "method": "PUT",
           "path": "/api/parts/categories/{id}"
         },
         {
-          "name": "删除分类",
+          "name": "鍒犻櫎鍒嗙被",
           "method": "DELETE",
           "path": "/api/parts/categories/{id}"
         }
       ]
     },
     {
-      "module": "设备管理",
+      "module": "璁惧绠＄悊",
       "apis": [
         {
-          "name": "获取设备列表",
+          "name": "鑾峰彇璁惧鍒楄〃",
           "method": "GET",
           "path": "/api/equipments",
           "params": {
-            "keyword": "搜索关键词（设备编码/名称/厂商/品牌/型号/供应商/位置）"
+            "keyword": "鎼滅储鍏抽敭璇嶏紙璁惧缂栫爜/鍚嶇О/鍘傚晢/鍝佺墝/鍨嬪彿/渚涘簲鍟?浣嶇疆锛?
           },
           "response": [
             {
-              "id": "设备ID",
-              "equipmentCode": "设备编码",
-              "equipmentName": "设备名称",
-              "manufacturer": "生产厂家",
-              "brand": "品牌",
-              "specModel": "规格型号",
-              "supplier": "供应商",
-              "productionDate": "生产日期（字符串）",
-              "serviceLifeYears": "使用年限（整数）",
-              "depreciationMethod": "折旧方式",
-              "location": "位置",
-              "technicalParams": "技术参数信息",
-              "sparePartsInfo": "备品备件信息",
-              "status": "状态",
-              "code": "兼容字段=equipmentCode",
-              "name": "兼容字段=equipmentName",
-              "model": "兼容字段=specModel",
-              "serviceLife": "兼容字段=serviceLifeYears",
-              "depreciation": "兼容字段=depreciationMethod",
-              "spareParts": "兼容字段=sparePartsInfo"
+              "id": "璁惧ID",
+              "equipmentCode": "璁惧缂栫爜",
+              "equipmentName": "璁惧鍚嶇О",
+              "manufacturer": "鐢熶骇鍘傚",
+              "brand": "鍝佺墝",
+              "specModel": "瑙勬牸鍨嬪彿",
+              "supplier": "渚涘簲鍟?,
+              "productionDate": "鐢熶骇鏃ユ湡锛堝瓧绗︿覆锛?,
+              "serviceLifeYears": "浣跨敤骞撮檺锛堟暣鏁帮級",
+              "depreciationMethod": "鎶樻棫鏂瑰紡",
+              "location": "浣嶇疆",
+              "technicalParams": "鎶€鏈弬鏁颁俊鎭?,
+              "sparePartsInfo": "澶囧搧澶囦欢淇℃伅",
+              "status": "鐘舵€?,
+              "code": "鍏煎瀛楁=equipmentCode",
+              "name": "鍏煎瀛楁=equipmentName",
+              "model": "鍏煎瀛楁=specModel",
+              "serviceLife": "鍏煎瀛楁=serviceLifeYears",
+              "depreciation": "鍏煎瀛楁=depreciationMethod",
+              "spareParts": "鍏煎瀛楁=sparePartsInfo"
             }
           ]
         },
         {
-          "name": "获取设备详情",
+          "name": "鑾峰彇璁惧璇︽儏",
           "method": "GET",
           "path": "/api/equipments/{id}"
         },
         {
-          "name": "创建设备",
+          "name": "鍒涘缓璁惧",
           "method": "POST",
           "path": "/api/equipments",
           "body": {
-            "equipmentCode": "设备编码（必填）",
-            "equipmentName": "设备名称（必填）",
-            "manufacturer": "生产厂家（必填）",
-            "brand": "品牌",
-            "specModel": "规格型号",
-            "supplier": "供应商",
-            "productionDate": "生产日期（可选；xDM拒绝时后端会降级并持久化回显）",
-            "serviceLifeYears": "使用年限",
-            "depreciationMethod": "折旧方式",
-            "location": "位置",
-            "technicalParams": "技术参数信息",
-            "sparePartsInfo": "备品备件信息"
+            "equipmentCode": "璁惧缂栫爜锛堝繀濉級",
+            "equipmentName": "璁惧鍚嶇О锛堝繀濉級",
+            "manufacturer": "鐢熶骇鍘傚锛堝繀濉級",
+            "brand": "鍝佺墝",
+            "specModel": "瑙勬牸鍨嬪彿",
+            "supplier": "渚涘簲鍟?,
+            "productionDate": "鐢熶骇鏃ユ湡锛堝彲閫夛紱xDM鎷掔粷鏃跺悗绔細闄嶇骇骞舵寔涔呭寲鍥炴樉锛?,
+            "serviceLifeYears": "浣跨敤骞撮檺",
+            "depreciationMethod": "鎶樻棫鏂瑰紡",
+            "location": "浣嶇疆",
+            "technicalParams": "鎶€鏈弬鏁颁俊鎭?,
+            "sparePartsInfo": "澶囧搧澶囦欢淇℃伅"
           }
         },
         {
-          "name": "更新设备",
+          "name": "鏇存柊璁惧",
           "method": "PUT",
           "path": "/api/equipments/{id}",
           "body": {
-            "equipmentCode": "设备编码（必填）",
-            "equipmentName": "设备名称（必填）",
-            "manufacturer": "生产厂家（必填）",
-            "brand": "品牌",
-            "specModel": "规格型号",
-            "supplier": "供应商",
-            "productionDate": "生产日期（可选；xDM拒绝时后端会降级并持久化回显）",
-            "serviceLifeYears": "使用年限",
-            "depreciationMethod": "折旧方式",
-            "location": "位置",
-            "technicalParams": "技术参数信息（支持清空）",
-            "sparePartsInfo": "备品备件信息（支持清空）"
+            "equipmentCode": "璁惧缂栫爜锛堝繀濉級",
+            "equipmentName": "璁惧鍚嶇О锛堝繀濉級",
+            "manufacturer": "鐢熶骇鍘傚锛堝繀濉級",
+            "brand": "鍝佺墝",
+            "specModel": "瑙勬牸鍨嬪彿",
+            "supplier": "渚涘簲鍟?,
+            "productionDate": "鐢熶骇鏃ユ湡锛堝彲閫夛紱xDM鎷掔粷鏃跺悗绔細闄嶇骇骞舵寔涔呭寲鍥炴樉锛?,
+            "serviceLifeYears": "浣跨敤骞撮檺",
+            "depreciationMethod": "鎶樻棫鏂瑰紡",
+            "location": "浣嶇疆",
+            "technicalParams": "鎶€鏈弬鏁颁俊鎭紙鏀寔娓呯┖锛?,
+            "sparePartsInfo": "澶囧搧澶囦欢淇℃伅锛堟敮鎸佹竻绌猴級"
           }
         },
         {
-          "name": "删除设备",
+          "name": "鍒犻櫎璁惧",
           "method": "DELETE",
           "path": "/api/equipments/{id}"
         }
       ]
     },
     {
-      "module": "工序配置",
+      "module": "宸ュ簭閰嶇疆",
       "apis": [
         {
-          "name": "获取工序列表",
+          "name": "鑾峰彇宸ュ簭鍒楄〃",
           "method": "GET",
           "path": "/api/procedures",
           "response": [
             {
-              "id": "工序ID",
-              "procedureName": "工序名称",
-              "procedureCode": "工序代码",
-              "description": "工序描述",
-              "standardTime": "标准工时(分钟)"
+              "id": "宸ュ簭ID",
+              "procedureName": "宸ュ簭鍚嶇О",
+              "procedureCode": "宸ュ簭浠ｇ爜",
+              "productionStep": "鐢熶骇姝ラ",
+              "productionAndTestingEquipment": "鐢熶骇鍜屾娴嬭澶囷紙鍏崇郴鑱氬悎锛?,
+              "operatorName": "鎿嶄綔浜哄憳",
+              "startTime": "寮€濮嬫椂闂?,
+              "endTime": "缁撴潫鏃堕棿"
             }
           ],
-          "note": "固定5道工序：毛坯制造、粗加工、精加工、检测、入库"
+          "note": "xDM 鏃犳暟鎹椂鍥為€€鍥哄畾5閬撳伐搴忥細姣涘澂鍒堕€犮€佺矖鍔犲伐銆佺簿鍔犲伐銆佹娴嬨€佸叆搴?
+        },
+        {
+          "name": "鏇存柊宸ュ簭",
+          "method": "PUT",
+          "path": "/api/procedures/{id}",
+          "body": {
+            "procedureCode": "宸ュ簭缂栧彿锛堝繀濉級",
+            "procedureName": "宸ュ簭鍚嶇О锛堝繀濉級",
+            "productionStep": "鐢熶骇姝ラ锛堝繀濉級",
+            "operatorName": "鎿嶄綔浜哄憳锛堝繀濉級",
+            "startTime": "寮€濮嬫椂闂达紙蹇呭～锛屽瓧绗︿覆锛涙敮鎸?yyyy-MM-dd HH:mm:ss锛?,
+            "endTime": "缁撴潫鏃堕棿锛堝繀濉紝瀛楃涓诧紱鏀寔 yyyy-MM-dd HH:mm:ss锛?
+          },
+          "note": "鍚庣浼氳嚜鍔ㄥ綊涓€鍖?startTime/endTime 鍒?xDM 鍙帴鍙楁牸寮忥紝骞跺湪鍒楄〃鎺ュ彛涓繑鍥炶鑼冨寲鏃堕棿瀛楃涓?
         }
       ]
     },
     {
-      "module": "工艺路线管理",
+      "module": "宸ヨ壓璺嚎绠＄悊",
       "apis": [
         {
-          "name": "获取工艺路线列表",
+          "name": "鑾峰彇宸ヨ壓璺嚎鍒楄〃",
           "method": "GET",
           "path": "/api/working-plans",
           "params": {
-            "keyword": "搜索关键词（工艺编号/工艺名称）"
+            "keyword": "鎼滅储鍏抽敭璇嶏紙宸ヨ壓缂栧彿/宸ヨ壓鍚嶇О锛?
           },
           "response": [
             {
-              "id": "工艺路线ID",
-              "code": "工艺编号",
-              "name": "工艺名称",
-              "version": "版本",
-              "product": "所属产品",
-              "description": "工艺描述",
-              "operator": "操作人员",
-              "equipment": "设备使用情况",
-              "operationTime": "操作时间"
+              "id": "宸ヨ壓璺嚎ID",
+              "code": "宸ヨ壓缂栧彿",
+              "name": "宸ヨ壓鍚嶇О",
+              "version": "鐗堟湰",
+              "product": "鎵€灞炰骇鍝?,
+              "description": "宸ヨ壓鎻忚堪",
+              "operator": "鎿嶄綔浜哄憳",
+              "equipment": "璁惧浣跨敤鎯呭喌",
+              "operationTime": "鎿嶄綔鏃堕棿"
             }
           ]
         },
         {
-          "name": "获取工艺路线详情",
+          "name": "鑾峰彇宸ヨ壓璺嚎璇︽儏",
           "method": "GET",
           "path": "/api/working-plans/{id}",
           "response": {
-            "id": "工艺路线ID",
-            "code": "工艺编号",
-            "name": "工艺名称",
-            "version": "版本",
-            "product": "所属产品",
-            "description": "工艺描述",
-            "operator": "操作人员",
-            "equipment": "设备使用情况",
-            "operationTime": "操作时间"
+            "id": "宸ヨ壓璺嚎ID",
+            "code": "宸ヨ壓缂栧彿",
+            "name": "宸ヨ壓鍚嶇О",
+            "version": "鐗堟湰",
+            "product": "鎵€灞炰骇鍝?,
+            "description": "宸ヨ壓鎻忚堪",
+            "operator": "鎿嶄綔浜哄憳",
+            "equipment": "璁惧浣跨敤鎯呭喌",
+            "operationTime": "鎿嶄綔鏃堕棿"
           }
         },
         {
-          "name": "创建工艺路线",
+          "name": "鍒涘缓宸ヨ壓璺嚎",
           "method": "POST",
           "path": "/api/working-plans",
           "body": {
-            "code": "工艺编号（必填）",
-            "name": "工艺名称（必填）",
-            "operator": "操作人员（必填）",
-            "operationTime": "操作时间（必填，字符串）",
-            "equipment": "设备使用情况（必填）",
-            "product": "所属产品",
-            "version": "版本",
-            "description": "工艺描述"
+            "code": "宸ヨ壓缂栧彿锛堝繀濉級",
+            "name": "宸ヨ壓鍚嶇О锛堝繀濉級",
+            "operator": "鎿嶄綔浜哄憳锛堝繀濉級",
+            "operationTime": "鎿嶄綔鏃堕棿锛堝繀濉紝瀛楃涓诧級",
+            "equipment": "璁惧浣跨敤鎯呭喌锛堝繀濉級",
+            "product": "鎵€灞炰骇鍝?,
+            "version": "鐗堟湰",
+            "description": "宸ヨ壓鎻忚堪"
           },
-          "note": "后端会兼容 xDM-F 对 operationTime 的格式限制，并保证回显"
+          "note": "鍚庣浼氬吋瀹?xDM-F 瀵?operationTime 鐨勬牸寮忛檺鍒讹紝骞朵繚璇佸洖鏄?
         },
         {
-          "name": "更新工艺路线",
+          "name": "鏇存柊宸ヨ壓璺嚎",
           "method": "PUT",
           "path": "/api/working-plans/{id}",
           "body": {
-            "code": "工艺编号",
-            "name": "工艺名称",
-            "operator": "操作人员",
-            "operationTime": "操作时间（字符串）",
-            "equipment": "设备使用情况",
-            "product": "所属产品",
-            "version": "版本",
-            "description": "工艺描述"
+            "code": "宸ヨ壓缂栧彿",
+            "name": "宸ヨ壓鍚嶇О",
+            "operator": "鎿嶄綔浜哄憳",
+            "operationTime": "鎿嶄綔鏃堕棿锛堝瓧绗︿覆锛?,
+            "equipment": "璁惧浣跨敤鎯呭喌",
+            "product": "鎵€灞炰骇鍝?,
+            "version": "鐗堟湰",
+            "description": "宸ヨ壓鎻忚堪"
           }
         },
         {
-          "name": "删除工艺路线",
+          "name": "鍒犻櫎宸ヨ壓璺嚎",
           "method": "DELETE",
           "path": "/api/working-plans/{id}"
         },
         {
-          "name": "获取工艺流程",
+          "name": "鑾峰彇宸ヨ壓娴佺▼",
           "method": "GET",
           "path": "/api/working-plans/{id}/processes"
         },
         {
-          "name": "更新工艺流程",
+          "name": "鏇存柊宸ヨ壓娴佺▼",
           "method": "PUT",
           "path": "/api/working-plans/{id}/processes"
         },
         {
-          "name": "追加工序到工艺路线",
+          "name": "杩藉姞宸ュ簭鍒板伐鑹鸿矾绾?,
           "method": "POST",
           "path": "/api/working-plans/{id}/procedures"
         }
@@ -395,3 +413,5 @@
     }
   ]
 }
+
+

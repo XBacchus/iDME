@@ -1,16 +1,16 @@
-# 前端 API 接口规范文档
+# 鍓嶇 API 鎺ュ彛瑙勮寖鏂囨。
 
-## 基础信息
+## 鍩虹淇℃伅
 
 **Base URL**: `http://localhost:8080`
 **Content-Type**: `application/json`
-**字符编码**: UTF-8
+**瀛楃缂栫爜**: UTF-8
 
 ---
 
-## 统一响应格式
+## 缁熶竴鍝嶅簲鏍煎紡
 
-### 成功响应
+### 鎴愬姛鍝嶅簲
 ```json
 {
   "code": 200,
@@ -19,16 +19,16 @@
 }
 ```
 
-### 错误响应
+### 閿欒鍝嶅簲
 ```json
 {
   "code": 400,
-  "message": "参数错误",
+  "message": "鍙傛暟閿欒",
   "data": null
 }
 ```
 
-### 分页响应
+### 鍒嗛〉鍝嶅簲
 ```json
 {
   "code": 200,
@@ -45,51 +45,52 @@
 
 ---
 
-## 请求头
+## 璇锋眰澶?
 
-| 请求头 | 必填 | 说明 |
+| 璇锋眰澶?| 蹇呭～ | 璇存槑 |
 |--------|------|------|
-| Content-Type | 是 | application/json |
-| Authorization | 否 | Bearer {token}（如需认证） |
+| Content-Type | 鏄?| application/json |
+| Authorization | 鍚?| Bearer {token}锛堝闇€璁よ瘉锛?|
 
 ---
 
-## 状态码
+## 鐘舵€佺爜
 
-| 状态码 | 说明 |
+| 鐘舵€佺爜 | 璇存槑 |
 |--------|------|
-| 200 | 成功 |
-| 400 | 参数错误 |
-| 401 | 未授权 |
-| 403 | 禁止访问 |
-| 404 | 资源不存在 |
-| 500 | 服务器错误 |
+| 200 | 鎴愬姛 |
+| 400 | 鍙傛暟閿欒 |
+| 401 | 鏈巿鏉?|
+| 403 | 绂佹璁块棶 |
+| 404 | 璧勬簮涓嶅瓨鍦?|
+| 500 | 鏈嶅姟鍣ㄩ敊璇?|
 
 ---
 
-## 日期时间格式
+## 鏃ユ湡鏃堕棿鏍煎紡
 
-所有日期时间字段统一使用 ISO 8601 格式：`yyyy-MM-dd'T'HH:mm:ss`
+鎵€鏈夋棩鏈熸椂闂村瓧娈电粺涓€浣跨敤 ISO 8601 鏍煎紡锛歚yyyy-MM-dd'T'HH:mm:ss`
 
-示例：`2024-01-01T10:00:00`
+绀轰緥锛歚2024-01-01T10:00:00`
 
 ---
 
-## 一、物料管理 API
+## 涓€銆佺墿鏂欑鐞?API
 
-### 1.1 获取物料列表
+### 1.1 鑾峰彇鐗╂枡鍒楄〃
 
-**接口**: `GET /api/parts`
+**鎺ュ彛**: `GET /api/parts`
 
-**请求参数**:
-| 参数 | 类型 | 必填 | 说明 |
+**璇锋眰鍙傛暟**:
+| 鍙傛暟 | 绫诲瀷 | 蹇呭～ | 璇存槑 |
 |------|------|------|------|
-| keyword | string | 否 | 搜索关键词（物料编号/名称） |
-| categoryId | number | 否 | 分类ID |
-| page | number | 否 | 页码，默认1 |
-| size | number | 否 | 每页数量，默认10 |
+| keyword | string | 鍚?| 鎼滅储鍏抽敭璇嶏紙鐗╂枡缂栧彿/鍚嶇О锛?|
+| categoryId | number | 否 | 分类ID（精确过滤） |
+| categoryIds | string | 否 | 分类ID列表（逗号分隔，父分类含子分类场景） |
+| page | number | 鍚?| 椤电爜锛岄粯璁? |
+| size | number | 鍚?| 姣忛〉鏁伴噺锛岄粯璁?0 |
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -99,11 +100,11 @@
       {
         "id": 1,
         "partNo": "MTR-2023-001",
-        "partName": "中心轮组件",
+        "partName": "涓績杞粍浠?,
         "specification": "CL-100",
         "stockQty": 50,
-        "supplier": "供应商A",
-        "categoryName": "机械零件",
+        "supplier": "渚涘簲鍟咥",
+        "categoryName": "鏈烘闆朵欢",
         "version": "V1.0"
       }
     ],
@@ -117,11 +118,11 @@
 
 ---
 
-### 1.2 获取物料详情
+### 1.2 鑾峰彇鐗╂枡璇︽儏
 
-**接口**: `GET /api/parts/{id}`
+**鎺ュ彛**: `GET /api/parts/{id}`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -129,12 +130,12 @@
   "data": {
     "id": 1,
     "partNo": "MTR-2023-001",
-    "partName": "中心轮组件",
+    "partName": "涓績杞粍浠?,
     "specification": "CL-100",
     "stockQty": 50,
-    "supplier": "供应商A",
+    "supplier": "渚涘簲鍟咥",
     "categoryId": 1,
-    "categoryName": "机械零件",
+    "categoryName": "鏈烘闆朵欢",
     "version": "V1.0"
   }
 }
@@ -142,32 +143,32 @@
 
 ---
 
-### 1.3 创建物料
+### 1.3 鍒涘缓鐗╂枡
 
-**接口**: `POST /api/parts`
+**鎺ュ彛**: `POST /api/parts`
 
-**必填字段**:
-| 字段 | 类型 | 说明 |
+**蹇呭～瀛楁**:
+| 瀛楁 | 绫诲瀷 | 璇存槑 |
 |------|------|------|
-| partNo | string | 物料编号 |
-| partName | string | 物料名称 |
-| specification | string | 规格型号 |
-| stockQty | number | 库存数量（>=0） |
-| supplier | string | 供应商 |
+| partNo | string | 鐗╂枡缂栧彿 |
+| partName | string | 鐗╂枡鍚嶇О |
+| specification | string | 瑙勬牸鍨嬪彿 |
+| stockQty | number | 搴撳瓨鏁伴噺锛?=0锛?|
+| supplier | string | 渚涘簲鍟?|
 
-**请求体**:
+**璇锋眰浣?*:
 ```json
 {
   "partNo": "MTR-2023-001",
-  "partName": "中心轮组件",
+  "partName": "涓績杞粍浠?,
   "specification": "CL-100",
   "stockQty": 50,
-  "supplier": "供应商A",
+  "supplier": "渚涘簲鍟咥",
   "categoryId": 1
 }
 ```
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -175,41 +176,40 @@
   "data": {
     "id": 1,
     "partNo": "MTR-2023-001",
-    "partName": "中心轮组件",
+    "partName": "涓績杞粍浠?,
     "specification": "CL-100",
     "stockQty": 50,
-    "supplier": "供应商A",
+    "supplier": "渚涘簲鍟咥",
     "categoryId": 1,
     "version": "V1.0"
   }
 }
 ```
 
-**校验失败示例**:
+**鏍￠獙澶辫触绀轰緥**:
 ```json
 {
   "code": 400,
-  "message": "规格型号不能为空",
+  "message": "瑙勬牸鍨嬪彿涓嶈兘涓虹┖",
   "data": null
 }
 ```
 
 ---
 
-### 1.4 更新物料
+### 1.4 鏇存柊鐗╂枡
 
-**接口**: `PUT /api/parts/{id}`
+**鎺ュ彛**: `PUT /api/parts/{id}`
 
-**请求体（支持部分更新）**:
+**璇锋眰浣擄紙鏀寔閮ㄥ垎鏇存柊锛?*:
 ```json
 {
-  "supplier": "供应商B"
+  "supplier": "渚涘簲鍟咮"
 }
 ```
 
-> 说明：后端会先合并已有物料数据后再校验，最终仍需满足物料必填字段约束。
-
-**响应示例**:
+> 璇存槑锛氬悗绔細鍏堝悎骞跺凡鏈夌墿鏂欐暟鎹悗鍐嶆牎楠岋紝鏈€缁堜粛闇€婊¤冻鐗╂枡蹇呭～瀛楁绾︽潫銆?
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -217,10 +217,10 @@
   "data": {
     "id": 1,
     "partNo": "MTR-2023-001",
-    "partName": "中心轮组件",
+    "partName": "涓績杞粍浠?,
     "specification": "CL-100",
     "stockQty": 50,
-    "supplier": "供应商A",
+    "supplier": "渚涘簲鍟咥",
     "categoryId": 1,
     "version": "V1.0"
   }
@@ -229,26 +229,26 @@
 
 ---
 
-### 1.5 删除物料
+### 1.5 鍒犻櫎鐗╂枡
 
-**接口**: `DELETE /api/parts/{id}`
+**鎺ュ彛**: `DELETE /api/parts/{id}`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
-  "message": "删除成功",
+  "message": "鍒犻櫎鎴愬姛",
   "data": null
 }
 ```
 
 ---
 
-### 1.6 获取物料 BOM
+### 1.6 鑾峰彇鐗╂枡 BOM
 
-**接口**: `GET /api/parts/{id}/bom`
+**鎺ュ彛**: `GET /api/parts/{id}/bom`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -257,14 +257,14 @@
     {
       "id": 2,
       "partNo": "MTR-2023-042",
-      "partName": "轴承单元",
+      "partName": "杞存壙鍗曞厓",
       "quantity": 2,
       "version": "V1.0",
       "children": [
         {
           "id": 4,
           "partNo": "MTR-2023-044",
-          "partName": "轴承",
+          "partName": "杞存壙",
           "quantity": 1,
           "version": "V1.0",
           "children": []
@@ -277,13 +277,13 @@
 
 ---
 
-### 1.7 更新物料 BOM
+### 1.7 鏇存柊鐗╂枡 BOM
 
-**接口**: `PUT /api/parts/{id}/bom`
+**鎺ュ彛**: `PUT /api/parts/{id}/bom`
 
-**请求体**: 同 BOM 响应格式的 data 字段
+**璇锋眰浣?*: 鍚?BOM 鍝嶅簲鏍煎紡鐨?data 瀛楁
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -294,13 +294,13 @@
 
 ---
 
-## 二、物料分类 API
+## 浜屻€佺墿鏂欏垎绫?API
 
-### 2.1 获取分类树
+### 2.1 鑾峰彇鍒嗙被鏍?
 
-**接口**: `GET /api/parts/categories`
+**鎺ュ彛**: `GET /api/parts/categories`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -308,11 +308,11 @@
   "data": [
     {
       "id": 1,
-      "name": "机械零件",
+      "name": "鏈烘闆朵欢",
       "children": [
         {
           "id": 2,
-          "name": "轴类",
+          "name": "杞寸被",
           "children": []
         }
       ]
@@ -323,26 +323,26 @@
 
 ---
 
-### 2.2 创建分类
+### 2.2 鍒涘缓鍒嗙被
 
-**接口**: `POST /api/parts/categories`
+**鎺ュ彛**: `POST /api/parts/categories`
 
-**请求体**:
+**璇锋眰浣?*:
 ```json
 {
-  "name": "新分类",
+  "name": "鏂板垎绫?,
   "parentId": 1
 }
 ```
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
   "message": "success",
   "data": {
     "id": 3,
-    "name": "新分类",
+    "name": "鏂板垎绫?,
     "parentId": 1
   }
 }
@@ -350,53 +350,53 @@
 
 ---
 
-### 2.3 更新分类
+### 2.3 鏇存柊鍒嗙被
 
-**接口**: `PUT /api/parts/categories/{id}`
+**鎺ュ彛**: `PUT /api/parts/categories/{id}`
 
-**请求体**:
+**璇锋眰浣?*:
 ```json
 {
-  "name": "更新后的分类名"
+  "name": "鏇存柊鍚庣殑鍒嗙被鍚?
 }
 ```
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
   "message": "success",
   "data": {
     "id": 1,
-    "name": "更新后的分类名"
+    "name": "鏇存柊鍚庣殑鍒嗙被鍚?
   }
 }
 ```
 
 ---
 
-### 2.4 删除分类
+### 2.4 鍒犻櫎鍒嗙被
 
-**接口**: `DELETE /api/parts/categories/{id}`
+**鎺ュ彛**: `DELETE /api/parts/categories/{id}`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
-  "message": "删除成功",
+  "message": "鍒犻櫎鎴愬姛",
   "data": null
 }
 ```
 
 ---
 
-## 三、版本管理 API
+## 涓夈€佺増鏈鐞?API
 
-### 3.1 获取版本历史
+### 3.1 鑾峰彇鐗堟湰鍘嗗彶
 
-**接口**: `GET /api/parts/{id}/versions`
+**鎺ュ彛**: `GET /api/parts/{id}/versions`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -404,9 +404,9 @@
   "data": [
     {
       "version": "V1.0",
-      "description": "初始版本",
+      "description": "鍒濆鐗堟湰",
       "status": "published",
-      "createdBy": "张三",
+      "createdBy": "寮犱笁",
       "createdAt": "2024-01-01T10:00:00"
     }
   ]
@@ -415,27 +415,27 @@
 
 ---
 
-### 3.2 创建新版本
+### 3.2 鍒涘缓鏂扮増鏈?
 
-**接口**: `POST /api/parts/{id}/versions`
+**鎺ュ彛**: `POST /api/parts/{id}/versions`
 
-**请求体**:
+**璇锋眰浣?*:
 ```json
 {
-  "description": "版本说明"
+  "description": "鐗堟湰璇存槑"
 }
 ```
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
   "message": "success",
   "data": {
     "version": "V2.0",
-    "description": "版本说明",
+    "description": "鐗堟湰璇存槑",
     "status": "draft",
-    "createdBy": "张三",
+    "createdBy": "寮犱笁",
     "createdAt": "2024-01-02T10:00:00"
   }
 }
@@ -443,17 +443,17 @@
 
 ---
 
-### 3.3 版本对比
+### 3.3 鐗堟湰瀵规瘮
 
-**接口**: `GET /api/parts/{id}/versions/compare`
+**鎺ュ彛**: `GET /api/parts/{id}/versions/compare`
 
-**请求参数**:
-| 参数 | 类型 | 必填 | 说明 |
+**璇锋眰鍙傛暟**:
+| 鍙傛暟 | 绫诲瀷 | 蹇呭～ | 璇存槑 |
 |------|------|------|------|
-| v1 | string | 是 | 版本1 |
-| v2 | string | 是 | 版本2 |
+| v1 | string | 鏄?| 鐗堟湰1 |
+| v2 | string | 鏄?| 鐗堟湰2 |
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -461,12 +461,12 @@
   "data": {
     "v1": {
       "version": "V1.0",
-      "partName": "中心轮组件",
+      "partName": "涓績杞粍浠?,
       "specification": "CL-100"
     },
     "v2": {
       "version": "V2.0",
-      "partName": "中心轮组件",
+      "partName": "涓績杞粍浠?,
       "specification": "CL-200"
     }
   }
@@ -475,14 +475,14 @@
 
 ---
 
-## 四、设备管理 API
+## 鍥涖€佽澶囩鐞?API
 
-### 4.1 获取设备列表
-**接口**: `GET /api/equipments`
+### 4.1 鑾峰彇璁惧鍒楄〃
+**鎺ュ彛**: `GET /api/equipments`
 
-**请求参数**: keyword, page, size
+**璇锋眰鍙傛暟**: keyword, page, size
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -492,11 +492,11 @@
       {
         "id": 1,
         "equipmentNo": "EQ-001",
-        "equipmentName": "数控车床",
+        "equipmentName": "鏁版帶杞﹀簥",
         "model": "CNC-100",
-        "manufacturer": "厂家A",
+        "manufacturer": "鍘傚A",
         "status": "running",
-        "location": "车间A"
+        "location": "杞﹂棿A"
       }
     ],
     "total": 50,
@@ -507,24 +507,24 @@
 }
 ```
 
-**状态枚举**: running | idle | maintenance | fault
+**鐘舵€佹灇涓?*: running | idle | maintenance | fault
 
-### 4.2 创建设备
-**接口**: `POST /api/equipments`
+### 4.2 鍒涘缓璁惧
+**鎺ュ彛**: `POST /api/equipments`
 
-**请求体**:
+**璇锋眰浣?*:
 ```json
 {
   "equipmentNo": "EQ-001",
-  "equipmentName": "数控车床",
+  "equipmentName": "鏁版帶杞﹀簥",
   "model": "CNC-100",
-  "manufacturer": "厂家A",
+  "manufacturer": "鍘傚A",
   "status": "idle",
-  "location": "车间A"
+  "location": "杞﹂棿A"
 }
 ```
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -532,21 +532,21 @@
   "data": {
     "id": 1,
     "equipmentNo": "EQ-001",
-    "equipmentName": "数控车床",
+    "equipmentName": "鏁版帶杞﹀簥",
     "model": "CNC-100",
-    "manufacturer": "厂家A",
+    "manufacturer": "鍘傚A",
     "status": "idle",
-    "location": "车间A"
+    "location": "杞﹂棿A"
   }
 }
 ```
 
-### 4.3 更新设备
-**接口**: `PUT /api/equipments/{id}`
+### 4.3 鏇存柊璁惧
+**鎺ュ彛**: `PUT /api/equipments/{id}`
 
-**请求体**: 同创建设备
+**璇锋眰浣?*: 鍚屽垱寤鸿澶?
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -554,81 +554,102 @@
   "data": {
     "id": 1,
     "equipmentNo": "EQ-001",
-    "equipmentName": "数控车床",
+    "equipmentName": "鏁版帶杞﹀簥",
     "model": "CNC-100",
-    "manufacturer": "厂家A",
+    "manufacturer": "鍘傚A",
     "status": "running",
-    "location": "车间A"
+    "location": "杞﹂棿A"
   }
 }
 ```
 
-### 4.4 删除设备
-**接口**: `DELETE /api/equipments/{id}`
+### 4.4 鍒犻櫎璁惧
+**鎺ュ彛**: `DELETE /api/equipments/{id}`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
-  "message": "删除成功",
+  "message": "鍒犻櫎鎴愬姛",
   "data": null
 }
 ```
 
 ---
 
-## 五、工序配置 API
+## 浜斻€佸伐搴忛厤缃?API
 
-### 5.1 获取工序列表
-**接口**: `GET /api/procedures`
+### 5.1 鑾峰彇宸ュ簭鍒楄〃
+**鎺ュ彛**: `GET /api/procedures`
 
-**固定5道工序**: 毛坯制造、粗加工、精加工、检测、入库
-
-**响应示例**:
+**璇存槑**:
+- 杩斿洖 `WorkingProcedure` 妯″瀷鏍稿績瀛楁锛屽苟琛ュ厖 `productionAndTestingEquipment`锛堢敱 `WorkingProcedure_Equipment` 鍏崇郴鑱氬悎璁惧鍚嶇О锛夈€?- 褰?xDM 灏氭棤宸ュ簭鏁版嵁鏃讹紝鍚庣鍥為€€杩斿洖榛樿 5 閬撳伐搴忥紙姣涘澂鍒堕€犮€佺矖鍔犲伐銆佺簿鍔犲伐銆佹娴嬨€佸叆搴擄級銆?- 鏃堕棿瀛楁 `startTime/endTime` 缁熶竴浠ュ悗绔鑼冨寲瀛楃涓茶繑鍥烇紙绀轰緥锛歚2026-03-13T09:00:00.000+0800`锛夈€?
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
   "message": "success",
   "data": [
     {
-      "id": 1,
-      "name": "毛坯制造",
-      "order": 1
-    },
-    {
-      "id": 2,
-      "name": "粗加工",
-      "order": 2
-    },
-    {
-      "id": 3,
-      "name": "精加工",
-      "order": 3
-    },
-    {
-      "id": 4,
-      "name": "检测",
-      "order": 4
-    },
-    {
-      "id": 5,
-      "name": "入库",
-      "order": 5
+      "id": "990000000000003",
+      "procedureCode": "WP-TEST-001",
+      "procedureName": "WorkingProcedure_Test_001",
+      "productionStep": "step-1",
+      "productionAndTestingEquipment": "CNC-01銆佷笁鍧愭爣妫€娴嬩华",
+      "operatorName": "寮犱笁",
+      "startTime": "2026-03-13T09:00:00.000+0800",
+      "endTime": "2026-03-13T10:00:00.000+0800"
     }
   ]
 }
 ```
 
+### 5.2 鏇存柊宸ュ簭
+**鎺ュ彛**: `PUT /api/procedures/{id}`
+
+**璇锋眰浣撶ず渚?*:
+```json
+{
+  "procedureCode": "WP-TEST-001",
+  "procedureName": "WorkingProcedure_Test_001",
+  "productionStep": "step-1",
+  "operatorName": "寮犱笁",
+  "startTime": "2026-03-13 09:00:00",
+  "endTime": "2026-03-13 10:00:00"
+}
+```
+
+**鏃堕棿杈撳叆鍏煎**:
+- 鏀寔锛歚yyyy-MM-dd HH:mm:ss`
+- 鏀寔锛歚yyyy-MM-ddTHH:mm:ss(.SSS)+0800`锛堟垨 `+08:00`锛屽悗绔細褰掍竴鍖栵級
+
+**鍝嶅簲绀轰緥**:
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "id": "990000000000003",
+    "procedureCode": "WP-TEST-001",
+    "procedureName": "WorkingProcedure_Test_001",
+    "productionStep": "step-1",
+    "productionAndTestingEquipment": "CNC-01銆佷笁鍧愭爣妫€娴嬩华",
+    "operatorName": "寮犱笁",
+    "startTime": "2026-03-13T09:00:00.000+0800",
+    "endTime": "2026-03-13T10:00:00.000+0800"
+  }
+}
+```
+
 ---
 
-## 六、工艺路线管理 API
+## 鍏€佸伐鑹鸿矾绾跨鐞?API
 
-### 6.1 获取工艺路线列表
-**接口**: `GET /api/working-plans`
+### 6.1 鑾峰彇宸ヨ壓璺嚎鍒楄〃
+**鎺ュ彛**: `GET /api/working-plans`
 
-**请求参数**: `keyword`（可选，按工艺编号/工艺名称过滤）
-
-**响应示例**:
+**璇锋眰鍙傛暟**: `keyword`锛堝彲閫夛紝鎸夊伐鑹虹紪鍙?宸ヨ壓鍚嶇О杩囨护锛?
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -637,11 +658,11 @@
     {
       "id": "873975767468347392",
       "code": "WP-2026-001",
-      "name": "中心轮零件加工",
+      "name": "涓績杞浂浠跺姞宸?,
       "version": "1.0",
-      "product": "中心轮组件",
-      "description": "中心轮零件加工标准工艺",
-      "operator": "张工",
+      "product": "涓績杞粍浠?,
+      "description": "涓績杞浂浠跺姞宸ユ爣鍑嗗伐鑹?,
+      "operator": "寮犲伐",
       "equipment": "CNC-01, CMM-02",
       "operationTime": "2026-03-13 10:00:00"
     }
@@ -649,10 +670,10 @@
 }
 ```
 
-### 6.2 获取工艺路线详情
-**接口**: `GET /api/working-plans/{id}`
+### 6.2 鑾峰彇宸ヨ壓璺嚎璇︽儏
+**鎺ュ彛**: `GET /api/working-plans/{id}`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -660,35 +681,35 @@
   "data": {
     "id": "873975767468347392",
     "code": "WP-2026-001",
-    "name": "中心轮零件加工",
+    "name": "涓績杞浂浠跺姞宸?,
     "version": "1.0",
-    "product": "中心轮组件",
-    "description": "中心轮零件加工标准工艺",
-    "operator": "张工",
+    "product": "涓績杞粍浠?,
+    "description": "涓績杞浂浠跺姞宸ユ爣鍑嗗伐鑹?,
+    "operator": "寮犲伐",
     "equipment": "CNC-01, CMM-02",
     "operationTime": "2026-03-13 10:00:00"
   }
 }
 ```
 
-### 6.3 创建工艺路线
-**接口**: `POST /api/working-plans`
+### 6.3 鍒涘缓宸ヨ壓璺嚎
+**鎺ュ彛**: `POST /api/working-plans`
 
-**请求体示例**:
+**璇锋眰浣撶ず渚?*:
 ```json
 {
   "code": "WP-2026-001",
-  "name": "中心轮零件加工",
+  "name": "涓績杞浂浠跺姞宸?,
   "version": "1.0",
-  "product": "中心轮组件",
-  "description": "中心轮零件加工标准工艺",
-  "operator": "张工",
+  "product": "涓績杞粍浠?,
+  "description": "涓績杞浂浠跺姞宸ユ爣鍑嗗伐鑹?,
+  "operator": "寮犲伐",
   "equipment": "CNC-01, CMM-02",
   "operationTime": "2026-03-13 10:00:00"
 }
 ```
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -696,23 +717,22 @@
   "data": {
     "id": "873975767468347392",
     "code": "WP-2026-001",
-    "name": "中心轮零件加工",
+    "name": "涓績杞浂浠跺姞宸?,
     "version": "1.0",
-    "product": "中心轮组件",
-    "description": "中心轮零件加工标准工艺",
-    "operator": "张工",
+    "product": "涓績杞粍浠?,
+    "description": "涓績杞浂浠跺姞宸ユ爣鍑嗗伐鑹?,
+    "operator": "寮犲伐",
     "equipment": "CNC-01, CMM-02",
     "operationTime": "2026-03-13 10:00:00"
   }
 }
 ```
 
-### 6.4 更新工艺路线
-**接口**: `PUT /api/working-plans/{id}`
+### 6.4 鏇存柊宸ヨ壓璺嚎
+**鎺ュ彛**: `PUT /api/working-plans/{id}`
 
-**请求体**: 同创建接口，可按需传入部分字段。
-
-**响应示例**:
+**璇锋眰浣?*: 鍚屽垱寤烘帴鍙ｏ紝鍙寜闇€浼犲叆閮ㄥ垎瀛楁銆?
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
@@ -720,249 +740,253 @@
   "data": {
     "id": "873975767468347392",
     "code": "WP-2026-001",
-    "name": "中心轮零件加工-已更新",
+    "name": "涓績杞浂浠跺姞宸?宸叉洿鏂?,
     "version": "1.1",
-    "product": "中心轮组件",
-    "description": "中心轮零件加工标准工艺-更新",
-    "operator": "李工",
+    "product": "涓績杞粍浠?,
+    "description": "涓績杞浂浠跺姞宸ユ爣鍑嗗伐鑹?鏇存柊",
+    "operator": "鏉庡伐",
     "equipment": "CNC-03, CMM-02",
     "operationTime": "2026-03-14 09:30:00"
   }
 }
 ```
 
-### 6.5 删除工艺路线
-**接口**: `DELETE /api/working-plans/{id}`
+### 6.5 鍒犻櫎宸ヨ壓璺嚎
+**鎺ュ彛**: `DELETE /api/working-plans/{id}`
 
-**响应示例**:
+**鍝嶅簲绀轰緥**:
 ```json
 {
   "code": 200,
-  "message": "删除成功",
+  "message": "鍒犻櫎鎴愬姛",
   "data": null
 }
 ```
 
-### 6.6 获取工艺流程
-**接口**: `GET /api/working-plans/{id}/processes`
+### 6.6 鑾峰彇宸ヨ壓娴佺▼
+**鎺ュ彛**: `GET /api/working-plans/{id}/processes`
 
-### 6.7 更新工艺流程
-**接口**: `PUT /api/working-plans/{id}/processes`
+### 6.7 鏇存柊宸ヨ壓娴佺▼
+**鎺ュ彛**: `PUT /api/working-plans/{id}/processes`
 
-### 6.8 追加工序到工艺路线
-**接口**: `POST /api/working-plans/{id}/procedures`
+### 6.8 杩藉姞宸ュ簭鍒板伐鑹鸿矾绾?**鎺ュ彛**: `POST /api/working-plans/{id}/procedures`
 
 ---
 
-## 七、错误码
+## 涓冦€侀敊璇爜
 
-| 错误码 | 说明 |
+| 閿欒鐮?| 璇存槑 |
 |--------|------|
-| 200 | 成功 |
-| 400 | 参数错误 |
-| 404 | 资源不存在 |
-| 500 | 服务器错误 |
+| 200 | 鎴愬姛 |
+| 400 | 鍙傛暟閿欒 |
+| 404 | 璧勬簮涓嶅瓨鍦?|
+| 500 | 鏈嶅姟鍣ㄩ敊璇?|
 
 ---
 
-## 八、测试数据要求
+## 鍏€佹祴璇曟暟鎹姹?
 
-1. 物料: 至少5条，包含"中心轮组件"
-2. 设备: 至少3条
-3. 工艺路线: "中心轮零件加工 V1.0"，包含完整5道工序
-4. 工序: 固定5道
+1. 鐗╂枡: 鑷冲皯5鏉★紝鍖呭惈"涓績杞粍浠?
+2. 璁惧: 鑷冲皯3鏉?
+3. 宸ヨ壓璺嚎: "涓績杞浂浠跺姞宸?V1.0"锛屽寘鍚畬鏁?閬撳伐搴?
+4. 宸ュ簭: 鍥哄畾5閬?
 
 ---
 
-## 九、xDM-F 模型映射说明
+## 涔濄€亁DM-F 妯″瀷鏄犲皠璇存槑
 
-### 9.1 架构说明
+### 9.1 鏋舵瀯璇存槑
 
-本项目采用三层架构，所有数据操作必须通过 xDM-F API：
+鏈」鐩噰鐢ㄤ笁灞傛灦鏋勶紝鎵€鏈夋暟鎹搷浣滃繀椤婚€氳繃 xDM-F API锛?
 
 ```
-前端 → 后端 Spring Boot → xDM-F 运行态 API → xDM-F 数据模型
+鍓嶇 鈫?鍚庣 Spring Boot 鈫?xDM-F 杩愯鎬?API 鈫?xDM-F 鏁版嵁妯″瀷
 ```
 
-后端需要将前端 API 字段映射到 xDM-F 模型字段。
+鍚庣闇€瑕佸皢鍓嶇 API 瀛楁鏄犲皠鍒?xDM-F 妯″瀷瀛楁銆?
 
 ---
 
-### 9.2 物料管理映射（Part）
+### 9.2 鐗╂枡绠＄悊鏄犲皠锛圥art锛?
 
-**xDM-F 模型**: `Part`
+**xDM-F 妯″瀷**: `Part`
 
-| 前端 API 字段 | xDM-F 字段 | 类型 | 说明 |
+| 鍓嶇 API 瀛楁 | xDM-F 瀛楁 | 绫诲瀷 | 璇存槑 |
 |--------------|-----------|------|------|
-| id | id | string | 物料ID |
-| partNo | partCode | string | 物料编号 |
-| partName | partName | string | 物料名称 |
-| specification | specModel | string | 规格型号 |
-| stockQty | stockQty | number | 库存数量 |
-| supplier | supplier | string | 供应商 |
+| id | id | string | 鐗╂枡ID |
+| partNo | partCode | string | 鐗╂枡缂栧彿 |
+| partName | partName | string | 鐗╂枡鍚嶇О |
+| specification | specModel | string | 瑙勬牸鍨嬪彿 |
+| stockQty | stockQty | number | 搴撳瓨鏁伴噺 |
+| supplier | supplier | string | 渚涘簲鍟?|
 | categoryId | - | number | 分类ID（前端使用） |
-| categoryName | categoryPath | string | 分类路径 |
-| version | versionNo | string | 版本号 |
+| categoryName | categoryPath | string | 鍒嗙被璺緞 |
+| version | versionNo | string | 鐗堟湰鍙?|
 
-**xDM-F API 调用**:
-- 创建: `POST /rdm_{appId}_app/services/dynamic/api/Part/create`
-- 查询: `POST /rdm_{appId}_app/services/dynamic/api/Part/query`
-- 更新: `POST /rdm_{appId}_app/services/dynamic/api/Part/update`
-- 删除: `POST /rdm_{appId}_app/services/dynamic/api/Part/delete`
+**xDM-F API 璋冪敤**:
+- 鍒涘缓: `POST /rdm_{appId}_app/services/dynamic/api/Part/create`
+- 鏌ヨ: `POST /rdm_{appId}_app/services/dynamic/api/Part/query`
+- 鏇存柊: `POST /rdm_{appId}_app/services/dynamic/api/Part/update`
+- 鍒犻櫎: `POST /rdm_{appId}_app/services/dynamic/api/Part/delete`
 
 ---
 
-### 9.3 BOM 关系映射（Part_Part）
+### 9.3 BOM 鍏崇郴鏄犲皠锛圥art_Part锛?
 
-**xDM-F 关系**: `Part_Part`
+**xDM-F 鍏崇郴**: `Part_Part`
 
-| 前端 API 字段 | xDM-F 字段 | 说明 |
+| 鍓嶇 API 瀛楁 | xDM-F 瀛楁 | 璇存槑 |
 |--------------|-----------|------|
-| id | id | 子物料ID |
-| partNo | target.partCode | 子物料编号 |
-| partName | target.partName | 子物料名称 |
-| quantity | - | 数量（关系属性） |
-| version | target.versionNo | 版本号 |
-| children | - | 递归子节点 |
+| id | id | 瀛愮墿鏂橧D |
+| partNo | target.partCode | 瀛愮墿鏂欑紪鍙?|
+| partName | target.partName | 瀛愮墿鏂欏悕绉?|
+| quantity | - | 鏁伴噺锛堝叧绯诲睘鎬э級 |
+| version | target.versionNo | 鐗堟湰鍙?|
+| children | - | 閫掑綊瀛愯妭鐐?|
 
-**xDM-F API 调用**:
-- 创建关系: `POST /rdm_{appId}_app/services/dynamic/api/Part_Part/create`
-- 查询关系: `POST /rdm_{appId}_app/services/dynamic/api/Part_Part/query`
+**xDM-F API 璋冪敤**:
+- 鍒涘缓鍏崇郴: `POST /rdm_{appId}_app/services/dynamic/api/Part_Part/create`
+- 鏌ヨ鍏崇郴: `POST /rdm_{appId}_app/services/dynamic/api/Part_Part/query`
 
 ---
 
-### 9.4 设备管理映射（Equipment）
+### 9.4 璁惧绠＄悊鏄犲皠锛圗quipment锛?
 
-**xDM-F 模型**: `Equipment`
+**xDM-F 妯″瀷**: `Equipment`
 
-| 前端 API 字段 | xDM-F 字段 | 类型 | 说明 |
+| 鍓嶇 API 瀛楁 | xDM-F 瀛楁 | 绫诲瀷 | 璇存槑 |
 |--------------|-----------|------|------|
-| id | id | string | 设备ID |
-| equipmentNo | equipmentCode | string | 设备编码 |
-| equipmentName | equipmentName | string | 设备名称 |
-| model | specModel | string | 规格型号 |
-| manufacturer | manufacturer | string | 生产厂家 |
-| status | - | string | 设备状态（前端扩展） |
-| location | location | string | 位置 |
-| brand | brand | string | 品牌 |
-| supplier | supplier | string | 供应商 |
-| productionDate | productionDate | date | 生产日期 |
-| serviceLifeYears | serviceLifeYears | number | 使用年限 |
-| depreciationMethod | depreciationMethod | string | 折旧方式 |
-| technicalParams | technicalParams | string | 技术参数信息 |
-| sparePartsInfo | sparePartsInfo | string | 备品备件信息 |
+| id | id | string | 璁惧ID |
+| equipmentNo | equipmentCode | string | 璁惧缂栫爜 |
+| equipmentName | equipmentName | string | 璁惧鍚嶇О |
+| model | specModel | string | 瑙勬牸鍨嬪彿 |
+| manufacturer | manufacturer | string | 鐢熶骇鍘傚 |
+| status | - | string | 璁惧鐘舵€侊紙鍓嶇鎵╁睍锛?|
+| location | location | string | 浣嶇疆 |
+| brand | brand | string | 鍝佺墝 |
+| supplier | supplier | string | 渚涘簲鍟?|
+| productionDate | productionDate | date | 鐢熶骇鏃ユ湡 |
+| serviceLifeYears | serviceLifeYears | number | 浣跨敤骞撮檺 |
+| depreciationMethod | depreciationMethod | string | 鎶樻棫鏂瑰紡 |
+| technicalParams | technicalParams | string | 鎶€鏈弬鏁颁俊鎭?|
+| sparePartsInfo | sparePartsInfo | string | 澶囧搧澶囦欢淇℃伅 |
 
-**xDM-F API 调用**:
-- 创建: `POST /rdm_{appId}_app/services/dynamic/api/Equipment/create`
-- 查询: `POST /rdm_{appId}_app/services/dynamic/api/Equipment/query`
-- 更新: `POST /rdm_{appId}_app/services/dynamic/api/Equipment/update`
-- 删除: `POST /rdm_{appId}_app/services/dynamic/api/Equipment/delete`
+**xDM-F API 璋冪敤**:
+- 鍒涘缓: `POST /rdm_{appId}_app/services/dynamic/api/Equipment/create`
+- 鏌ヨ: `POST /rdm_{appId}_app/services/dynamic/api/Equipment/query`
+- 鏇存柊: `POST /rdm_{appId}_app/services/dynamic/api/Equipment/update`
+- 鍒犻櫎: `POST /rdm_{appId}_app/services/dynamic/api/Equipment/delete`
 
 ---
 
 
-### 9.5 工序配置映射（WorkingProcedure）
+### 9.5 宸ュ簭閰嶇疆鏄犲皠锛圵orkingProcedure锛?
 
-**xDM-F 模型**: `WorkingProcedure`
+**xDM-F 妯″瀷**: `WorkingProcedure`
 
-| 前端 API 字段 | xDM-F 字段 | 类型 | 说明 |
+| 鍓嶇 API 瀛楁 | xDM-F 瀛楁 | 绫诲瀷 | 璇存槑 |
 |--------------|-----------|------|------|
-| id | id | string | 工序ID |
-| name | procedureName | string | 工序名称 |
-| order | - | number | 工序顺序（前端扩展） |
-| procedureCode | procedureCode | string | 工序编号 |
-| productionStep | productionStep | string | 生产步骤 |
-| operatorName | operatorName | string | 操作人员 |
-| startTime | startTime | datetime | 开始时间 |
-| endTime | endTime | datetime | 结束时间 |
+| id | id | string | 宸ュ簭ID |
+| name | procedureName | string | 宸ュ簭鍚嶇О |
+| order | - | number | 宸ュ簭椤哄簭锛堝墠绔墿灞曪級 |
+| procedureCode | procedureCode | string | 宸ュ簭缂栧彿 |
+| productionStep | productionStep | string | 鐢熶骇姝ラ |
+| productionAndTestingEquipment | - | string | 鐢熶骇鍜屾娴嬭澶囷紙鐢?`WorkingProcedure_Equipment` 鍏崇郴鑱氬悎锛?|
+| operatorName | operatorName | string | 鎿嶄綔浜哄憳 |
+| startTime | startTime | datetime | 寮€濮嬫椂闂?|
+| endTime | endTime | datetime | 缁撴潫鏃堕棿 |
 
-**固定5道工序**:
-1. 毛坯制造
-2. 粗加工
-3. 精加工
-4. 检测
-5. 入库
+**鍥哄畾5閬撳伐搴?*:
+1. 姣涘澂鍒堕€?
+2. 绮楀姞宸?
+3. 绮惧姞宸?
+4. 妫€娴?
+5. 鍏ュ簱
 
-**xDM-F API 调用**:
-- 创建: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure/create`
-- 查询: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure/query`
+**xDM-F API 璋冪敤**:
+- 鍒涘缓: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure/create`
+- 鏌ヨ: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure/query`
 
 ---
 
-### 9.6 工艺路线映射（WorkingPlan）
+### 9.6 宸ヨ壓璺嚎鏄犲皠锛圵orkingPlan锛?
 
-**xDM-F 模型**: `WorkingPlan`
+**xDM-F 妯″瀷**: `WorkingPlan`
 
-| 前端 API 字段 | xDM-F 字段 | 类型 | 说明 |
+| 鍓嶇 API 瀛楁 | xDM-F 瀛楁 | 绫诲瀷 | 璇存槑 |
 |--------------|-----------|------|------|
-| id | id | string | 工艺ID |
-| planName | planName | string | 工艺名称 |
-| planCode | planCode | string | 工艺编号 |
-| partId | - | number | 物料ID（前端关联） |
-| partName | - | string | 物料名称（前端显示） |
-| status | - | string | 状态（前端扩展） |
-| versionNo | versionNo | string | 版本号 |
-| belongProduct | belongProduct | string | 所属产品 |
-| operatorName | operatorName | string | 操作人员 |
-| operationTime | operationTime | datetime | 操作时间 |
-| equipmentUsage | equipmentUsage | string | 设备使用情况 |
-| procedures | - | array | 关联的工序列表 |
+| id | id | string | 宸ヨ壓ID |
+| planName | planName | string | 宸ヨ壓鍚嶇О |
+| planCode | planCode | string | 宸ヨ壓缂栧彿 |
+| partId | - | number | 鐗╂枡ID锛堝墠绔叧鑱旓級 |
+| partName | - | string | 鐗╂枡鍚嶇О锛堝墠绔樉绀猴級 |
+| status | - | string | 鐘舵€侊紙鍓嶇鎵╁睍锛?|
+| versionNo | versionNo | string | 鐗堟湰鍙?|
+| belongProduct | belongProduct | string | 鎵€灞炰骇鍝?|
+| operatorName | operatorName | string | 鎿嶄綔浜哄憳 |
+| operationTime | operationTime | datetime | 鎿嶄綔鏃堕棿 |
+| equipmentUsage | equipmentUsage | string | 璁惧浣跨敤鎯呭喌 |
+| procedures | - | array | 鍏宠仈鐨勫伐搴忓垪琛?|
 
-**xDM-F API 调用**:
-- 创建: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan/create`
-- 查询: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan/query`
-- 更新: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan/update`
-- 删除: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan/delete`
+**xDM-F API 璋冪敤**:
+- 鍒涘缓: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan/create`
+- 鏌ヨ: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan/query`
+- 鏇存柊: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan/update`
+- 鍒犻櫎: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan/delete`
 
 ---
 
-### 9.7 工艺-工序关系映射（WorkingPlan_WorkingProcedure）
+### 9.7 宸ヨ壓-宸ュ簭鍏崇郴鏄犲皠锛圵orkingPlan_WorkingProcedure锛?
 
-**xDM-F 关系**: `WorkingPlan_WorkingProcedure`
+**xDM-F 鍏崇郴**: `WorkingPlan_WorkingProcedure`
 
-| 前端 API 字段 | xDM-F 字段 | 说明 |
+| 鍓嶇 API 瀛楁 | xDM-F 瀛楁 | 璇存槑 |
 |--------------|-----------|------|
-| procedureId | target.id | 工序ID |
-| name | target.procedureName | 工序名称 |
-| order | - | 工序顺序（关系属性） |
-| equipmentId | - | 设备ID（通过 WorkingProcedure_Equipment 关系） |
-| equipmentName | - | 设备名称 |
-| duration | - | 工时（关系属性） |
+| procedureId | target.id | 宸ュ簭ID |
+| name | target.procedureName | 宸ュ簭鍚嶇О |
+| order | - | 宸ュ簭椤哄簭锛堝叧绯诲睘鎬э級 |
+| equipmentId | - | 璁惧ID锛堥€氳繃 WorkingProcedure_Equipment 鍏崇郴锛?|
+| equipmentName | - | 璁惧鍚嶇О |
+| duration | - | 宸ユ椂锛堝叧绯诲睘鎬э級 |
 
-**xDM-F API 调用**:
-- 创建关系: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan_WorkingProcedure/create`
-- 查询关系: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan_WorkingProcedure/query`
-
----
-
-### 9.8 工序-设备关系映射（WorkingProcedure_Equipment）
-
-**xDM-F 关系**: `WorkingProcedure_Equipment`
-
-**xDM-F API 调用**:
-- 创建关系: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure_Equipment/create`
-- 查询关系: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure_Equipment/query`
+**xDM-F API 璋冪敤**:
+- 鍒涘缓鍏崇郴: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan_WorkingProcedure/create`
+- 鏌ヨ鍏崇郴: `POST /rdm_{appId}_app/services/dynamic/api/WorkingPlan_WorkingProcedure/query`
 
 ---
 
-### 9.9 工序-物料关系映射（WorkingProcedure_Part）
+### 9.8 宸ュ簭-璁惧鍏崇郴鏄犲皠锛圵orkingProcedure_Equipment锛?
 
-**xDM-F 关系**: `WorkingProcedure_Part`
+**xDM-F 鍏崇郴**: `WorkingProcedure_Equipment`
 
-**xDM-F API 调用**:
-- 创建关系: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure_Part/create`
-- 查询关系: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure_Part/query`
+**xDM-F API 璋冪敤**:
+- 鍒涘缓鍏崇郴: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure_Equipment/create`
+- 鏌ヨ鍏崇郴: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure_Equipment/query`
+
+---
+
+### 9.9 宸ュ簭-鐗╂枡鍏崇郴鏄犲皠锛圵orkingProcedure_Part锛?
+
+**xDM-F 鍏崇郴**: `WorkingProcedure_Part`
+
+**xDM-F API 璋冪敤**:
+- 鍒涘缓鍏崇郴: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure_Part/create`
+- 鏌ヨ鍏崇郴: `POST /rdm_{appId}_app/services/dynamic/api/WorkingProcedure_Part/query`
 
 ---
 
-### 9.10 后端实现注意事项
+### 9.10 鍚庣瀹炵幇娉ㄦ剰浜嬮」
 
-1. **统一响应封装**: 所有 xDM-F API 返回需要包装成 `{ code, message, data }` 格式
-2. **字段映射**: 后端 Service 层负责前端字段和 xDM-F 字段的转换
-3. **分页处理**: xDM-F 查询结果需要转换为前端分页格式
-4. **关系查询**: 需要通过多次 API 调用组装完整的业务对象（如 BOM 树、工艺路线详情）
-5. **错误处理**: xDM-F API 错误需要转换为前端统一错误格式
-6. **日期格式**: xDM-F 的 Timestamp 需要转换为 ISO 8601 格式字符串
+1. **缁熶竴鍝嶅簲灏佽**: 鎵€鏈?xDM-F API 杩斿洖闇€瑕佸寘瑁呮垚 `{ code, message, data }` 鏍煎紡
+2. **瀛楁鏄犲皠**: 鍚庣 Service 灞傝礋璐ｅ墠绔瓧娈靛拰 xDM-F 瀛楁鐨勮浆鎹?
+3. **鍒嗛〉澶勭悊**: xDM-F 鏌ヨ缁撴灉闇€瑕佽浆鎹负鍓嶇鍒嗛〉鏍煎紡
+4. **鍏崇郴鏌ヨ**: 闇€瑕侀€氳繃澶氭 API 璋冪敤缁勮瀹屾暣鐨勪笟鍔″璞★紙濡?BOM 鏍戙€佸伐鑹鸿矾绾胯鎯咃級
+5. **閿欒澶勭悊**: xDM-F API 閿欒闇€瑕佽浆鎹负鍓嶇缁熶竴閿欒鏍煎紡
+6. **鏃ユ湡鏍煎紡**: xDM-F 鐨?Timestamp 闇€瑕佽浆鎹负 ISO 8601 鏍煎紡瀛楃涓?
 
 ---
+
+
+
+
 

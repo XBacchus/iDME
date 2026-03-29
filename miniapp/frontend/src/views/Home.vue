@@ -125,17 +125,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { getPartList } from '@/api/parts'
+import { getProcedures } from '@/api/procedures'
 
 const router = useRouter()
-
-const metrics = [
-  { label: '在线模块', value: '04' },
-  { label: '预警项', value: '02' },
-  { label: '在制工序', value: '01' },
-  { label: '设备在线', value: '98.6%' }
-]
 
 const modules = [
   {
@@ -172,21 +168,21 @@ const modules = [
   }
 ]
 
-const materials = [
-  { id: 1, code: 'MTR-2023-001', name: '中心轮轴承单元', spec: 'SKF-6205-2RS', stock: '1,240', stockClass: 'stock-tag ok', supplier: 'SKF Group' },
-  { id: 2, code: 'MTR-2023-042', name: '精密硬化齿轮', spec: 'MOD-2.5-42T', stock: '15', stockClass: 'stock-tag warn', supplier: '德国精工部件' },
-  { id: 3, code: 'MTR-2023-083', name: '定位销组件', spec: 'PIN-08-SS', stock: '428', stockClass: 'stock-tag info', supplier: '华东精密五金' }
-]
+const materials = ref([
+  { id: 1, code: 'MTR-2023-001', name: '中心轮轴承单元', spec: 'SKF-6205-2RS', stock: '1,240', stockClass: 'ok', stockLevel: 'ok', supplier: 'SKF Group' },
+  { id: 2, code: 'MTR-2023-042', name: '精密硬化齿轮', spec: 'MOD-2.5-42T', stock: '15', stockClass: 'warn', stockLevel: 'warn', supplier: '德国精工部件' },
+  { id: 3, code: 'MTR-2023-083', name: '定位销组件', spec: 'PIN-08-SS', stock: '428', stockClass: 'info', stockLevel: 'info', supplier: '华东精密五金' }
+])
 
-const processSteps = [
+const processSteps = ref([
   { num: '01', name: '毛坯制造', location: '铸造车间', stateClass: 'is-active' },
   { num: '02', name: '粗加工', location: 'CNC-01 工位', stateClass: 'is-idle' },
   { num: '03', name: '精加工', location: 'CNC-05 工位', stateClass: 'is-idle' },
   { num: '04', name: '检测', location: 'CMM 三坐标', stateClass: 'is-review' },
   { num: '05', name: '入库', location: '成品仓', stateClass: 'is-complete' }
-]
+])
 
-const operations = [
+const operations = ref([
   {
     id: 1,
     code: 'OP-2023-A1',
@@ -220,9 +216,138 @@ const operations = [
     time: '预计 10-27',
     cardClass: 'is-waiting'
   }
-]
+])
 
-const processProgressWidth = computed(() => '25%')
+const metrics = computed(() => [
+  { label: '在线模块', value: '04' },
+  { label: '预警项', value: String(materials.value.filter((item) => item.stockLevel === 'warn').length).padStart(2, '0') },
+  { label: '在制工序', value: String(operations.value.filter((item) => item.status === '进行中').length).padStart(2, '0') },
+  { label: '设备在线', value: '98.6%' }
+])
+
+const getStockMeta = (qty) => {
+  if (qty <= 50) {
+    return { className: 'warn', level: 'warn' }
+  }
+
+  if (qty <= 200) {
+    return { className: 'info', level: 'info' }
+  }
+
+  return { className: 'ok', level: 'ok' }
+}
+
+const getOperationMeta = (status) => {
+  if (status === 1) {
+    return {
+      status: '进行中',
+      statusClass: 'badge running',
+      cardClass: 'is-running'
+    }
+  }
+
+  if (status === 2) {
+    return {
+      status: '已完成',
+      statusClass: 'badge complete',
+      cardClass: 'is-complete'
+    }
+  }
+
+  return {
+    status: '待开始',
+    statusClass: 'badge idle',
+    cardClass: 'is-waiting'
+  }
+}
+
+const getStepStateClass = (status, index) => {
+  if (status === 1) {
+    return 'is-active'
+  }
+
+  if (status === 2) {
+    return 'is-complete'
+  }
+
+  return index === 0 ? 'is-review' : 'is-idle'
+}
+
+const processProgressWidth = computed(() => {
+  const total = processSteps.value.length
+  if (!total) {
+    return '0%'
+  }
+
+  const activeIndex = processSteps.value.findIndex((step) => step.stateClass === 'is-active')
+  const completedCount = processSteps.value.filter((step) => step.stateClass === 'is-complete').length
+  const progressUnits = activeIndex >= 0 ? activeIndex + 0.5 : completedCount
+
+  return `${Math.max(12, Math.round((progressUnits / total) * 100))}%`
+})
+
+const loadDashboardData = async () => {
+  try {
+    const [partsRes, proceduresRes] = await Promise.all([
+      getPartList({ page: 1, size: 5 }),
+      getProcedures()
+    ])
+
+    const partRecords = partsRes?.data?.records || []
+    if (partRecords.length) {
+      materials.value = partRecords.map((item) => {
+        const qty = Number(item.stockQty ?? item.qty ?? item.quantity ?? 0)
+        const stockMeta = getStockMeta(qty)
+
+        return {
+          id: item.id ?? item.partNo ?? item.code,
+          code: item.partNo || item.partCode || item.code || '--',
+          name: item.partName || item.name || '--',
+          spec: item.specification || item.specModel || item.model || '--',
+          stock: qty.toLocaleString('en-US'),
+          stockClass: stockMeta.className,
+          stockLevel: stockMeta.level,
+          supplier: item.supplier || '--'
+        }
+      })
+    }
+
+    const procedureRows = Array.isArray(proceduresRes?.data) ? proceduresRes.data : []
+    if (procedureRows.length) {
+      processSteps.value = procedureRows.slice(0, 5).map((item, index) => {
+        const status = Number(item.status ?? 0)
+        return {
+          num: String(Number(item.order ?? index + 1)).padStart(2, '0'),
+          name: item.procedureName || item.name || `工序 ${index + 1}`,
+          location: item.productionAndTestingEquipment || item.location || '待配置工位',
+          stateClass: getStepStateClass(status, index)
+        }
+      })
+
+      operations.value = procedureRows.slice(0, 6).map((item, index) => {
+        const meta = getOperationMeta(Number(item.status ?? 0))
+
+        return {
+          id: item.id ?? index + 1,
+          code: item.procedureCode || item.code || `OP-${String(index + 1).padStart(2, '0')}`,
+          status: item.statusText || meta.status,
+          statusClass: meta.statusClass,
+          title: item.procedureName || item.name || `工序 ${index + 1}`,
+          desc: item.productionStep || item.description || '暂无工序说明',
+          owner: item.operatorName || item.operator || '未分配',
+          time: item.startTime || item.time || '--',
+          cardClass: meta.cardClass
+        }
+      })
+    }
+  } catch {
+    ElMessage.warning('首页实时数据加载失败，已保留示例数据。')
+  }
+}
+
+onMounted(() => {
+  loadDashboardData()
+})
 </script>
 
 <style scoped>
@@ -580,6 +705,10 @@ td {
   border-left: 3px solid rgba(255, 255, 255, 0.12);
 }
 
+.operation-card.is-complete {
+  border-left: 3px solid #3b82f6;
+}
+
 .operation-card__code {
   position: absolute;
   top: 20px;
@@ -604,6 +733,11 @@ td {
 .badge.idle {
   background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.72);
+}
+
+.badge.complete {
+  background: rgba(59, 130, 246, 0.12);
+  color: #93c5fd;
 }
 
 .operation-card h3 {
@@ -794,11 +928,21 @@ td {
   border: 1px solid #e2e8f0;
 }
 
+.app-shell.theme-bright .badge.complete {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #d1fae5;
+}
+
 .app-shell.theme-bright .operation-card.is-running {
   border-left-color: #f43f5e;
 }
 
 .app-shell.theme-bright .operation-card.is-waiting {
   border-left-color: #e2e8f0;
+}
+
+.app-shell.theme-bright .operation-card.is-complete {
+  border-left-color: #0f766e;
 }
 </style>

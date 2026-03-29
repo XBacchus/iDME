@@ -45,13 +45,9 @@ const loadData = async () => {
   try {
     const { data } = await getCategoryTree()
     treeData.value = data
-  } catch (error) {
-    // 使用Mock数据
-    treeData.value = [
-      { id: 1, name: '轴承', children: [] },
-      { id: 2, name: '齿轮', children: [] },
-      { id: 3, name: '外壳', children: [] }
-    ]
+  } catch {
+    treeData.value = []
+    ElMessage.error('加载分类树失败')
   }
 }
 
