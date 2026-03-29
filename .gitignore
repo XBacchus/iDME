@@ -35,3 +35,6 @@ olc/*.tmp
 # Local caches / test artifacts
 _verify/cookie*.txt
 _verify/start_now.log
+
+# Local collaboration notes
+PROJECT_SUMMARY.md

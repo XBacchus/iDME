@@ -1,147 +1,75 @@
-﻿{
+{
   "openapi": "3.0.3",
   "info": {
     "title": "iDME MiniApp API",
-    "version": "0.1.0"
+    "version": "0.2.4"
   },
   "paths": {
     "/api/parts": {
-      "post": {
-        "summary": "创建物料",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "get": {
-        "summary": "查询物料（支持搜索）",
-        "parameters": [
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
+      "get": {},
+      "post": {}
     },
     "/api/parts/{id}": {
-      "delete": {
-        "summary": "删除物料",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/parts/categories": {
-      "get": {
-        "summary": "获取分类树",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
+      "get": {},
+      "put": {},
+      "delete": {}
     },
     "/api/parts/{id}/bom": {
-      "post": {
-        "summary": "添加 BOM 关系",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
+      "get": {},
+      "put": {},
+      "post": {}
+    },
+    "/api/parts/categories": {
+      "get": {},
+      "post": {}
+    },
+    "/api/parts/categories/{id}": {
+      "put": {},
+      "delete": {}
+    },
+    "/api/parts/{id}/versions": {
+      "get": {},
+      "post": {}
+    },
+    "/api/parts/{id}/versions/compare": {
+      "get": {}
+    },
+    "/api/parts/{id}/versions/{version}/rollback": {
+      "post": {}
+    },
+    "/api/parts/{id}/versions/{version}/status": {
+      "put": {}
     },
     "/api/equipments": {
-      "post": {
-        "summary": "创建设备",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
+      "get": {},
+      "post": {}
+    },
+    "/api/equipments/{id}": {
+      "get": {},
+      "put": {},
+      "delete": {}
     },
     "/api/working-plans": {
-      "post": {
-        "summary": "创建工艺路线",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
+      "get": {},
+      "post": {}
     },
     "/api/working-plans/{id}": {
-      "get": {
-        "summary": "获取工艺路线详情",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
+      "get": {},
+      "put": {},
+      "delete": {}
+    },
+    "/api/working-plans/{id}/processes": {
+      "get": {},
+      "put": {}
     },
     "/api/working-plans/{id}/procedures": {
-      "post": {
-        "summary": "关联工序",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
+      "post": {}
+    },
+    "/api/procedures": {
+      "get": {}
+    },
+    "/api/procedures/{id}": {
+      "put": {}
     }
   }
 }

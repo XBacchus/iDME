@@ -1,13 +1,13 @@
-﻿{
+{
   "openapi": "3.0.3",
   "info": {
     "title": "miniapp-backend API",
-    "version": "0.1.0"
+    "version": "0.2.4"
   },
   "paths": {
     "/api/parts": {
       "post": {
-        "summary": "创建物料",
+        "summary": "Create part",
         "responses": {
           "200": {
             "description": "OK"
@@ -15,7 +15,7 @@
         }
       },
       "get": {
-        "summary": "查询物料（支持搜索）",
+        "summary": "List parts",
         "parameters": [
           {
             "name": "keyword",
@@ -35,7 +35,7 @@
     },
     "/api/parts/{id}": {
       "delete": {
-        "summary": "删除物料",
+        "summary": "Delete part",
         "parameters": [
           {
             "name": "id",
@@ -55,7 +55,7 @@
     },
     "/api/parts/categories": {
       "get": {
-        "summary": "获取分类树",
+        "summary": "Get category tree",
         "responses": {
           "200": {
             "description": "OK"
@@ -65,7 +65,7 @@
     },
     "/api/parts/{id}/bom": {
       "post": {
-        "summary": "添加 BOM 关系",
+        "summary": "Add BOM relation",
         "parameters": [
           {
             "name": "id",
@@ -84,8 +84,103 @@
       }
     },
     "/api/equipments": {
+      "get": {
+        "summary": "List equipments",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search by code, name, manufacturer, brand, model, supplier, or location"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
-        "summary": "创建设备",
+        "summary": "Create equipment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EquipmentWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/equipments/{id}": {
+      "get": {
+        "summary": "Get equipment detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update equipment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EquipmentWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete equipment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -94,8 +189,37 @@
       }
     },
     "/api/working-plans": {
+      "get": {
+        "summary": "List working plans",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search by working plan code or name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
-        "summary": "创建工艺路线",
+        "summary": "Create working plan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkingPlanWriteRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -105,7 +229,91 @@
     },
     "/api/working-plans/{id}": {
       "get": {
-        "summary": "获取工艺路线详情",
+        "summary": "Get working plan detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update working plan",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkingPlanWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete working plan",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/working-plans/{id}/processes": {
+      "get": {
+        "summary": "Get process flow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update process flow",
         "parameters": [
           {
             "name": "id",
@@ -125,7 +333,7 @@
     },
     "/api/working-plans/{id}/procedures": {
       "post": {
-        "summary": "关联工序",
+        "summary": "Append procedure to working plan",
         "parameters": [
           {
             "name": "id",
@@ -139,6 +347,171 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/procedures": {
+      "get": {
+        "summary": "获取工序列表",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/procedures/{id}": {
+      "put": {
+        "summary": "更新工序",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcedureWriteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EquipmentWriteRequest": {
+        "type": "object",
+        "required": [
+          "equipmentCode",
+          "equipmentName",
+          "manufacturer"
+        ],
+        "properties": {
+          "equipmentCode": {
+            "type": "string"
+          },
+          "equipmentName": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "specModel": {
+            "type": "string"
+          },
+          "supplier": {
+            "type": "string"
+          },
+          "productionDate": {
+            "type": "string",
+            "description": "Optional; backend falls back and persists echo data if xDM rejects this value"
+          },
+          "serviceLifeYears": {
+            "type": "integer"
+          },
+          "depreciationMethod": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "technicalParams": {
+            "type": "string"
+          },
+          "sparePartsInfo": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkingPlanWriteRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Working plan code"
+          },
+          "name": {
+            "type": "string",
+            "description": "Working plan name"
+          },
+          "operator": {
+            "type": "string",
+            "description": "Operator"
+          },
+          "operationTime": {
+            "type": "string",
+            "description": "Operation time"
+          },
+          "equipment": {
+            "type": "string",
+            "description": "Equipment usage"
+          },
+          "product": {
+            "type": "string",
+            "description": "Related product"
+          },
+          "version": {
+            "type": "string",
+            "description": "Version"
+          },
+          "description": {
+            "type": "string",
+            "description": "Working plan description"
+          }
+        }
+      },
+      "ProcedureWriteRequest": {
+        "type": "object",
+        "required": [
+          "procedureCode",
+          "procedureName",
+          "productionStep",
+          "operatorName",
+          "startTime",
+          "endTime"
+        ],
+        "properties": {
+          "procedureCode": {
+            "type": "string",
+            "description": "工序编号"
+          },
+          "procedureName": {
+            "type": "string",
+            "description": "工序名称"
+          },
+          "productionStep": {
+            "type": "string",
+            "description": "生产步骤"
+          },
+          "operatorName": {
+            "type": "string",
+            "description": "操作人员"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "开始时间，支持 yyyy-MM-dd HH:mm:ss；后端会自动归一化为 xDM 可接受格式"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "结束时间，支持 yyyy-MM-dd HH:mm:ss；后端会自动归一化为 xDM 可接受格式"
           }
         }
       }

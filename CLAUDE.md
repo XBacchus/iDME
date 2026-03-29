@@ -31,5 +31,11 @@
 - DB/model changes: `.cursor/database_datainfo.md`
 - API gateway/workflow acceptance: `miniapp/backend/tests/TEST_ACCEPTANCE_CHECKLIST.md`
 
+## Frontend Development
+- 前端开发时必须参考设计规范：`miniapp/frontend/设计规范.md`
+- 设计模板预览：`miniapp/frontend/设计模板.html`
+- 前端开发计划：`miniapp/frontend/前端开发计划.md`
+- 风格要求：暗色主题（Earth Edition）、Tailwind CSS、Arc 浏览器风格
+
 ## Git Hooks
 - Use `scripts/install-git-hooks.bat` (Windows) or `scripts/install-git-hooks.sh` (Linux/macOS)

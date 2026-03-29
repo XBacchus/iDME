@@ -28,3 +28,13 @@
 - 测试文件：`src/test/java/com/idme/miniapp/controller/ManufacturingApiControllerTest.java`
 - 测试命令：`mvn -Dtest=ManufacturingApiControllerTest test`
 - 结果：10/10 通过
+
+- 2026-03-12 | 后端适配层（parts/equipments/working-plans/procedures）打通并统一返回结构 | 状态：✅ | 文件：ApiAdapterIntegrationTest.java、XdmRuntimeServiceTest.java | 命令：`mvn clean test`
+- 2026-03-13 | Equipment 字段口径对齐（12字段）、创建日期容错与回显、扩展字段清空、前端查询与全字段展示 | 状态：✅ | 文件：MiniAppAdapterService.java、EquipmentList.vue、EquipmentForm.vue、ApiAdapterIntegrationTest.java、ApiIntegrationTest.java | 命令：`mvn "-Dtest=ApiAdapterIntegrationTest,ApiIntegrationTest,XdmRuntimeServiceTest" test`、`npm run build`、MCP验收（/equipments CRUD）
+- 2026-03-13 | Equipment `productionDate` 回显改为可持久化（重启后不丢失） | 状态：✅ | 文件：EquipmentProductionDateStore.java、MiniAppAdapterService.java、API_DOCS/frontend_api_requirements.json、API_DOCS/miniapp-backend.json | 命令：`mvn "-Dtest=ApiAdapterIntegrationTest,ApiIntegrationTest,XdmRuntimeServiceTest" test`、手工重启穿透（create->restart->get）
+- 2026-03-13 | Part 必填字段契约收敛（partNo/partName/specification/stockQty/supplier）+ 更新合并校验 | 状态：✅ | 文件：MiniAppAdapterService.java、PartForm.vue、ApiAdapterIntegrationTest.java、API_DOCS/API_SPECIFICATION.md、API_DOCS/frontend_api_requirements.json、API_DOCS/api_doc.json | 命令：`mvn test`、`npm run build`、MCP sub-agent 验收（/parts CRUD、分类管理、版本管理）
+- 2026-03-13 | Procedures 页面补齐 `WorkingProcedure` 字段口径、设备聚合展示与在线编辑能力 | 状态：✅ | 文件：MiniAppAdapterService.java、ProcedureList.vue、API_DOCS/API_SPECIFICATION.md、API_DOCS/frontend_api_requirements.json、.cursor/project_structure.md | 命令：`mvn -q -DskipTests compile`、`npm run build`
+- 2026-03-13 | 物料列表分类树筛选支持父类展开、`categoryIds` 透传与页面返回状态保留 | 状态：✅ | 文件：PartList.vue、PartController.java、MiniAppAdapterService.java、API_DOCS/API_SPECIFICATION.md、API_DOCS/frontend_api_requirements.json、.cursor/project_structure.md | 命令：`mvn -q "-Dtest=ApiIntegrationTest" test`、`npm run build`
+- 2026-03-13 | 物料列表分类树筛选终验：一级展开子分类、父类携带 `categoryIds` 过滤、返回后状态保留 | 状态：✅ | 文件：PartList.vue、PartController.java、MiniAppAdapterService.java | 证据：`GET /api/parts?keyword=&categoryId=1001&categoryIds=1001,1002,1003&page=1&size=20`
+- 2026-03-29 | 默认后端方案收敛为 adapter controllers + `MiniAppAdapterService`，legacy `ManufacturingApiController` 默认停用，`start.bat` 改为输出 miniapp 日志并按 `/api/health` 健康检查等待后端启动 | 状态：✅ | 文件：ManufacturingApiController.java、ManufacturingApiControllerTest.java、start.bat、.cursor/project_structure.md | 命令：`mvn -q -DskipTests compile`、`.\start.bat`、`curl http://127.0.0.1:8080/api/health`
+- 2026-03-29 | 修复根目录 `start.bat` 前端自动启动在 `node_modules` 已存在时被短路、导致 5173 等待超时的问题 | 状态：✅ | 文件：start.bat、.cursor/project_structure.md | 命令：`.\start.bat`、`Invoke-WebRequest http://127.0.0.1:5173`、`curl.exe http://127.0.0.1:8080/api/health`

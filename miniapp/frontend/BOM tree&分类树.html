@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrial Intelligence - BOM & Classification System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #2563eb;
+            --bg-grid: #f3f4f6;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Chamfered/Beveled Corners Utility */
+        .bevel-sm {
+            clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+        }
+        .bevel-md {
+            clip-path: polygon(15px 0%, 100% 0%, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0% 100%, 0% 15px);
+        }
+        .bevel-border {
+            position: relative;
+            background: #fff;
+        }
+        .bevel-border::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 1px;
+            background: #e2e8f0;
+            clip-path: polygon(15px 0%, 100% 0%, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0% 100%, 0% 15px);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .magazine-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+        }
+
+        .tree-line-v {
+            position: relative;
+        }
+        .tree-line-v::before {
+            content: '';
+            position: absolute;
+            left: -1.25rem;
+            top: -0.5rem;
+            bottom: 0.5rem;
+            width: 1px;
+            background: #cbd5e1;
+        }
+        .tree-line-v::after {
+            content: '';
+            position: absolute;
+            left: -1.25rem;
+            top: 0.75rem;
+            width: 1rem;
+            height: 1px;
+            background: #cbd5e1;
+        }
+
+        .flow-connector {
+            stroke: #94a3b8;
+            stroke-width: 1.5;
+            fill: none;
+        }
+    </style>
+</head>
+<body class="p-8 lg:p-12 overflow-x-hidden">
+
+    <!-- Magazine Header -->
+    <header class="mb-20 border-b-2 border-slate-900 pb-8 magazine-grid">
+        <div class="col-span-12 lg:col-span-8">
+            <p class="mono text-xs uppercase tracking-widest text-blue-600 font-bold mb-2">Internal Protocol / v6.0</p>
+            <h1 class="text-6xl font-black tracking-tighter uppercase leading-none">Industrial<br>Architecture</h1>
+        </div>
+        <div class="col-span-12 lg:col-span-4 flex flex-col justify-end items-end text-right">
+            <p class="text-sm font-medium leading-relaxed max-w-xs text-slate-500">
+                A structured visualization of mechanical classification and bill of materials for advanced production lines.
+            </p>
+        </div>
+    </header>
+
+    <!-- UI SECTION 01: HIGH CONTRAST GRID -->
+    <section class="mb-32">
+        <div class="flex items-baseline justify-between mb-10">
+            <h2 class="text-3xl font-bold tracking-tight">01. High-Contrast System</h2>
+            <span class="h-px flex-grow mx-6 bg-slate-200"></span>
+            <span class="mono text-sm">LEVEL_SCHEMA_A</span>
+        </div>
+
+        <div class="magazine-grid">
+            <!-- Classification Tree 1 -->
+            <div class="col-span-12 lg:col-span-4">
+                <div class="bevel-border p-8 bg-white min-h-[400px]">
+                    <div class="flex items-center gap-2 mb-8 border-b border-slate-100 pb-4">
+                        <div class="w-2 h-6 bg-blue-600"></div>
+                        <h3 class="font-bold uppercase tracking-wider text-sm">Classification Index</h3>
+                    </div>
+                    <ul class="space-y-4 text-sm font-medium">
+                        <li class="flex items-center gap-2 text-slate-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                            机械零件
+                        </li>
+                        <li class="ml-6 tree-line-v">
+                            <div class="flex items-center gap-2 text-slate-900">
+                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                                传动件
+                            </div>
+                            <ul class="mt-4 space-y-3">
+                                <li class="ml-6 tree-line-v flex items-center gap-2 text-slate-600 hover:text-blue-600 cursor-pointer transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    齿轮
+                                </li>
+                                <li class="ml-6 tree-line-v flex items-center gap-2 text-slate-600 hover:text-blue-600 cursor-pointer transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    轴承
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="ml-6 tree-line-v flex items-center gap-2 text-slate-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                            紧固件
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- BOM Tree 1 -->
+            <div class="col-span-12 lg:col-span-8">
+                <div class="bevel-border p-8 bg-white overflow-hidden relative min-h-[400px]">
+                    <div class="flex items-center justify-between mb-8 border-b border-slate-100 pb-4">
+                        <h3 class="font-bold uppercase tracking-wider text-sm">BOM Visualizer / Flow</h3>
+                        <span class="px-3 py-1 bg-slate-100 text-[10px] mono font-bold">MODE: PRODUCTION</span>
+                    </div>
+                    
+                    <div class="relative flex items-center justify-between h-64 px-4">
+                        <!-- SVG Connectors -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none">
+                            <path d="M120 128 H 220" class="flow-connector" />
+                            <path d="M380 128 H 420" class="flow-connector" />
+                            <path d="M220 128 V 60 H 260" class="flow-connector" />
+                            <path d="M220 128 V 196 H 260" class="flow-connector" />
+                        </svg>
+
+                        <!-- Node 1 -->
+                        <div class="relative z-10 w-32 h-20 bg-slate-900 bevel-sm flex flex-col items-center justify-center text-white">
+                            <span class="text-[10px] opacity-60 mono">ASSEMBLY</span>
+                            <span class="text-xs font-bold">中心轮组件</span>
+                        </div>
+
+                        <!-- Node Group -->
+                        <div class="flex flex-col gap-12">
+                            <div class="relative z-10 w-36 h-20 border-2 border-slate-900 bg-white bevel-sm flex flex-col items-center justify-center">
+                                <span class="absolute -top-3 right-2 bg-blue-600 text-white text-[10px] px-2 py-0.5 bevel-sm">x2</span>
+                                <span class="text-[10px] text-slate-400 mono">SUB-UNIT</span>
+                                <span class="text-xs font-bold uppercase">轴承单元</span>
+                            </div>
+                            <div class="relative z-10 w-36 h-20 border-2 border-slate-100 bg-slate-50 bevel-sm flex flex-col items-center justify-center">
+                                <span class="absolute -top-3 right-2 bg-slate-400 text-white text-[10px] px-2 py-0.5 bevel-sm">x1</span>
+                                <span class="text-xs font-bold text-slate-500">齿轮</span>
+                            </div>
+                        </div>
+
+                        <!-- Leaf Nodes -->
+                        <div class="flex flex-col gap-4">
+                            <div class="w-32 py-2 px-3 border border-slate-200 text-[11px] font-medium flex justify-between bg-white">
+                                <span>轴承</span><span class="text-blue-600 font-bold">x1</span>
+                            </div>
+                            <div class="w-32 py-2 px-3 border border-slate-200 text-[11px] font-medium flex justify-between bg-white">
+                                <span>密封圈</span><span class="text-blue-600 font-bold">x2</span>
+                            </div>
+                            <div class="w-32 py-2 px-3 border border-slate-200 text-[11px] font-medium flex justify-between bg-white">
+                                <span>润滑脂</span><span class="text-blue-600 font-bold">10g</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UI SECTION 02: MINIMALIST BLUEPRINT -->
+    <section class="mb-32">
+        <div class="flex items-baseline justify-between mb-10">
+            <h2 class="text-3xl font-bold tracking-tight">02. Blueprint Aesthetic</h2>
+            <span class="h-px flex-grow mx-6 bg-slate-200"></span>
+            <span class="mono text-sm">LEVEL_SCHEMA_B</span>
+        </div>
+
+        <div class="magazine-grid">
+            <!-- Classification Tree 2 -->
+            <div class="col-span-12 lg:col-span-4 space-y-6">
+                <div class="bg-slate-100 p-8 bevel-md">
+                    <h3 class="mono text-xs mb-6 text-slate-500">// CATEGORY_HIERARCHY</h3>
+                    <div class="space-y-1">
+                        <div class="p-3 bg-white flex justify-between items-center bevel-sm border-l-4 border-blue-600">
+                            <span class="text-sm font-bold">机械零件</span>
+                            <span class="text-[10px] mono text-slate-400">ID: 001</span>
+                        </div>
+                        <div class="p-3 bg-slate-50/50 ml-4 flex justify-between items-center bevel-sm border-l-2 border-slate-300">
+                            <span class="text-sm">传动件</span>
+                            <span class="text-[10px] mono text-slate-400">ID: 001-A</span>
+                        </div>
+                        <div class="p-2 ml-10 flex justify-between items-center border-b border-slate-200">
+                            <span class="text-xs text-slate-600">齿轮</span>
+                            <button class="text-blue-600 hover:underline text-[10px] font-bold">VIEW</button>
+                        </div>
+                        <div class="p-2 ml-10 flex justify-between items-center border-b border-slate-200">
+                            <span class="text-xs text-slate-600">轴承</span>
+                            <button class="text-blue-600 hover:underline text-[10px] font-bold">VIEW</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOM Tree 2 -->
+            <div class="col-span-12 lg:col-span-8">
+                <div class="border-2 border-slate-200 bg-white p-8 bevel-md overflow-x-auto">
+                    <div class="inline-flex min-w-full items-start gap-12">
+                        <!-- Assembly Level -->
+                        <div class="flex-shrink-0 w-48">
+                            <div class="p-4 bg-slate-900 text-white bevel-sm mb-4">
+                                <p class="text-[10px] mono opacity-50 uppercase mb-1">Root</p>
+                                <p class="font-bold text-sm">外壳组件</p>
+                            </div>
+                        </div>
+
+                        <!-- Level 1 -->
+                        <div class="flex-shrink-0 w-48 space-y-4 pt-10">
+                            <div class="relative">
+                                <div class="absolute -left-6 top-6 w-6 h-px bg-slate-300"></div>
+                                <div class="p-4 border border-slate-200 bevel-sm bg-white">
+                                    <p class="text-[10px] mono text-blue-600 mb-1">M-01 (x8)</p>
+                                    <p class="font-bold text-sm text-slate-800">螺栓 M8</p>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="absolute -left-6 top-6 w-6 h-px bg-slate-300"></div>
+                                <div class="p-4 border border-slate-200 bevel-sm bg-white">
+                                    <p class="text-[10px] mono text-blue-600 mb-1">M-02 (x8)</p>
+                                    <p class="font-bold text-sm text-slate-800">弹簧垫片</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Technical Specs -->
+                        <div class="flex-shrink-0 w-64 bg-slate-50 p-6 bevel-sm self-stretch">
+                            <h4 class="text-xs font-black uppercase mb-4 border-b border-slate-200 pb-2">Technical Summary</h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-[11px]">
+                                    <span class="text-slate-500 uppercase">Total Parts</span>
+                                    <span class="font-bold">16 Units</span>
+                                </div>
+                                <div class="flex justify-between text-[11px]">
+                                    <span class="text-slate-500 uppercase">Weight Est.</span>
+                                    <span class="font-bold">1.24 kg</span>
+                                </div>
+                                <div class="flex justify-between text-[11px]">
+                                    <span class="text-slate-500 uppercase">Material</span>
+                                    <span class="font-bold">SUS304 / Grade 8.8</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UI SECTION 03: MAGAZINE EDITORIAL -->
+    <section class="mb-20">
+        <div class="flex items-baseline justify-between mb-10">
+            <h2 class="text-3xl font-bold tracking-tight">03. Editorial Layout</h2>
+            <span class="h-px flex-grow mx-6 bg-slate-200"></span>
+            <span class="mono text-sm">LEVEL_SCHEMA_C</span>
+        </div>
+
+        <div class="magazine-grid">
+            <!-- Classification Tree 3 -->
+            <div class="col-span-12 lg:col-span-3">
+                <div class="border-t-4 border-slate-900 pt-6">
+                    <h3 class="text-4xl font-black mb-6 italic">INDEX</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <span class="text-xs font-bold px-2 py-1 bg-blue-600 text-white bevel-sm mb-3 inline-block">01. MECHANICAL</span>
+                            <div class="ml-4 space-y-2">
+                                <p class="text-sm font-bold hover:text-blue-600 cursor-pointer">Transmission Components</p>
+                                <p class="text-sm text-slate-500 hover:text-blue-600 cursor-pointer">Hydraulic Systems</p>
+                                <p class="text-sm text-slate-500 hover:text-blue-600 cursor-pointer">Pneumatic Parts</p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold px-2 py-1 bg-slate-200 text-slate-800 bevel-sm mb-3 inline-block">02. ELECTRICAL</span>
+                            <div class="ml-4 space-y-2">
+                                <p class="text-sm text-slate-400">Sensors & Actuators</p>
+                                <p class="text-sm text-slate-400">Control Units</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOM Tree 3 (Matrix Style) -->
+            <div class="col-span-12 lg:col-span-9">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="col-span-1 md:col-span-3 h-24 bg-slate-900 flex items-center px-10 bevel-md">
+                        <div class="flex items-center gap-12">
+                            <div>
+                                <p class="text-[10px] mono text-blue-400">PROJECT_REF</p>
+                                <p class="text-white font-bold text-lg uppercase">Heavy-Duty Rotor Assembly</p>
+                            </div>
+                            <div class="h-10 w-px bg-slate-700"></div>
+                            <div>
+                                <p class="text-[10px] mono text-blue-400">BOM_REV</p>
+                                <p class="text-white font-bold text-lg uppercase">B102-4</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- BOM Cards -->
+                    <div class="bg-white p-6 bevel-border min-h-[250px] group hover:bg-slate-50 transition-colors">
+                        <span class="text-3xl font-black text-slate-100 group-hover:text-blue-100 transition-colors">01</span>
+                        <h4 class="text-sm font-bold mb-4 uppercase tracking-tighter border-b border-slate-100 pb-2">Primary Housing</h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end border-b border-dashed border-slate-200 pb-1">
+                                <span class="text-xs text-slate-500">Alloy Shell</span>
+                                <span class="text-xs font-black">1 Unit</span>
+                            </div>
+                            <div class="flex justify-between items-end border-b border-dashed border-slate-200 pb-1">
+                                <span class="text-xs text-slate-500">Mounting Brackets</span>
+                                <span class="text-xs font-black">4 Units</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 bevel-border min-h-[250px] group hover:bg-slate-50 transition-colors">
+                        <span class="text-3xl font-black text-slate-100 group-hover:text-blue-100 transition-colors">02</span>
+                        <h4 class="text-sm font-bold mb-4 uppercase tracking-tighter border-b border-slate-100 pb-2">Core Drive Train</h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end border-b border-dashed border-slate-200 pb-1">
+                                <span class="text-xs text-slate-500">Helical Gear Set</span>
+                                <span class="text-xs font-black">2 Sets</span>
+                            </div>
+                            <div class="flex justify-between items-end border-b border-dashed border-slate-200 pb-1">
+                                <span class="text-xs text-slate-500">Torque Shaft</span>
+                                <span class="text-xs font-black">1 Unit</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-600 p-6 bevel-md text-white min-h-[250px]">
+                        <span class="text-3xl font-black opacity-30">03</span>
+                        <h4 class="text-sm font-bold mb-4 uppercase tracking-tighter border-b border-blue-400 pb-2">Support Elements</h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end border-b border-dashed border-blue-400 pb-1">
+                                <span class="text-xs opacity-80">Precision Bearings</span>
+                                <span class="text-xs font-black">8 Units</span>
+                            </div>
+                            <div class="mt-8">
+                                <button class="w-full py-2 bg-white text-blue-600 font-bold text-xs bevel-sm uppercase hover:bg-slate-100 transition-colors">
+                                    Initiate Procurement
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Stats -->
+    <footer class="mt-20 border-t border-slate-200 pt-8 flex justify-between items-center text-[10px] mono text-slate-400 uppercase tracking-[0.2em]">
+        <div>© 2024 Industrial Systems Division</div>
+        <div class="flex gap-8">
+            <span>Server Status: Operational</span>
+            <span>Security Level: Tier 4</span>
+        </div>
+    </footer>
+
+</body>
+</html>
