@@ -56,3 +56,5 @@
 - 2026-03-29：前端首页控制台 `/` 路由改为默认应用亮色壳层，并将统计卡、导航卡、内容区卡片与表格底色统一提升为白底，更新 `src/components/layout/AppLayout.vue` 与 `src/views/Home.vue`，不调整任何布局结构。
 - 2026-03-29：前端主题切换逻辑修正为“首次默认亮色、后续按用户切换状态持久化”，移除首页 `/` 路由强制亮色限制，更新 `src/components/layout/AppLayout.vue`，恢复亮暗模式双向切换能力。
 - 2026-03-29：前端明亮模式继续向四个模块页对齐控制台页视觉口径，补充 `src/assets/styles/common.css` 的亮色主题公共规则，并重构 `src/views/parts/PartList.vue`、`src/views/equipments/EquipmentList.vue`、`src/views/working-plans/WorkingPlanList.vue`、`src/views/procedures/ProcedureList.vue` 与 `src/components/business/OperationCard.vue` 的标题区、指标卡、工作区和状态卡样式。
+- 2026-03-29：按赛题“业务层通过 xDM-F API、后端负责字段映射与统一响应”口径收敛默认后端方案，保留 `PartController.java`、`EquipmentController.java`、`WorkingPlanController.java`、`ProcedureController.java` + `MiniAppAdapterService.java` 作为正式接口层，并通过 `miniapp.legacy-proxy.enabled` 默认停用 `ManufacturingApiController.java`；同步更新 `start.bat` 为后端日志落盘并按 `/api/health` 健康检查等待启动完成。
+- 2026-03-29：修复根目录 `start.bat` 的前端自动启动短路问题；将 `node_modules` 检查与 `npm install` 前移到主脚本执行，再由子窗口仅执行 `npm run dev`，避免 `node_modules` 已存在时跳过前端启动并导致 5173 等待超时。

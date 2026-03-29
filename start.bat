@@ -50,20 +50,46 @@ if not errorlevel 1 (
 
 call :is_port_listening 8080
 if not errorlevel 1 (
+  call :wait_http_ready http://127.0.0.1:8080/api/health 30 miniapp-backend
+  if errorlevel 1 (
+    echo [ERROR] port 8080 is occupied but miniapp-backend health endpoint is not ready.
+    call :print_file_tail "%~dp0miniapp\backend\logs\backend.err.log" 60
+    call :print_file_tail "%~dp0miniapp\backend\logs\backend.out.log" 60
+    exit /b 1
+  )
   echo [INFO] miniapp-backend already listening on 8080, skip start.
 ) else (
   echo [INFO] starting miniapp-backend...
   start "miniapp-backend" cmd /c "cd /d ""%~dp0miniapp\backend"" && call mvn spring-boot:run"
-  call :wait_port 8080 180 miniapp-backend
-  if errorlevel 1 exit /b 1
+  call :wait_http_ready http://127.0.0.1:8080/api/health 240 miniapp-backend
+  if errorlevel 1 (
+    call :print_file_tail "%~dp0miniapp\backend\logs\backend.err.log" 60
+    call :print_file_tail "%~dp0miniapp\backend\logs\backend.out.log" 60
+    exit /b 1
+  )
 )
 
 call :is_port_listening 5173
 if not errorlevel 1 (
   echo [INFO] miniapp-frontend already listening on 5173, skip start.
 ) else (
+  pushd "%~dp0miniapp\frontend"
+  if errorlevel 1 (
+    echo [ERROR] failed to open miniapp-frontend directory.
+    exit /b 1
+  )
+  if not exist "node_modules" (
+    echo [INFO] installing frontend dependencies...
+    call npm install
+    if errorlevel 1 (
+      popd
+      echo [ERROR] failed to install frontend dependencies.
+      exit /b 1
+    )
+  )
+  popd
   echo [INFO] starting miniapp-frontend...
-  start "miniapp-frontend" cmd /c "cd /d ""%~dp0miniapp\frontend"" && if not exist node_modules (echo [INFO] installing frontend dependencies... && call npm install) && call npm run dev"
+  start "miniapp-frontend" cmd /c "cd /d ""%~dp0miniapp\frontend"" && call npm run dev"
   call :wait_port 5173 180 miniapp-frontend
   if errorlevel 1 exit /b 1
 )
@@ -171,3 +197,29 @@ for /l %%i in (1,1,%MAX_RETRY%) do (
 )
 echo [ERROR] timeout waiting for %SERVICE_NAME% on port %PORT%.
 exit /b 1
+
+:wait_http_ready
+set "URL=%~1"
+set "MAX_RETRY=%~2"
+set "SERVICE_NAME=%~3"
+for /l %%i in (1,1,%MAX_RETRY%) do (
+  powershell -NoProfile -Command "$ProgressPreference='SilentlyContinue'; try { $resp = Invoke-WebRequest -UseBasicParsing -Uri '%URL%' -TimeoutSec 2; if ($resp.StatusCode -ge 200 -and $resp.StatusCode -lt 300) { exit 0 } else { exit 1 } } catch { exit 1 }" >nul 2>nul
+  if not errorlevel 1 (
+    echo [INFO] %SERVICE_NAME% health check passed: %URL%
+    exit /b 0
+  )
+  >nul ping -n 2 127.0.0.1
+)
+echo [ERROR] timeout waiting for %SERVICE_NAME% health endpoint: %URL%
+exit /b 1
+
+:print_file_tail
+set "FILE_PATH=%~1"
+set "TAIL_COUNT=%~2"
+if not exist "%FILE_PATH%" (
+  echo [WARN] log file not found: %FILE_PATH%
+  exit /b 0
+)
+echo [INFO] showing last %TAIL_COUNT% lines of %FILE_PATH%
+powershell -NoProfile -Command "Get-Content -Path '%FILE_PATH%' -Tail %TAIL_COUNT%"
+exit /b 0
