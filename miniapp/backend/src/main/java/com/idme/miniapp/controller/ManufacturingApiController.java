@@ -2,6 +2,7 @@ package com.idme.miniapp.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.idme.miniapp.service.XdmGatewayService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +19,8 @@ import org.springframework.web.util.UriUtils;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@RequestMapping("/api/legacy-manufacturing")
+@RequestMapping("/api")
+@ConditionalOnProperty(name = "miniapp.legacy-proxy.enabled", havingValue = "true")
 public class ManufacturingApiController {
 
     private static final String PARTS_PATH = "/api/parts";
