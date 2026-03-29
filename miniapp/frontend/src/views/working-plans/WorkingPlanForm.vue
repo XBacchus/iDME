@@ -1,41 +1,59 @@
 <template>
-  <div class="p-8">
-    <div class="mb-6">
-      <h1 class="text-lg font-bold text-white">{{ isEdit ? '编辑工艺路线' : '新增工艺路线' }}</h1>
-    </div>
+  <div class="mx-auto w-full max-w-4xl space-y-6">
+    <section>
+      <p class="eyebrow">Manufacturing / Route Form</p>
+      <h1 class="page-heading">{{ isEdit ? '编辑工艺路线' : '新增工艺路线' }}</h1>
+      <p class="page-subtitle">
+        维护工艺编号、版本、产品归属与操作信息，保存后会返回工艺路线列表。
+      </p>
+    </section>
 
-    <div class="floating-island p-6 max-w-3xl">
-      <el-form :model="form" label-width="100px" label-position="left">
+    <section class="floating-island mx-auto w-full max-w-4xl">
+      <el-form :model="form" label-width="100px" label-position="left" class="space-y-2">
         <el-form-item label="工艺编号">
           <el-input v-model="form.code" placeholder="例如 WP-2024-001" />
         </el-form-item>
+
         <el-form-item label="工艺名称">
           <el-input v-model="form.name" placeholder="例如 中心轴零件加工" />
         </el-form-item>
+
         <el-form-item label="版本号">
           <el-input v-model="form.version" placeholder="例如 1.0" />
         </el-form-item>
+
         <el-form-item label="所属产品">
           <el-input v-model="form.product" placeholder="产品名称" />
         </el-form-item>
+
         <el-form-item label="工艺描述">
           <el-input v-model="form.description" type="textarea" :rows="3" />
         </el-form-item>
+
         <el-form-item label="操作人员">
           <el-input v-model="form.operator" />
         </el-form-item>
+
         <el-form-item label="设备使用">
           <el-input v-model="form.equipment" placeholder="设备列表" />
         </el-form-item>
+
         <el-form-item label="操作时间">
           <el-input v-model="form.operationTime" placeholder="例如 2026-03-13 10:00:00" />
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="handleSubmit">保存</el-button>
-          <el-button @click="$router.back()">取消</el-button>
+
+        <el-form-item class="!mb-0 pt-4">
+          <div class="flex flex-wrap gap-3">
+            <button class="action-button action-button-primary" type="button" @click="handleSubmit">
+              保存
+            </button>
+            <button class="action-button action-button-secondary" type="button" @click="$router.back()">
+              取消
+            </button>
+          </div>
         </el-form-item>
       </el-form>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -86,12 +104,3 @@ onMounted(async () => {
   }
 })
 </script>
-
-<style scoped>
-.floating-island {
-  background: #2C2C2E;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-}
-</style>

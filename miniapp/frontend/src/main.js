@@ -1,7 +1,6 @@
-﻿import { createApp } from 'vue'
+import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import 'element-plus/theme-chalk/dark/css-vars.css'
 import vue3TreeOrg from 'vue3-tree-org'
 import 'vue3-tree-org/lib/vue3-tree-org.css'
 import App from './App.vue'

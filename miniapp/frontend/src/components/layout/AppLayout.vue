@@ -1,9 +1,9 @@
 <template>
-  <div class="h-screen flex overflow-hidden">
-    <Sidebar />
-    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
-      <Header />
-      <div class="flex-1 overflow-y-auto p-8 custom-scrollbar bg-[#1c1c1e]">
+  <div class="app-shell" :class="{ 'theme-bright': isBrightTheme }">
+    <Sidebar :is-bright-theme="isBrightTheme" @toggle-bright-theme="toggleBrightTheme" />
+    <main class="app-main">
+      <Header :is-bright-theme="isBrightTheme" />
+      <div class="app-content custom-scrollbar">
         <router-view />
       </div>
     </main>
@@ -11,6 +11,23 @@
 </template>
 
 <script setup>
+import { onMounted, ref, watch } from 'vue'
 import Sidebar from './Sidebar.vue'
 import Header from './Header.vue'
+
+const THEME_STORAGE_KEY = 'idme-shell-theme'
+const isBrightTheme = ref(false)
+
+onMounted(() => {
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
+  isBrightTheme.value = storedTheme ? storedTheme === 'bright' : true
+})
+
+watch(isBrightTheme, (value) => {
+  window.localStorage.setItem(THEME_STORAGE_KEY, value ? 'bright' : 'dark')
+})
+
+const toggleBrightTheme = () => {
+  isBrightTheme.value = !isBrightTheme.value
+}
 </script>

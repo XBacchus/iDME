@@ -1,9 +1,15 @@
 <template>
-  <div class="p-8">
-    <div class="floating-island max-w-3xl">
-      <h2 class="text-lg font-semibold text-white mb-6">{{ isEdit ? '编辑物料' : '新增物料' }}</h2>
+  <div class="mx-auto w-full max-w-4xl space-y-6">
+    <section>
+      <p class="eyebrow">Warehouse / Material Form</p>
+      <h1 class="page-heading">{{ isEdit ? '编辑物料' : '新增物料' }}</h1>
+      <p class="page-subtitle">
+        维护物料主数据、分类归属与库存信息，保存后会同步回当前物料管理视图。
+      </p>
+    </section>
 
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+    <section class="floating-island mx-auto w-full max-w-4xl">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" class="space-y-2">
         <el-form-item label="物料编号" prop="partNo">
           <el-input v-model="form.partNo" placeholder="请输入物料编号" />
         </el-form-item>
@@ -25,15 +31,26 @@
         </el-form-item>
 
         <el-form-item label="分类" prop="categoryId">
-          <el-tree-select v-model="form.categoryId" :data="categories" :props="{ label: 'name', value: 'id' }" placeholder="请选择分类" />
+          <el-tree-select
+            v-model="form.categoryId"
+            :data="categories"
+            :props="{ label: 'name', value: 'id' }"
+            placeholder="请选择分类"
+          />
         </el-form-item>
 
-        <el-form-item>
-          <el-button type="primary" @click="handleSubmit">保存</el-button>
-          <el-button @click="router.back()">取消</el-button>
+        <el-form-item class="!mb-0 pt-4">
+          <div class="flex flex-wrap gap-3">
+            <button class="action-button action-button-primary" type="button" @click="handleSubmit">
+              保存
+            </button>
+            <button class="action-button action-button-secondary" type="button" @click="router.back()">
+              取消
+            </button>
+          </div>
         </el-form-item>
       </el-form>
-    </div>
+    </section>
   </div>
 </template>
 

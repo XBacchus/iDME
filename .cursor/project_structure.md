@@ -41,3 +41,9 @@
 - 2026-03-13：更新根目录 `start.bat`，新增 miniapp 后端（8080）与前端（5173）一键启动及 `-force` 停止流程。
 - 2026-03-13：工艺路线模块补齐 `operationTime` 前后端口径：前端 `WorkingPlanForm.vue`、`WorkingPlanList.vue`、`WorkingPlanDetail.vue` 新增字段展示；后端新增 `service/WorkingPlanOperationTimeStore.java`，并在 `MiniAppAdapterService.java` 增加 `operationTime` 兼容重试与缓存回写逻辑。
 - 2026-03-13：同步 Part 契约文档到 `API_DOCS`（必填字段与更新语义）并更新验收清单 `miniapp/backend/tests/TEST_ACCEPTANCE_CHECKLIST.md`。
+- 2026-03-23：前端主布局与物料列表视觉重构，更新 `src/assets/styles/*`、`src/components/layout/*`、`src/router/index.js`、`src/views/parts/PartList.vue` 以对齐新的玻璃拟态暗色风格，并修正内容滚动容器与部分 API 路径重复前缀问题。
+- 2026-03-28：前端控制台按参考稿 `ai_studio_code (4).html` 回收为固定亮色壳层，重写 `src/components/layout/*`、`src/views/Home.vue`、`src/router/index.js`、`src/main.js`、`src/App.vue`，移除亮暗切换并统一首页文案与结构。
+- 2026-03-29：前端控制台亮色模式按参考稿 `ai_studio_code (2).html` 仅调整配色层，更新 `src/components/layout/AppLayout.vue`、`src/components/layout/Sidebar.vue`、`src/components/layout/Header.vue`、`src/assets/styles/common.css`、`src/views/Home.vue`，保留现有布局与模块结构不变。
+- 2026-03-29：前端首页控制台 `/` 路由改为默认应用亮色壳层，并将统计卡、导航卡、内容区卡片与表格底色统一提升为白底，更新 `src/components/layout/AppLayout.vue` 与 `src/views/Home.vue`，不调整任何布局结构。
+- 2026-03-29：前端主题切换逻辑修正为“首次默认亮色、后续按用户切换状态持久化”，移除首页 `/` 路由强制亮色限制，更新 `src/components/layout/AppLayout.vue`，恢复亮暗模式双向切换能力。
+- 2026-03-29：前端明亮模式继续向四个模块页对齐控制台页视觉口径，补充 `src/assets/styles/common.css` 的亮色主题公共规则，并重构 `src/views/parts/PartList.vue`、`src/views/equipments/EquipmentList.vue`、`src/views/working-plans/WorkingPlanList.vue`、`src/views/procedures/ProcedureList.vue` 与 `src/components/business/OperationCard.vue` 的标题区、指标卡、工作区和状态卡样式。
